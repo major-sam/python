@@ -6,3 +6,5 @@
 # а внизу виден результат выполнения этого файла.
 
 # https://sam.net.ru/owncloud/index.php/s/aOf2ZGk4JDe7frl
+
+#зачет!
