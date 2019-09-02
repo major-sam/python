@@ -1,0 +1,4 @@
+OS info is 
+uname_result(system='Windows', node='sam-home', release='10', version='10.0.18362', machine='AMD64', processor='Intel64 Family 6 Model 158 Stepping 9, GenuineIntel')
+
+Python version is 3.6.4 (v3.6.4:d48eceb, Dec 19 2017, 06:54:40) [MSC v.1900 64 bit (AMD64)] ('64bit', 'WindowsPE')
