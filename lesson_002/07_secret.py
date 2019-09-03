@@ -23,9 +23,11 @@ secret_message = [
 secret_line_4 = secret_message[3][12:6:-1]
 secret_line_5 = secret_message[4][20:15:-1]
 
-message = secret_message[0][3]
-message += " " + secret_message[1][9:13]
-message += " " + secret_message[2][5:14:2]
-message += " " + secret_line_4
-message += " " + secret_line_5
+message = (secret_message[0][3] + " "
+           + secret_message[1][9:13] + " "
+           + secret_message[2][5:14:2] + " "
+           + secret_line_4 + " "
+           + secret_line_5
+           )  # так корректнее записать с точки зрения стиля (PEP8). Это будет оцениваться начиная со след модуля
 print(message)
+#зачет!
