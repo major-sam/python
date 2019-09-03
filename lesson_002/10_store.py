@@ -52,19 +52,19 @@ table_0 = store[goods['Стол']][0]
 table_1 = store[goods['Стол']][1]
 table_total_q = table_0['quantity'] + table_1['quantity']
 table_cost = table_0['quantity'] * table_0['price'] + table_1['quantity'] * table_1['price']
-print('Столов -', table_total_q , 'шт, стоимость', table_cost, 'руб')
+print('Столов -', table_total_q, 'шт, стоимость', table_cost, 'руб')
 
 couch_0 = store[goods['Диван']][0]
 couch_1 = store[goods['Диван']][1]
 couch_total_q = couch_0['quantity'] + couch_1['quantity']
-couch_cost = couch_0['quantity'] *couch_0['price'] + couch_1[
+couch_cost = couch_0['quantity'] * couch_0['price'] + couch_1[
     'quantity'] * couch_1['price']
 print('Диванов -', couch_total_q, 'шт, стоимость', couch_cost, 'руб')
 
 cheir_0 = store[goods['Стул']][0]
 cheir_1 = store[goods['Стул']][1]
 cheir_2 = store[goods['Стул']][2]
-cheir_total_q =  cheir_0['quantity'] + cheir_1['quantity'] + cheir_2['quantity']
+cheir_total_q = cheir_0['quantity'] + cheir_1['quantity'] + cheir_2['quantity']
 cheir_cost = cheir_0['quantity'] * cheir_0['price'] + cheir_1['quantity'] * cheir_1['price'] + cheir_2['quantity'] * \
              cheir_2['price']
 print('Стульев -', cheir_total_q, 'шт, стоимость', cheir_cost, 'руб')
@@ -74,3 +74,5 @@ print('Стульев -', cheir_total_q, 'шт, стоимость', cheir_cost,
 # и оформить попытку сдачи ДЗ! Без этого ДЗ не будет проверяться!                        #
 # Как оформить попытку сдачи смотрите видео - https://youtu.be/qVpN0L-C3LU               #
 ##########################################################################################
+
+#зачет!
