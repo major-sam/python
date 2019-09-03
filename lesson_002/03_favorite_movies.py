@@ -15,6 +15,10 @@ my_favorite_movies = 'Терминатор, Пятый элемент, Ават�
 # как указано в задании!
 
 print(my_favorite_movies[0:10])
-print(my_favorite_movies[len(my_favorite_movies)-15:len(my_favorite_movies)])
+print(my_favorite_movies[len(my_favorite_movies) - 15:len(my_favorite_movies)])  # TODO не корректная запись
 print(my_favorite_movies[12:25])
-print(my_favorite_movies[len(my_favorite_movies)-22:len(my_favorite_movies)-17])
+print(my_favorite_movies[len(my_favorite_movies) - 22:len(my_favorite_movies) - 17])  # TODO и здесь
+# TODO в обоих этих случаях лучше использовать срезы типа [-15:],
+# TODO они будут идентичны срезу [len(my_favorite_movies)-15:len(my_favorite_movies)]
+# TODO Кроме того, если используете что-то длинное вроде "len(my_favorite_movies)",
+# TODO лучше вынести это в короткую переменную

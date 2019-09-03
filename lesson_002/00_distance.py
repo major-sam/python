@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 from pprint import pprint
+
 # Есть словарь координат городов
 
 sites = {
@@ -15,9 +16,9 @@ distances = {}
 moscow = sites['Moscow']
 london = sites['London']
 paris = sites['Paris']
-moscow_london = ((moscow[0]-london[0])**2 + (moscow[1]-london[1])**2)**.5
-moscow_paris = ((moscow[0]-paris[0])**2 + (moscow[1]-paris[1])**2)**.5
-london_paris = ((london[0]-paris[0])**2 + (london[1]-paris[1])**2)**.5
+moscow_london = ((moscow[0] - london[0]) ** 2 + (moscow[1] - london[1]) ** 2) ** .5
+moscow_paris = ((moscow[0] - paris[0]) ** 2 + (moscow[1] - paris[1]) ** 2) ** .5
+london_paris = ((london[0] - paris[0]) ** 2 + (london[1] - paris[1]) ** 2) ** .5
 distances['Paris'] = {}
 distances['Paris']['Moscow'] = moscow_paris
 distances['Paris']['London'] = london_paris
@@ -30,3 +31,7 @@ distances['London']['Paris'] = london_paris
 
 pprint(distances)
 # Почему вывод начинается с Лондона ? сортировка по имени?
+# особенность pprint
+# на самом деле словарь - неупорядоченная коллекция объектов
+
+#зачет!
