@@ -52,12 +52,12 @@ table_0 = store[goods['Стол']][0]
 table_1 = store[goods['Стол']][1]
 table_total_q = table_0['quantity'] + table_1['quantity']
 table_cost = table_0['quantity'] * table_0['price'] + table_1['quantity'] * table_1['price']
-print('Столов -', table_total_q , 'шт, стоимость', table_cost, 'руб')
+print('Столов -', table_total_q, 'шт, стоимость', table_cost, 'руб')
 
 couch_0 = store[goods['Диван']][0]
 couch_1 = store[goods['Диван']][1]
 couch_total_q = couch_0['quantity'] + couch_1['quantity']
-couch_cost = couch_0['quantity'] *couch_0['price'] + couch_1[
+couch_cost = couch_0['quantity'] * couch_0['price'] + couch_1[
     'quantity'] * couch_1['price']
 print('Диванов -', couch_total_q, 'шт, стоимость', couch_cost, 'руб')
 
