@@ -11,4 +11,5 @@ result = (1 + 2) * 3
 print(result)
 
 result = ((1 + 2) / 3 + 4) * 5
-print(int(result))
+print(int(result))  # TODO иногда явное приведение делать полезно и нужно, но в этом случае - это лишнее
+
