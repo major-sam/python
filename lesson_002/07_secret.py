@@ -20,9 +20,12 @@ secret_message = [
 #
 # Требуется задать конкретные индексы, например secret_message[3][12:23:4]
 # Если нужны вычисления и разные пробы - делайте это в консоли пайтона, тут нужен только результат
-secret_line_4 = secret_message[3][7:13]
-reversed4 = secret_line_4[::-1]  # TODO эти две операции можно совместить, записав срез сразу как [x:y:-1]
-secret_line_5 = secret_message[4][16:21]
-reversed5 = secret_line_5[::-1]  # TODO это же касается этих двух операций, совместите их в одну
-# TODO кроме того, корректнее будеть сложить получившиеся строки в отдельной переменной и вывести её в print()
-print(secret_message[0][3], secret_message[1][9:13], secret_message[2][5:14:2], reversed4, reversed5)
+secret_line_4 = secret_message[3][12:6:-1]
+secret_line_5 = secret_message[4][20:15:-1]
+
+message = secret_message[0][3]
+message += " " + secret_message[1][9:13]
+message += " " + secret_message[2][5:14:2]
+message += " " + secret_line_4
+message += " " + secret_line_5
+print(message)
