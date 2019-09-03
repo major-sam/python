@@ -41,6 +41,6 @@ violator_songs_dict = {
 # TODO но зачастую лучше использовать обращение по ключу violator_songs_dict['Sweetest Perfection']
 # TODO разница в том, что если мы совершим опечатку в ключе, get() не выдаст нам ошибку и мы можем её пропустить.
 # TODO в целом задание выполнено верно, но сделайте ещё вариант с получением значения прямо по ключу (без .get())
-summ1 = round(violator_songs_dict.get('Sweetest Perfection') + violator_songs_dict.get(
-    'Policy of Truth') + violator_songs_dict.get('Blue Dress'), 2)
+summ1 = round(violator_songs_dict['Sweetest Perfection'] + violator_songs_dict[
+    'Policy of Truth'] + violator_songs_dict['Blue Dress'], 2)
 print('А другие три песни звучат', summ1, 'минут')
