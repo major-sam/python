@@ -64,7 +64,7 @@ print('Диванов -', couch_total_q, 'шт, стоимость', couch_cost,
 cheir_0 = store[goods['Стул']][0]
 cheir_1 = store[goods['Стул']][1]
 cheir_2 = store[goods['Стул']][2]
-cheir_total_q =  cheir_0['quantity'] + cheir_1['quantity'] + cheir_2['quantity']
+cheir_total_q = cheir_0['quantity'] + cheir_1['quantity'] + cheir_2['quantity']
 cheir_cost = cheir_0['quantity'] * cheir_0['price'] + cheir_1['quantity'] * cheir_1['price'] + cheir_2['quantity'] * \
              cheir_2['price']
 print('Стульев -', cheir_total_q, 'шт, стоимость', cheir_cost, 'руб')
@@ -74,3 +74,5 @@ print('Стульев -', cheir_total_q, 'шт, стоимость', cheir_cost,
 # и оформить попытку сдачи ДЗ! Без этого ДЗ не будет проверяться!                        #
 # Как оформить попытку сдачи смотрите видео - https://youtu.be/qVpN0L-C3LU               #
 ##########################################################################################
+
+#зачет!
