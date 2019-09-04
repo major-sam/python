@@ -54,10 +54,11 @@ store = {
 #         подсчет стоимости товара
 #     вывод на консоль количества и стоимости товара на складе
 
-# TODO здесь ваш код
-
-
-
-
-
-
+for names in goods:
+    count, price = 0, 0
+    goods_id = goods[names]
+    cut_store = store[goods_id]
+    for _ in cut_store:
+        price += _['quantity'] * _['price']
+        count += _['quantity']
+    print(names, '-', count, 'шт, стоимость', price, 'руб')
