@@ -58,7 +58,9 @@ for names in goods:
     count, price = 0, 0
     goods_id = goods[names]
     cut_store = store[goods_id]
-    for _ in cut_store:
-        price += _['quantity'] * _['price']
-        count += _['quantity']
+    for item in cut_store:  # "_" тут совсем не подходит, с item гораздо понятнее будет
+        price += item['quantity'] * item['price']
+        count += item['quantity']
     print(names, '-', count, 'шт, стоимость', price, 'руб')
+
+#зачет!

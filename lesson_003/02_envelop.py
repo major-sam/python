@@ -66,3 +66,5 @@ if True in [side_xy, side_xz, side_yx, side_yz, side_zx, side_zy]:
     print('ДА')
 else:
     print('НЕТ')
+# Отличное решение! :)
+#зачет!

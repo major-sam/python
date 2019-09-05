@@ -9,7 +9,7 @@ import simple_draw as sd
 # Вывести 10 смайликов в произвольных точках экрана.
 
 
-def smile(color):
+def smile(color):  # TODO в условиях это сказано немного противоречиво, но функция должна ещё принимать параметру X,Y
     center_x = sd.random_number(100, 500)
     center_y = sd.random_number(100, 500)
     center = sd.get_point(center_x, center_y)
@@ -30,6 +30,8 @@ def smile(color):
     right_eye_end = sd.get_point(right_eye_x + 30, right_eye_y)
     sd.line(right_eye_start, right_eye_end, width=2, color=color)
 
+
 for _ in range(10):
     smile(sd.random_color())
 sd.pause()
+# А в целом, отличная работа, в который раз! :)
