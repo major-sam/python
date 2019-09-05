@@ -13,7 +13,7 @@ educational_grant, expenses = 10000, 12000
 month, additional_expenses = 1, .03
 income_miss = expenses - educational_grant
 while month < 10:
-    expenses = expenses + expenses * additional_expenses
-    income_miss = income_miss + expenses - educational_grant
+    expenses += expenses * additional_expenses  # немного упростил запись
+    income_miss += expenses - educational_grant  # и тут
     month += 1
-print('Студенту надо попросить', income_miss, 'рублей')
+print('Студенту надо попросить', income_miss, 'рублей')  # TODO у ответа не хватает округления (ХХХ.ХХ рублей)
