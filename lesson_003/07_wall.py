@@ -5,16 +5,22 @@ import simple_draw as sd
 
 # Нарисовать стену из кирпичей. Размер кирпича - 100х50
 # Использовать вложенные циклы for
+# shift = 0
+# for y in range(0, 601, 50):
+#     start_y = sd.get_point(0, y)
+#     end_y = sd.get_point(601, y)
+#     sd.line(start_y, end_y, width=2, color=sd.COLOR_DARK_YELLOW)
+#     for x in range(shift, 601 - shift, 100):
+#         start_x = sd.get_point(x, y-50)
+#         end_x = sd.get_point(x, y)
+#         sd.line(start_x, end_x, width=3, color=sd.COLOR_DARK_YELLOW)
+#     shift -= 50
 shift = 0
 for y in range(0, 601, 50):
-    start_y = sd.get_point(0, y)
-    end_y = sd.get_point(601, y)
-    sd.line(start_y, end_y, width=2, color=sd.COLOR_DARK_YELLOW)
     for x in range(shift, 601 - shift, 100):
-        start_x = sd.get_point(x, y-50)
-        end_x = sd.get_point(x, y)
-        sd.line(start_x, end_x, width=3, color=sd.COLOR_DARK_YELLOW)
+        start_x = sd.get_point(x, y)
+        end_x = sd.get_point(x + 100, y + 50)
+        sd.rectangle(start_x, end_x, width=1)
     shift -= 50
-# TODO с линиями вышло неплохо, но попробуйте использовать sd.rectangle(), должно получиться проще
 
 sd.pause()
