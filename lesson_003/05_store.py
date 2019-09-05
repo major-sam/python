@@ -54,11 +54,11 @@ store = {
 #         подсчет стоимости товара
 #     вывод на консоль количества и стоимости товара на складе
 
-for names in goods:
+for names in goods:  # TODO используйте метод .items() для словаря и заводите цикл по двум переменным
     count, price = 0, 0
-    goods_id = goods[names]
-    cut_store = store[goods_id]
-    for _ in cut_store:
-        price += _['quantity'] * _['price']
-        count += _['quantity']
+    goods_id = goods[names]  # TODO это позволит избавиться от лишней переменной
+    cut_store = store[goods_id]  # TODO и сразу передать сюда нужный id
+    for item in cut_store:  # "_" тут совсем не подходит, с item гораздо понятнее будет
+        price += item['quantity'] * item['price']
+        count += item['quantity']
     print(names, '-', count, 'шт, стоимость', price, 'руб')

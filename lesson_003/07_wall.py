@@ -15,6 +15,6 @@ for y in range(0, 601, 50):
         end_x = sd.get_point(x, y)
         sd.line(start_x, end_x, width=3, color=sd.COLOR_DARK_YELLOW)
     shift -= 50
-
+# TODO с линиями вышло неплохо, но попробуйте использовать sd.rectangle(), должно получиться проще
 
 sd.pause()

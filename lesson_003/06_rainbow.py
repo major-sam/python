@@ -28,3 +28,5 @@ for colors in rainbow_colors:
     sd.circle(center_position=center, radius=radius, color=colors, width=rainbow_width)
     radius -= rainbow_step
 sd.pause()
+# Отличная работа! :)
+#зачет!

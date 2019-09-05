@@ -62,7 +62,9 @@ side_yz = (brick_y <= hole_x and brick_z <= hole_y)
 side_zx = (brick_z <= hole_x and brick_x <= hole_y)
 side_xz = (brick_x <= hole_x and brick_z <= hole_y)
 
-if True in [side_xy, side_xz, side_yx, side_yz, side_zx, side_zy]:
-    print('ДА')
+if True in [side_xy, side_xz, side_yx, side_yz, side_zx, side_zy]:  # можно True in было бы заменить на any()
+    print('ДА')  # это встроенные метод, проверяющий выполнение хотя бы одного условия из списка
 else:
     print('НЕТ')
+# Отличное решение! :)
+#зачет!
