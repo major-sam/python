@@ -17,13 +17,6 @@ def triangle(triangle_start, angle, length):
     side_c.draw()
 
 
-point_1 = sd.get_point(100, 100)
-point_2 = sd.get_point(100, 400)
-point_3 = sd.get_point(400, 100)
-point_4 = sd.get_point(400, 400)
-triangle(triangle_start=point_1, angle=321, length=100)
-
-
 # - квадрата
 
 def quadro(quadro_start, angle, length):
@@ -35,9 +28,6 @@ def quadro(quadro_start, angle, length):
     side_c.draw()
     side_d = sd.get_vector(start_point=side_c.end_point, angle=angle + 270, length=length)
     side_d.draw()
-
-
-quadro(quadro_start=point_2, angle=10, length=100)
 
 
 # - пятиугольника
@@ -53,8 +43,6 @@ def pento(pento_start, angle, length):
     side_e = sd.get_vector(start_point=side_d.end_point, angle=angle + 288, length=length)
     side_e.draw()
 
-
-pento(pento_start=point_3, angle=22, length=100)
 
 # - шестиугольника
 def hexagon(hexagon_start, angle, length):
@@ -72,7 +60,16 @@ def hexagon(hexagon_start, angle, length):
     side_f.draw()
 
 
-hexagon(hexagon_start=point_4, angle=0, length=100)
+point_1 = sd.get_point(100, 100)
+point_2 = sd.get_point(100, 400)
+point_3 = sd.get_point(400, 100)
+point_4 = sd.get_point(400, 400)
+triangle(triangle_start=point_1, angle=321, length=100)
+quadro(quadro_start=point_2, angle=10, length=100)
+pento(pento_start=point_3, angle=22, length=100)
+
+
+# hexagon(hexagon_start=point_4, angle=0, length=100)
 
 
 # Все функции должны принимать 3 параметра:
@@ -117,6 +114,22 @@ hexagon(hexagon_start=point_4, angle=0, length=100)
 # А теперь - сколько надо работы что бы внести изменения в код? Выгода на лицо :)
 # Поэтому среди программистов есть принцип D.R.Y. https://clck.ru/GEsA9
 # Будьте ленивыми, не используйте копи-пасту!
-
+#
+# def circul_vector(sides, start_point, additional_angle=0, length=100):
+#     if sides < 3:
+#         print('3+ sides needed for a figure')
+#         return
+#     base_angle = 360 / sides
+#     buffer_point = start_point
+#     for side in range(0, sides - 1):
+#         side_a = sd.get_vector(start_point=buffer_point, angle=additional_angle + base_angle * side, length=length)
+#         side_a.draw()
+#         buffer_point = side_a.end_point
+#     sd.line(buffer_point, start_point)
+#
+#
+# point = sd.get_point(200, 200)
+# circul_vector(12, point, 0, 100)
+# почему съезжает пиксель я без понятия - должно работать
 
 sd.pause()
