@@ -18,3 +18,4 @@ while month < 10:
     month += 1
 income_miss = round(income_miss, 2)
 print('Студенту надо попросить', income_miss, 'рублей')
+#зачет!

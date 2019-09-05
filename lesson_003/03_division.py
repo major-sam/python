@@ -16,3 +16,5 @@ while a - b_buffer >= 0:
     b_buffer = b * interaction_counter
 
 print(' Целочисленное деление', a, 'на', b, 'дает', interaction_counter)
+
+#зачет!

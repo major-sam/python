@@ -9,7 +9,7 @@ sd.resolution = (1200, 600)
 
 # point = sd.get_point(300,300)
 # radius = 50
-# for step in range(3):
+# for step in range(5):  # TODO тут 3 окружности, а не 5
 #     sd.circle(center_position=point, radius=radius, width=1)
 #     radius -= 5
 
