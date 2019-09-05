@@ -4,8 +4,14 @@ import simple_draw as sd
 
 sd.resolution = (1200, 600)
 
+
 # Нарисовать пузырек - три вложенных окружностей с шагом 5 пикселей
-# TODO нужно выполнить каждое задание ( код можно закомментировать, если мешается )
+
+# point = sd.get_point(300,300)
+# radius = 50
+# for step in range(5):
+#     sd.circle(center_position=point, radius=radius, width=1)
+#     radius -= 5
 
 # Написать функцию рисования пузырька, принммающую 2 (или более) параметра: точка рисовании и шаг
 def bubble(point, step, color):
@@ -16,15 +22,27 @@ def bubble(point, step, color):
 
 
 # Нарисовать 10 пузырьков в ряд
-# TODO это тоже нужно выполнить
+
+# for x_position in range(100, 1001, 100):
+#     point = sd.get_point(x_position, 300)
+#     bubble(point=point, step=3, color=sd.COLOR_DARK_CYAN)
+
 # Нарисовать три ряда по 10 пузырьков
-# TODO и это
+# for y_position in range(100, 301, 100):
+#     for x_position in range(100, 1001, 100):
+#         point = sd.get_point(x_position, y_position)
+#         bubble(point=point, step=3, color=sd.COLOR_DARK_CYAN)
+
 
 # Нарисовать 100 пузырьков в произвольных местах экрана случайными цветами
-for _ in range(100):
-    point = sd.random_point()
-    color = sd.random_color()
-    bubble(point, step=3, color=color)
+# def bubble(point, step, color):
+#     radius = 50
+#     for _ in range(3):
+#         sd.circle(center_position=point, radius=radius, color=color, width=1)
+#         radius -= step
+# for _ in range(100):
+#     point = sd.random_point()
+#     color = sd.random_color()
+#     bubble(point, step=3, color=color)
 
 sd.pause()
-# TODO последнее задание со 100 пузырьками сделано верно :) хорошая работа, но жду код и остальных частей
