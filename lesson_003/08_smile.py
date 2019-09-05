@@ -37,3 +37,5 @@ for _ in range(10):
     smile(center_a, center_b, sd.random_color())
 sd.pause()
 # А в целом, отличная работа, в который раз! :)
+
+#зачет!

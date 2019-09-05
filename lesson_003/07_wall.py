@@ -24,3 +24,4 @@ for y in range(0, 601, 50):
     shift -= 50
 
 sd.pause()
+#зачет!
