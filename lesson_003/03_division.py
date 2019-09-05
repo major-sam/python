@@ -10,9 +10,9 @@
 #   Целочисленное деление ХХХ на YYY дает ZZZ
 
 a, b = 179, 37
-i, j = 1, 0  # TODO постарайтесь придумать полезные имена для этих переменных
-while a - j >= 0:
-    i += 1
-    j = b * i
+interaction_counter, b_buffer = 1, 0
+while a - b_buffer >= 0:
+    interaction_counter += 1
+    b_buffer = b * interaction_counter
 
-print(' Целочисленное деление', a, 'на', b, 'дает', i)
+print(' Целочисленное деление', a, 'на', b, 'дает', interaction_counter)
