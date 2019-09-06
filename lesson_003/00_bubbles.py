@@ -46,3 +46,4 @@ def bubble(point, step, color):
 #     bubble(point, step=3, color=color)
 
 sd.pause()
+#зачет!

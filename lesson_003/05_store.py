@@ -62,3 +62,4 @@ for goods_name, goods_id in goods.items():
         count += item['quantity']
     print(goods_name, '-', count, 'шт, стоимость', price, 'руб')
 
+#зачет!
