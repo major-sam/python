@@ -20,3 +20,5 @@ elif month in [2, 4, 6, 9, 11]:
 else:
     print(month, '- неверный номер месяца')
 print('Кол-во дней в месяце', days_in_month)
+
+#зачет!
