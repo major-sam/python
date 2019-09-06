@@ -14,7 +14,7 @@ import simple_draw as sd
 # и константы COLOR_RED, COLOR_ORANGE, COLOR_YELLOW, COLOR_GREEN, COLOR_CYAN, COLOR_BLUE, COLOR_PURPLE
 # Результат решения см lesson_004/results/exercise_02_global_color.jpg
 
-print('Возможные цвета\n'
+print('Возможные цвета\n'  # TODO чтобы сократить количество кода, попробуйте эту информацию добавить в словарь ниже
       '0 : red\n'
       '1 : orange\n'
       '2 : yellow\n'
@@ -23,7 +23,7 @@ print('Возможные цвета\n'
       '5 : blue\n'
       '6 : purple\n')
 
-colors = {
+colors = {  # TODO а затем информацию из словаря выводите пользователю внутри while, перед input-ом
     '0': sd.COLOR_RED,
     '1': sd.COLOR_ORANGE,
     '2': sd.COLOR_YELLOW,
@@ -39,6 +39,8 @@ while user_input not in colors:
     user_input = input('Выберете цвет фигур\n')
 user_color = colors[user_input]
 
+# TODO используйте код из 2ой части 01 задания (после правок)
+# TODO и желательно задавать функции в начале файле, а рабочий код писать после них
 
 def triangle(triangle_start, angle, length, color):
     side_a = sd.get_vector(start_point=triangle_start, angle=angle, length=length)

@@ -30,6 +30,7 @@ import simple_draw as sd
 #         return
 #     v1 = sd.get_vector(start_point=start_point, angle=br_angle , length=br_length, width=1)
 #     v1.draw()
+# TODO второй вектор будет лишним, начинается из той же точки, на ту же длину
 #     v2 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
 #     v2.draw()
 #     right_angle = br_angle - 30
@@ -61,10 +62,11 @@ import simple_draw as sd
 # Возможный результат решения см lesson_004/results/exercise_04_fractal_02.jpg
 
 def draw_branches(start_point, br_angle, br_length):
-    if br_length < 10:  # лучше будет с 1
+    if br_length < 10:  # лучше будет с 1 - да, красиво :) а ещё было бы здорово толщину добавить (по желанию)
         return
     v1 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
     v1.draw()
+    # TODO этот вектор уже будет лишним, он ведь начинается из той же точки, с тем же углом
     v2 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
     v2.draw()
     length_delta = sd.random_number(80, 120)/100    #В обе стороны 20%
