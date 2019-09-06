@@ -17,16 +17,16 @@ sd.resolution = (1200, 600)
 #     snowflake_size = sd.random_number(10, 100)
 #     snowflake_y = sd.random_number(500, 600)
 #     snowflake_x = sd.random_number(100, 1100)
-#     random_snowflake_on_air.update({snow: [
-#         {'size': snowflake_size,
-#          'x': snowflake_x,
+#     random_snowflake_on_air.update({snow: [  # TODO да, словарь удобен для хранения 3 параметров объекта
+#         {'size': snowflake_size,  # TODO но в списки удобнее добавлять/удалять параметры
+#          'x': snowflake_x,  # TODO что позволит вам упростить код ниже
 #          'y': snowflake_y}
 #     ]})
 #
 # while True:
-#     sd.clear_screen()
-#     for snowflake_in_air_id in range(N):
-#         snowflake_shift_y = sd.random_number(1, 10)
+#     sd.clear_screen()  # TODO попробуйте использовать подсказку для ускорения отрисовки, которая описана ниже
+#     for snowflake_in_air_id in range(N):  # TODO лучше не проходить ни по спискам, ни по словарям подобным методом
+#         snowflake_shift_y = sd.random_number(1, 10)  # TODO можно было бы использовать .items(), вышло бы короче
 #         snow_in_air = random_snowflake_on_air[snowflake_in_air_id]
 #         for snowflake_in_air in snow_in_air:
 #             snowflake_in_air['y'] -= snowflake_shift_y
@@ -66,7 +66,7 @@ sd.resolution = (1200, 600)
 # - сделать сугоб внизу экрана - если снежинка долетает до низа, оставлять её там,
 #   и добавлять новую снежинку
 # Результат решения см https://youtu.be/XBx0JtxHiLg
-
+# TODO правки в первой части отразятся и на второй, со списками этот код нужно будет упростить
 N = 20
 snowflake_on_flore_count = 0
 random_snowflake_on_air = {}
@@ -82,7 +82,7 @@ for snow in range(N):
     ]})
 
 while True:
-    sd.clear_screen()
+    sd.clear_screen()  # TODO кроме ускорения, подсказка позволит не отрисовывать сугробы в каждой итерации
     for snowflake_on_flore_id in range(snowflake_on_flore_count):
         snow_on_floor = random_snowflake_on_floor[snowflake_on_flore_id]
         for snowflake_on_floor in snow_on_floor:

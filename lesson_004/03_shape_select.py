@@ -87,16 +87,20 @@ while user_color_input not in colors:
     user_color_input = input('Выберете цвет фигур\n')
 user_color = colors[user_color_input]
 
-print('Возможные фигуры\n'
-      '0 : треугольник\n'
+print('Возможные фигуры\n'  # TODO здесь та же идея, попробуйте скомпоновать всю информацию
+      '0 : треугольник\n'  # TODO вместе с функциями, в словарь. 
       '1 : квадрат\n'
       '2 : пятиугольник\n'
       '3 : шестиугольник\n')
+
 user_figure_input = input('Выберете фигуру\n')
+
 while int(user_figure_input) not in range(4):
     print('Вы ввели некоректный номер', user_figure_input)
     user_figure_input = input('Выберете фигуру\n')
+
 midpoint = sd.get_point(200, 300)
+# TODO так же, из словаря можно будет вызвать нужную функцию за пару строк
 if user_figure_input == '0':
     triangle(triangle_start=midpoint, angle=321, length=100, color=user_color)
     sd.pause()
@@ -109,5 +113,3 @@ elif user_figure_input == '2':
 elif user_figure_input == '3':
     hexagon(hexagon_start=midpoint, angle=22, length=100, color=user_color)
     sd.pause()
-
-
