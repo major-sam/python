@@ -105,18 +105,20 @@ while user_input not in colors.keys():
 user_color = colors[user_input]['sd_color']
 
 print('Возможные фигуры\n')
-shapes = {
-    '0': 'треугольник',
-    '1': 'квадрат',
+shapes = {  # TODO здесь лучше создать словарь по примеру словаря с цветами
+    '0': 'треугольник',  # TODO только вместо цветов добафить функции, рисующие нужную фигуру
+    '1': 'квадрат',  # TODO тут вот будет функция для рисования квадрата :)
     '2': 'пятиугольник',
     '3': 'шестиугольник'
 }
 for shape_id, shape_name in shapes.items():
     print(shape_id, ':', shape_name)
+
 midpoint = sd.get_point(200, 300)
 user_shape = input('Выберете фигуру\n')
 while user_shape not in shapes.keys():
     print('Вы ввели некоректный номер', user_shape)
     user_shape = input('Выберете фигуру\n')
+# TODO хорошо, но нужно будет глянуть на результат с измененной функцией 01
 choosing_figure(user_shape, midpoint, 321, 100, color=user_color)
 sd.pause()

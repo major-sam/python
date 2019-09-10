@@ -8,8 +8,7 @@ sd.resolution = (1200, 600)
 # - создать списки данных для отрисовки N снежинок
 # - нарисовать падение этих N снежинок
 # - создать список рандомных длинн лучей снежинок (от 10 до 100) и пусть все снежинки будут разные
-
-#
+# TODO использовать списки вместо словаря 3 списка, по 1 на каждый параметр
 # N = 20
 # snowflake_on_flore_count = 0
 # random_snowflake_on_air = {}
@@ -48,8 +47,6 @@ sd.resolution = (1200, 600)
 # sd.user_want_exit()
 
 
-
-
 # подсказка! для ускорения отрисовки можно
 #  - убрать clear_screen()
 #  - в начале рисования всех снежинок вызвать sd.start_drawing()
@@ -64,6 +61,7 @@ sd.resolution = (1200, 600)
 # - сделать сугоб внизу экрана - если снежинка долетает до низа, оставлять её там,
 #   и добавлять новую снежинку
 # Результат решения см https://youtu.be/XBx0JtxHiLg
+# TODO это лишний код? Если он не нужен - надо удалить
 # N = 20
 # snowflake_on_flore_count = 0
 # random_snowflake_on_air = {}
@@ -115,11 +113,11 @@ sd.resolution = (1200, 600)
 
 N = 20
 snowflake_on_flore_count = 0
-random_snowflake_on_air = {}
+random_snowflake_on_air = {}  # TODO вместо словаря 3 списка
 for snow in range(N):
-    snowflake_size = sd.random_number(10, 100)
-    snowflake_y = sd.random_number(500, 600)
-    snowflake_x = sd.random_number(100, 1100)
+    snowflake_size = sd.random_number(10, 100)  # TODO список для этих значений
+    snowflake_y = sd.random_number(500, 600)  # TODO список для этих
+    snowflake_x = sd.random_number(100, 1100)  # TODO и для этих(значения будут связаны одним индексом)
     random_snowflake_on_air.update({snow: [snowflake_size, snowflake_x, snowflake_y]})
 
 while True:
@@ -127,15 +125,20 @@ while True:
         snowflake_shift_y = sd.random_number(1, 10)
         snowflake_shift_x = sd.random_number(-10, 10)
         buffer_point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2])
-        point = sd.get_point(snowflake_in_air_param[1] - snowflake_shift_x, snowflake_in_air_param[2] - snowflake_shift_y)
-        sd.start_drawing()
+        # TODO если точку point определить после
+        # TODO snowflake_in_air_param[1] -= snowflake_shift_x
+        # TODO snowflake_in_air_param[2] -= snowflake_shift_y
+        # TODO то не нужно будет дублировать эти вычисления
+        point = sd.get_point(snowflake_in_air_param[1] - snowflake_shift_x,
+                             snowflake_in_air_param[2] - snowflake_shift_y)
+        sd.start_drawing()  # TODO это можно вынести перед for
         sd.snowflake(center=buffer_point, length=snowflake_in_air_param[0], color=sd.background_color)
         snowflake_in_air_param[1] -= snowflake_shift_x
         snowflake_in_air_param[2] -= snowflake_shift_y
-        sd.start_drawing()
+        sd.start_drawing()  # TODO это лишнее
         sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.COLOR_WHITE)
-        if snowflake_in_air_param[2] <= snowflake_in_air_param[0]:
-            snowflake_in_air_param[2] = sd.random_number(500, 600)
+        if snowflake_in_air_param[2] <= snowflake_in_air_param[0]:  # TODO при достижении земли, снежинку
+            snowflake_in_air_param[2] = sd.random_number(500, 600)  # TODO надо будет добавить в списки
             snowflake_in_air_param[1] = sd.random_number(100, 1100)
             snowflake_in_air_param[0] = sd.random_number(10, 100)
     sd.finish_drawing()
