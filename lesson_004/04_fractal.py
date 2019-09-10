@@ -30,13 +30,12 @@ import simple_draw as sd
 #         return
 #     v1 = sd.get_vector(start_point=start_point, angle=br_angle , length=br_length, width=1)
 #     v1.draw()
-# TODO второй вектор будет лишним, начинается из той же точки, на ту же длину
 #     v2 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
 #     v2.draw()
 #     right_angle = br_angle - 30
 #     left_angle = br_angle + 30
 #     next_point = {right_angle: v1.end_point,
-#                   left_angle: v2.end_point}
+#                   left_angle: v1.end_point}
 #     br_length = br_length * .75
 #     for angle_switch, point_xy in next_point.items():
 #         draw_branches(start_point=point_xy, br_angle=angle_switch, br_length=br_length)
@@ -61,24 +60,20 @@ import simple_draw as sd
 # - сделать рандомное отклонение длины ветвей в пределах 20% от коэффициента 0.75
 # Возможный результат решения см lesson_004/results/exercise_04_fractal_02.jpg
 
-def draw_branches(start_point, br_angle, br_length):
+def draw_branches(start_point, br_angle, br_length, br_width=1):
     if br_length < 10:  # лучше будет с 1 - да, красиво :) а ещё было бы здорово толщину добавить (по желанию)
         return
-    v1 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
+    v1 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=br_width)
     v1.draw()
-    # TODO этот вектор уже будет лишним, он ведь начинается из той же точки, с тем же углом
-    v2 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
-    v2.draw()
-    length_delta = sd.random_number(80, 120)/100    #В обе стороны 20%
-    angle_delta = sd.random_number(60, 140)/100     #В обе стороны 40%
+    length_delta = sd.random_number(80, 120) / 100  # В обе стороны 20%
+    angle_delta = sd.random_number(60, 140) / 100  # В обе стороны 40%
     right_angle = br_angle - 30 * angle_delta
     left_angle = br_angle + 30 * angle_delta
     next_point = {right_angle: v1.end_point,
-                  left_angle: v2.end_point}
+                  left_angle: v1.end_point}
     br_length = br_length * .75 * length_delta
-
     for angle_switch, point_xy in next_point.items():
-        draw_branches(start_point=point_xy, br_angle=angle_switch, br_length=br_length)
+        draw_branches(start_point=point_xy, br_angle=angle_switch, br_length=br_length, br_width=br_width)
 
 
 root_point = sd.get_point(300, 30)

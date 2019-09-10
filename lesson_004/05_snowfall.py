@@ -17,40 +17,38 @@ sd.resolution = (1200, 600)
 #     snowflake_size = sd.random_number(10, 100)
 #     snowflake_y = sd.random_number(500, 600)
 #     snowflake_x = sd.random_number(100, 1100)
-#     random_snowflake_on_air.update({snow: [  # TODO да, словарь удобен для хранения 3 параметров объекта
-#         {'size': snowflake_size,  # TODO но в списки удобнее добавлять/удалять параметры
-#          'x': snowflake_x,  # TODO что позволит вам упростить код ниже
-#          'y': snowflake_y}
-#     ]})
+#     random_snowflake_on_air.update({snow: [snowflake_size, snowflake_x, snowflake_y]})
 #
 # while True:
-#     sd.clear_screen()  # TODO попробуйте использовать подсказку для ускорения отрисовки, которая описана ниже
-#     for snowflake_in_air_id in range(N):  # TODO лучше не проходить ни по спискам, ни по словарям подобным методом
-#         snowflake_shift_y = sd.random_number(1, 10)  # TODO можно было бы использовать .items(), вышло бы короче
-#         snow_in_air = random_snowflake_on_air[snowflake_in_air_id]
-#         for snowflake_in_air in snow_in_air:
-#             snowflake_in_air['y'] -= snowflake_shift_y
-#             snowflake_in_air['x'] += snowflake_shift_x
-#             point = sd.get_point(snowflake_in_air['x'], snowflake_in_air['y'])
-#             sd.snowflake(center=point, length=snowflake_in_air['size'])
-#             if snowflake_in_air['y'] <= snowflake_in_air['size']:
-#                 snowflake_in_air['y'] = sd.random_number(500, 600)
-#                 snowflake_in_air['x'] = sd.random_number(100, 1100)
-#                 snowflake_in_air['size'] = sd.random_number(10, 100)
-#
+#     for snowflake_in_air_id, snowflake_in_air_param in random_snowflake_on_air.items():
+#         snowflake_shift_y = sd.random_number(1, 10)
+#         buffer_point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2])
+#         point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2] - snowflake_shift_y)
+#         sd.start_drawing()
+#         sd.snowflake(center=buffer_point, length=snowflake_in_air_param[0], color=sd.background_color)
+#         snowflake_in_air_param[2] -= snowflake_shift_y
+#         sd.start_drawing()
+#         sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.COLOR_WHITE)
+#         if snowflake_in_air_param[2] <= snowflake_in_air_param[0]:
+#             sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.background_color)
+#             snowflake_in_air_param[2] = sd.random_number(500, 600)
+#             snowflake_in_air_param[1] = sd.random_number(100, 1100)
+#             snowflake_in_air_param[0] = sd.random_number(10, 100)
+#     sd.finish_drawing()
 #     sd.sleep(0.1)
 #     if sd.user_want_exit():
 #         break
-
+#
+# sd.pause()
 # Пригодятся функции
 # sd.get_point()
 # sd.snowflake()
 # sd.sleep()
 # sd.random_number()
 # sd.user_want_exit()
-#
-#
-# sd.pause()
+
+
+
 
 # подсказка! для ускорения отрисовки можно
 #  - убрать clear_screen()
@@ -66,52 +64,83 @@ sd.resolution = (1200, 600)
 # - сделать сугоб внизу экрана - если снежинка долетает до низа, оставлять её там,
 #   и добавлять новую снежинку
 # Результат решения см https://youtu.be/XBx0JtxHiLg
-# TODO правки в первой части отразятся и на второй, со списками этот код нужно будет упростить
+# N = 20
+# snowflake_on_flore_count = 0
+# random_snowflake_on_air = {}
+# random_snowflake_on_floor = {}
+# for snow in range(N):
+#     snowflake_size = sd.random_number(10, 100)
+#     snowflake_y = sd.random_number(500, 600)
+#     snowflake_x = sd.random_number(100, 1100)
+#     random_snowflake_on_air.update({snow: [
+#         {'size': snowflake_size,
+#          'x': snowflake_x,
+#          'y': snowflake_y}
+#     ]})
+#
+# while True:
+#     sd.clear_screen()
+#     for snowflake_on_flore_id in range(snowflake_on_flore_count):
+#         snow_on_floor = random_snowflake_on_floor[snowflake_on_flore_id]
+#         for snowflake_on_floor in snow_on_floor:
+#             point = sd.get_point(snowflake_on_floor['x'], snowflake_on_floor['y'])
+#             sd.snowflake(center=point, length=snowflake_on_floor['size'])
+#     for snowflake_in_air_id in range(N):
+#         snowflake_shift_y = sd.random_number(1, 10)
+#         snowflake_shift_x = sd.random_number(-10, 10)
+#         snow_in_air = random_snowflake_on_air[snowflake_in_air_id]
+#         for snowflake_in_air in snow_in_air:
+#             snowflake_in_air['y'] -= snowflake_shift_y
+#             snowflake_in_air['x'] += snowflake_shift_x
+#             point = sd.get_point(snowflake_in_air['x'], snowflake_in_air['y'])
+#             sd.snowflake(center=point, length=snowflake_in_air['size'])
+#             if snowflake_in_air['y'] <= snowflake_in_air['size']:
+#                 snowflake_on_floor_size = snowflake_in_air['size']
+#                 snowflake_on_floor_y = snowflake_in_air['y'] + 5
+#                 snowflake_on_floor_x = snowflake_in_air['x']
+#                 random_snowflake_on_floor.update({snowflake_on_flore_count: [
+#                     {'size': snowflake_on_floor_size,
+#                      'x': snowflake_on_floor_x,
+#                      'y': snowflake_on_floor_y}
+#                 ]})
+#                 snowflake_on_flore_count += 1
+#                 snowflake_in_air['y'] = sd.random_number(500, 600)
+#                 snowflake_in_air['x'] = sd.random_number(100, 1100)
+#                 snowflake_in_air['size'] = sd.random_number(10, 100)
+#
+#     sd.sleep(0.1)
+#     if sd.user_want_exit():
+#         break
+# sd.pause()
+
 N = 20
 snowflake_on_flore_count = 0
 random_snowflake_on_air = {}
-random_snowflake_on_floor = {}
 for snow in range(N):
     snowflake_size = sd.random_number(10, 100)
     snowflake_y = sd.random_number(500, 600)
     snowflake_x = sd.random_number(100, 1100)
-    random_snowflake_on_air.update({snow: [
-        {'size': snowflake_size,
-         'x': snowflake_x,
-         'y': snowflake_y}
-    ]})
+    random_snowflake_on_air.update({snow: [snowflake_size, snowflake_x, snowflake_y]})
 
 while True:
-    sd.clear_screen()  # TODO кроме ускорения, подсказка позволит не отрисовывать сугробы в каждой итерации
-    for snowflake_on_flore_id in range(snowflake_on_flore_count):
-        snow_on_floor = random_snowflake_on_floor[snowflake_on_flore_id]
-        for snowflake_on_floor in snow_on_floor:
-            point = sd.get_point(snowflake_on_floor['x'], snowflake_on_floor['y'])
-            sd.snowflake(center=point, length=snowflake_on_floor['size'])
-    for snowflake_in_air_id in range(N):
+    for snowflake_in_air_id, snowflake_in_air_param in random_snowflake_on_air.items():
         snowflake_shift_y = sd.random_number(1, 10)
         snowflake_shift_x = sd.random_number(-10, 10)
-        snow_in_air = random_snowflake_on_air[snowflake_in_air_id]
-        for snowflake_in_air in snow_in_air:
-            snowflake_in_air['y'] -= snowflake_shift_y
-            snowflake_in_air['x'] += snowflake_shift_x
-            point = sd.get_point(snowflake_in_air['x'], snowflake_in_air['y'])
-            sd.snowflake(center=point, length=snowflake_in_air['size'])
-            if snowflake_in_air['y'] <= snowflake_in_air['size']:
-                snowflake_on_floor_size = snowflake_in_air['size']
-                snowflake_on_floor_y = snowflake_in_air['y'] + 5
-                snowflake_on_floor_x = snowflake_in_air['x']
-                random_snowflake_on_floor.update({snowflake_on_flore_count: [
-                    {'size': snowflake_on_floor_size,
-                     'x': snowflake_on_floor_x,
-                     'y': snowflake_on_floor_y}
-                ]})
-                snowflake_on_flore_count += 1
-                snowflake_in_air['y'] = sd.random_number(500, 600)
-                snowflake_in_air['x'] = sd.random_number(100, 1100)
-                snowflake_in_air['size'] = sd.random_number(10, 100)
-
+        buffer_point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2])
+        point = sd.get_point(snowflake_in_air_param[1] - snowflake_shift_x, snowflake_in_air_param[2] - snowflake_shift_y)
+        sd.start_drawing()
+        sd.snowflake(center=buffer_point, length=snowflake_in_air_param[0], color=sd.background_color)
+        snowflake_in_air_param[1] -= snowflake_shift_x
+        snowflake_in_air_param[2] -= snowflake_shift_y
+        sd.start_drawing()
+        sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.COLOR_WHITE)
+        if snowflake_in_air_param[2] <= snowflake_in_air_param[0]:
+            snowflake_in_air_param[2] = sd.random_number(500, 600)
+            snowflake_in_air_param[1] = sd.random_number(100, 1100)
+            snowflake_in_air_param[0] = sd.random_number(10, 100)
+    sd.finish_drawing()
     sd.sleep(0.1)
     if sd.user_want_exit():
         break
+
 sd.pause()
