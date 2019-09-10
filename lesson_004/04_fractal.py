@@ -30,6 +30,7 @@ import simple_draw as sd
 #         return
 #     v1 = sd.get_vector(start_point=start_point, angle=br_angle , length=br_length, width=1)
 #     v1.draw()
+# TODO я не просто так TODO-шку тут писал :) v2 нужно удалить
 #     v2 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
 #     v2.draw()
 #     right_angle = br_angle - 30

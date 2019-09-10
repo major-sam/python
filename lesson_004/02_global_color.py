@@ -104,10 +104,11 @@ while user_input not in colors.keys():
     user_input = input('Выберете цвет фигур\n')
 user_color = colors[user_input]['sd_color']
 
-point_1 = sd.get_point(100, 100)
+point_1 = sd.get_point(100, 100)  # TODO эти точки можно напрямую в функции choosing_figure передавать
 point_2 = sd.get_point(100, 400)
 point_3 = sd.get_point(400, 100)
 point_4 = sd.get_point(400, 400)
+# TODO после изменений в 01, новую функцию надо будет использовать тут
 choosing_figure(0, point_1, 321, 100, color=user_color)
 choosing_figure(1, point_2, 321, 100, color=user_color)
 choosing_figure(2, point_3, 321, 100, color=user_color)
