@@ -2,42 +2,46 @@
 
 import simple_draw as sd
 
-sd.resolution = (1200, 600)
+sd.resolution = (1200, 800)
 
 # На основе кода из практической части реализовать снегопад:
 # - создать списки данных для отрисовки N снежинок
 # - нарисовать падение этих N снежинок
 # - создать список рандомных длинн лучей снежинок (от 10 до 100) и пусть все снежинки будут разные
-# TODO использовать списки вместо словаря 3 списка, по 1 на каждый параметр
 # N = 20
-# snowflake_on_flore_count = 0
-# random_snowflake_on_air = {}
+# random_snowflake_on_air_x = []
+# random_snowflake_on_air_y = []
+# random_snowflake_on_air_size = []
 # for snow in range(N):
-#     snowflake_size = sd.random_number(10, 100)
-#     snowflake_y = sd.random_number(500, 600)
-#     snowflake_x = sd.random_number(100, 1100)
-#     random_snowflake_on_air.update({snow: [snowflake_size, snowflake_x, snowflake_y]})
-#
+#     random_snowflake_on_air_size.append(sd.random_number(10, 100))
+#     random_snowflake_on_air_y.append(sd.random_number(500, 600))
+#     random_snowflake_on_air_x.append(sd.random_number(100, 1100))
 # while True:
-#     for snowflake_in_air_id, snowflake_in_air_param in random_snowflake_on_air.items():
+#     for snowflake_in_air_id in range(N):
 #         snowflake_shift_y = sd.random_number(1, 10)
-#         buffer_point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2])
-#         point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2] - snowflake_shift_y)
+#         buffer_point = sd.get_point(random_snowflake_on_air_x[snowflake_in_air_id],
+#                                     random_snowflake_on_air_y[snowflake_in_air_id])
 #         sd.start_drawing()
-#         sd.snowflake(center=buffer_point, length=snowflake_in_air_param[0], color=sd.background_color)
-#         snowflake_in_air_param[2] -= snowflake_shift_y
-#         sd.start_drawing()
-#         sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.COLOR_WHITE)
-#         if snowflake_in_air_param[2] <= snowflake_in_air_param[0]:
-#             sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.background_color)
-#             snowflake_in_air_param[2] = sd.random_number(500, 600)
-#             snowflake_in_air_param[1] = sd.random_number(100, 1100)
-#             snowflake_in_air_param[0] = sd.random_number(10, 100)
+#         sd.snowflake(center=buffer_point,
+#                      length=random_snowflake_on_air_size[snowflake_in_air_id],
+#                      color=sd.background_color)
+#         random_snowflake_on_air_y[snowflake_in_air_id] -= snowflake_shift_y
+#         point = sd.get_point(random_snowflake_on_air_x[snowflake_in_air_id],
+#                              random_snowflake_on_air_y[snowflake_in_air_id])
+#         sd.snowflake(center=point,
+#                      length=random_snowflake_on_air_size[snowflake_in_air_id],
+#                      color=sd.COLOR_WHITE)
+#         if random_snowflake_on_air_y[snowflake_in_air_id] <= random_snowflake_on_air_size[snowflake_in_air_id]:
+#             sd.snowflake(center=point,
+#                          length=random_snowflake_on_air_size[snowflake_in_air_id],
+#                          color=sd.background_color)
+#             random_snowflake_on_air_y[snowflake_in_air_id] = sd.random_number(500, 600)
+#             random_snowflake_on_air_x[snowflake_in_air_id] = sd.random_number(100, 1100)
+#             random_snowflake_on_air_size[snowflake_in_air_id] = sd.random_number(10, 100)
 #     sd.finish_drawing()
 #     sd.sleep(0.1)
 #     if sd.user_want_exit():
 #         break
-#
 # sd.pause()
 # Пригодятся функции
 # sd.get_point()
@@ -61,89 +65,46 @@ sd.resolution = (1200, 600)
 # - сделать сугоб внизу экрана - если снежинка долетает до низа, оставлять её там,
 #   и добавлять новую снежинку
 # Результат решения см https://youtu.be/XBx0JtxHiLg
-# TODO это лишний код? Если он не нужен - надо удалить
-# N = 20
-# snowflake_on_flore_count = 0
-# random_snowflake_on_air = {}
-# random_snowflake_on_floor = {}
-# for snow in range(N):
-#     snowflake_size = sd.random_number(10, 100)
-#     snowflake_y = sd.random_number(500, 600)
-#     snowflake_x = sd.random_number(100, 1100)
-#     random_snowflake_on_air.update({snow: [
-#         {'size': snowflake_size,
-#          'x': snowflake_x,
-#          'y': snowflake_y}
-#     ]})
-#
-# while True:
-#     sd.clear_screen()
-#     for snowflake_on_flore_id in range(snowflake_on_flore_count):
-#         snow_on_floor = random_snowflake_on_floor[snowflake_on_flore_id]
-#         for snowflake_on_floor in snow_on_floor:
-#             point = sd.get_point(snowflake_on_floor['x'], snowflake_on_floor['y'])
-#             sd.snowflake(center=point, length=snowflake_on_floor['size'])
-#     for snowflake_in_air_id in range(N):
-#         snowflake_shift_y = sd.random_number(1, 10)
-#         snowflake_shift_x = sd.random_number(-10, 10)
-#         snow_in_air = random_snowflake_on_air[snowflake_in_air_id]
-#         for snowflake_in_air in snow_in_air:
-#             snowflake_in_air['y'] -= snowflake_shift_y
-#             snowflake_in_air['x'] += snowflake_shift_x
-#             point = sd.get_point(snowflake_in_air['x'], snowflake_in_air['y'])
-#             sd.snowflake(center=point, length=snowflake_in_air['size'])
-#             if snowflake_in_air['y'] <= snowflake_in_air['size']:
-#                 snowflake_on_floor_size = snowflake_in_air['size']
-#                 snowflake_on_floor_y = snowflake_in_air['y'] + 5
-#                 snowflake_on_floor_x = snowflake_in_air['x']
-#                 random_snowflake_on_floor.update({snowflake_on_flore_count: [
-#                     {'size': snowflake_on_floor_size,
-#                      'x': snowflake_on_floor_x,
-#                      'y': snowflake_on_floor_y}
-#                 ]})
-#                 snowflake_on_flore_count += 1
-#                 snowflake_in_air['y'] = sd.random_number(500, 600)
-#                 snowflake_in_air['x'] = sd.random_number(100, 1100)
-#                 snowflake_in_air['size'] = sd.random_number(10, 100)
-#
-#     sd.sleep(0.1)
-#     if sd.user_want_exit():
-#         break
-# sd.pause()
+
 
 N = 20
 snowflake_on_flore_count = 0
-random_snowflake_on_air = {}  # TODO вместо словаря 3 списка
+random_snowflake_on_air_x = []
+random_snowflake_on_air_y = []
+random_snowflake_on_air_size = []
 for snow in range(N):
-    snowflake_size = sd.random_number(10, 100)  # TODO список для этих значений
-    snowflake_y = sd.random_number(500, 600)  # TODO список для этих
-    snowflake_x = sd.random_number(100, 1100)  # TODO и для этих(значения будут связаны одним индексом)
-    random_snowflake_on_air.update({snow: [snowflake_size, snowflake_x, snowflake_y]})
-
+    random_snowflake_on_air_size.append(sd.random_number(10, 100))
+    random_snowflake_on_air_y.append(sd.random_number(500, 800))
+    random_snowflake_on_air_x.append(sd.random_number(50, 1150))
 while True:
-    for snowflake_in_air_id, snowflake_in_air_param in random_snowflake_on_air.items():
-        snowflake_shift_y = sd.random_number(1, 10)
+    for snowflake_in_air_id in range(N):
+        snowflake_shift_y = sd.random_number(1, 15)
         snowflake_shift_x = sd.random_number(-10, 10)
-        buffer_point = sd.get_point(snowflake_in_air_param[1], snowflake_in_air_param[2])
-        # TODO если точку point определить после
-        # TODO snowflake_in_air_param[1] -= snowflake_shift_x
-        # TODO snowflake_in_air_param[2] -= snowflake_shift_y
-        # TODO то не нужно будет дублировать эти вычисления
-        point = sd.get_point(snowflake_in_air_param[1] - snowflake_shift_x,
-                             snowflake_in_air_param[2] - snowflake_shift_y)
-        sd.start_drawing()  # TODO это можно вынести перед for
-        sd.snowflake(center=buffer_point, length=snowflake_in_air_param[0], color=sd.background_color)
-        snowflake_in_air_param[1] -= snowflake_shift_x
-        snowflake_in_air_param[2] -= snowflake_shift_y
-        sd.start_drawing()  # TODO это лишнее
-        sd.snowflake(center=point, length=snowflake_in_air_param[0], color=sd.COLOR_WHITE)
-        if snowflake_in_air_param[2] <= snowflake_in_air_param[0]:  # TODO при достижении земли, снежинку
-            snowflake_in_air_param[2] = sd.random_number(500, 600)  # TODO надо будет добавить в списки
-            snowflake_in_air_param[1] = sd.random_number(100, 1100)
-            snowflake_in_air_param[0] = sd.random_number(10, 100)
+        buffer_point = sd.get_point(random_snowflake_on_air_x[snowflake_in_air_id],
+                                    random_snowflake_on_air_y[snowflake_in_air_id])
+        sd.start_drawing()
+        sd.snowflake(center=buffer_point,
+                     length=random_snowflake_on_air_size[snowflake_in_air_id],
+                     color=sd.background_color)
+        random_snowflake_on_air_y[snowflake_in_air_id] -= snowflake_shift_y
+        random_snowflake_on_air_x[snowflake_in_air_id] -= snowflake_shift_x
+        point = sd.get_point(random_snowflake_on_air_x[snowflake_in_air_id],
+                             random_snowflake_on_air_y[snowflake_in_air_id])
+        sd.snowflake(center=point,
+                     length=random_snowflake_on_air_size[snowflake_in_air_id],
+                     color=sd.COLOR_WHITE)
+        if random_snowflake_on_air_y[snowflake_in_air_id] <= random_snowflake_on_air_size[snowflake_in_air_id]:
+            sd.snowflake(center=point,
+                         length=random_snowflake_on_air_size[snowflake_in_air_id],
+                         color=sd.COLOR_WHITE)
+            random_snowflake_on_air_size.append(random_snowflake_on_air_size[snowflake_in_air_id])
+            random_snowflake_on_air_y.append(random_snowflake_on_air_y[snowflake_in_air_id])
+            random_snowflake_on_air_x.append(random_snowflake_on_air_x[snowflake_in_air_id])
+            random_snowflake_on_air_y[snowflake_in_air_id] = sd.random_number(700, 800)
+            random_snowflake_on_air_x[snowflake_in_air_id] = sd.random_number(100, 1100)
+            random_snowflake_on_air_size[snowflake_in_air_id] = sd.random_number(10, 100)
     sd.finish_drawing()
     sd.sleep(0.1)
     if sd.user_want_exit():
         break
-
 sd.pause()

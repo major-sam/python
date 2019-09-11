@@ -24,15 +24,12 @@ import simple_draw as sd
 #   с параметром "угол рисования" равным углу только что нарисованной ветви,
 #   и параметром "длинна ветвей" в 0.75 меньшей чем длина только что нарисованной ветви
 
-
+#
 # def draw_branches(start_point, br_angle, br_length):
 #     if br_length < 10:  # лучше будет с 1
 #         return
-#     v1 = sd.get_vector(start_point=start_point, angle=br_angle , length=br_length, width=1)
+#     v1 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
 #     v1.draw()
-# TODO я не просто так TODO-шку тут писал :) v2 нужно удалить
-#     v2 = sd.get_vector(start_point=start_point, angle=br_angle, length=br_length, width=1)
-#     v2.draw()
 #     right_angle = br_angle - 30
 #     left_angle = br_angle + 30
 #     next_point = {right_angle: v1.end_point,
@@ -60,7 +57,7 @@ import simple_draw as sd
 # - сделать рандомное отклонение угла ветвей в пределах 40% от 30-ти градусов
 # - сделать рандомное отклонение длины ветвей в пределах 20% от коэффициента 0.75
 # Возможный результат решения см lesson_004/results/exercise_04_fractal_02.jpg
-
+#
 def draw_branches(start_point, br_angle, br_length, br_width=1):
     if br_length < 10:  # лучше будет с 1 - да, красиво :) а ещё было бы здорово толщину добавить (по желанию)
         return

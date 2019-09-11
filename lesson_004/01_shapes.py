@@ -69,6 +69,8 @@ def choosing_figure(figure_id, start_point, additional_angle=0, length=100):
     elif figure_id == 3:
         hexagon(start_point, additional_angle, length)
 
+
+# choosing_figure(1, point, 10, 120)
 # point_1 = sd.get_point(100, 100)
 # point_2 = sd.get_point(100, 400)
 # point_3 = sd.get_point(400, 100)
@@ -123,6 +125,7 @@ def choosing_figure(figure_id, start_point, additional_angle=0, length=100):
 # Будьте ленивыми, не используйте копи-пасту!
 #
 
+
 def circle_vector(sides, start_point, additional_angle=0, length=100):
     if sides < 3:
         print('3+ sides needed for a figure')
@@ -134,13 +137,30 @@ def circle_vector(sides, start_point, additional_angle=0, length=100):
         side_a.draw()
         buffer_point = side_a.end_point
     sd.line(buffer_point, start_point)
+
+
 # circle_vector(12, point, 0, 100)
 
 
+def get_triangle(start_point, additional_angle=0, length=100):
+    sides = 3
+    circle_vector(sides, start_point, additional_angle, length)
+
+
+def get_quadro(start_point, additional_angle=0, length=100):
+    sides = 4
+    circle_vector(sides, start_point, additional_angle, length)
+
+
+def get_pento(start_point, additional_angle=0, length=100):
+    sides = 5
+    circle_vector(sides, start_point, additional_angle, length)
+
+
+def get_hex(start_point, additional_angle=0, length=100):
+    sides = 6
+    circle_vector(sides, start_point, additional_angle, length)
+
+
 point = sd.get_point(200, 200)
-choosing_figure(1, point, 10, 120)  # TODO я имел ввиду не совсем это :)
-# TODO вместо тех функций выше - должны быть небольшие функции, которые принимают 3 параметра
-# TODO и вызывают circle_vector, но уже с 4 параметрами
-# TODO Так, функция треугольник(3 параметра) вызовет общую_функцию(3 стороны, + 3 параметра)
-# TODO функция четырехугольника(3 параметра) вызовет общую_фукнцию(4 стороны, + 3 параметра)...и тд
 sd.pause()
