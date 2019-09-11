@@ -164,3 +164,5 @@ def get_hex(start_point, additional_angle=0, length=100):
 
 point = sd.get_point(200, 200)
 sd.pause()
+
+#зачет!

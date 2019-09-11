@@ -80,3 +80,5 @@ get_quadro(sd.get_point(100, 400), 321, 100, color=user_color)
 get_pento(sd.get_point(400, 100), 321, 100, color=user_color)
 get_hex(sd.get_point(400, 400), 321, 100, color=user_color)
 sd.pause()
+
+#зачет!

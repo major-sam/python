@@ -143,7 +143,7 @@ print('Возможные фигуры\n')
 shapes = {
     '0':
         {'shape': 'треугольник',
-         'func': 'get_triangle(midpoint, additional_angle=0, length=100, color=user_color)'},
+         'func': get_triangle},  # TODO хранить функции можно таким образом
     '1':
         {'shape': 'квадрат',
          'func': 'get_quadro(midpoint, additional_angle=0, length=100, color=user_color)'},
@@ -160,5 +160,9 @@ user_shape = input('Выберете фигуру\n')
 while user_shape not in shapes.keys():
     print('Вы ввели некоректный номер', user_shape)
     user_shape = input('Выберете фигуру\n')
-exec(shapes[user_shape]['func'])
+exec(shapes[user_shape]['func'])  # TODO затем эту функцию с нужными параметрами вызываем здесь
+# TODO что-то вроде функция = словарь[адрес]
+# TODO функция(параметры)
 sd.pause()
+
+# TODO и нужно подчистить лишний код сверху перед зачетом.

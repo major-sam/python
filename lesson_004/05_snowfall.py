@@ -72,17 +72,19 @@ snowflake_on_flore_count = 0
 random_snowflake_on_air_x = []
 random_snowflake_on_air_y = []
 random_snowflake_on_air_size = []
+
 for snow in range(N):
     random_snowflake_on_air_size.append(sd.random_number(10, 100))
     random_snowflake_on_air_y.append(sd.random_number(500, 800))
     random_snowflake_on_air_x.append(sd.random_number(50, 1150))
+
 while True:
     for snowflake_in_air_id in range(N):
         snowflake_shift_y = sd.random_number(1, 15)
         snowflake_shift_x = sd.random_number(-10, 10)
         buffer_point = sd.get_point(random_snowflake_on_air_x[snowflake_in_air_id],
                                     random_snowflake_on_air_y[snowflake_in_air_id])
-        sd.start_drawing()
+        sd.start_drawing()  # TODO вынести наружу списка, тут она не нужна
         sd.snowflake(center=buffer_point,
                      length=random_snowflake_on_air_size[snowflake_in_air_id],
                      color=sd.background_color)
