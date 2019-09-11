@@ -15,4 +15,14 @@
 # Создать рецепт своего бургера, по вашему вкусу.
 # Если не хватает инградиентов - создать соответствующие функции в модуле my_burger
 
-# TODO здесь ваш код
+import lesson_005.my_burger as my_burger
+my_burger.bun(1)
+my_burger.mayonnaise()
+my_burger.pinnacle()
+my_burger.tomato()
+my_burger.cutlet(1)
+my_burger.cheese()
+my_burger.cutlet(2)
+my_burger.bun(2)
+print('Большой и очень вкусный гамбургер готов! Приятного аппетита!')
+

@@ -5,8 +5,13 @@
 # подсказка: для вывода элементов списка через запятую можно использовать функцию строки .join()
 # https://docs.python.org/3/library/stdtypes.html#str.join
 
-# TODO здесь ваш код
+from lesson_005.district.central_street.house1.room1 import folks as central_h1_room1
+from lesson_005.district.central_street.house1.room2 import folks as central_h1_room2
+from lesson_005.district.central_street.house2.room1 import folks as central_h2_room1
+from lesson_005.district.central_street.house2.room2 import folks as central_h2_room2
+from lesson_005.district.soviet_street.house1.room1 import folks as soviet_h1_room1
+from lesson_005.district.soviet_street.house1.room2 import folks as soviet_h1_room2
 
-
-
-
+sep = ', '
+print(sep.join(central_h1_room1), sep.join(central_h1_room2), sep.join(central_h2_room1), sep.join(central_h2_room2),
+      sep.join(soviet_h1_room1), sep.join(soviet_h1_room2), sep=sep)
