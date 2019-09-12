@@ -16,7 +16,9 @@
 # Если не хватает инградиентов - создать соответствующие функции в модуле my_burger
 
 from lesson_005.my_burger import bun,mayonnaise,pinnacle,tomato,cheese,cutlet
-
+# TODO в импортах тоже нужно соблюдать стиль (PEP8)
+# TODO Для правильного форматирования можно и нужно запускать Code/Reformat Code (CTRL + ALT + L)
+# TODO внесенные изменения стоит запоминать и стараться им следовать
 bun(1)
 mayonnaise()
 pinnacle()

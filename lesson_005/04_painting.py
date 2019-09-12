@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
+# TODO Пайтон не находит функции
+# TODO уточните путь, как в задании 03 с бургером
 from sun import draw_sun
 from house import draw_house, draw_window
 from tree import draw_tree
