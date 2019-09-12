@@ -11,7 +11,8 @@ from lesson_005.district.central_street.house2.room1 import folks as central_h2_
 from lesson_005.district.central_street.house2.room2 import folks as central_h2_room2
 from lesson_005.district.soviet_street.house1.room1 import folks as soviet_h1_room1
 from lesson_005.district.soviet_street.house1.room2 import folks as soviet_h1_room2
-
+# TODO на soviet_street ещё есть house2, про них не стоит забывать
 sep = ', '
+# TODO стоит упростить print(), добавьте жителей в отдельную переменную, а её уже выводите с разделением
 print(sep.join(central_h1_room1), sep.join(central_h1_room2), sep.join(central_h2_room1), sep.join(central_h2_room2),
       sep.join(soviet_h1_room1), sep.join(soviet_h1_room2), sep=sep)
