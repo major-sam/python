@@ -95,3 +95,5 @@ func = shapes[user_shape]['func']
 func(midpoint, additional_angle=0, length=100, color=user_color)
 
 sd.pause()
+
+#зачет!
