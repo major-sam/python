@@ -15,10 +15,7 @@
 # Создать рецепт своего бургера, по вашему вкусу.
 # Если не хватает инградиентов - создать соответствующие функции в модуле my_burger
 
-from lesson_005.my_burger import bun,mayonnaise,pinnacle,tomato,cheese,cutlet
-# TODO в импортах тоже нужно соблюдать стиль (PEP8)
-# TODO Для правильного форматирования можно и нужно запускать Code/Reformat Code (CTRL + ALT + L)
-# TODO внесенные изменения стоит запоминать и стараться им следовать
+from lesson_005.my_burger import bun, mayonnaise, pinnacle, tomato, cheese, cutlet
 bun(1)
 mayonnaise()
 pinnacle()
@@ -28,4 +25,3 @@ cheese()
 cutlet(2)
 bun(2)
 print('Большой и очень вкусный гамбургер готов! Приятного аппетита!')
-
