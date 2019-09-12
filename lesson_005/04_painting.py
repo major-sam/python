@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 import simple_draw as sd
-# TODO Пайтон не находит функции
-# TODO уточните путь, как в задании 03 с бургером
-from sun import draw_sun
-from house import draw_house, draw_window
-from tree import draw_tree
-from smile import draw_smile
-from rainbow import draw_rainbow
-from snowfall import draw_snowfall
+from lesson_005.import_04.sun import draw_sun
+from lesson_005.import_04.house import draw_house, draw_window
+from lesson_005.import_04.tree import draw_tree
+from lesson_005.import_04.smile import draw_smile
+from lesson_005.import_04.rainbow import draw_rainbow
+from lesson_005.import_04.snowfall import draw_snowfall
 
 # Создать пакет, в который скопировать функции отрисовки из предыдущего урока
 #  - радуги
