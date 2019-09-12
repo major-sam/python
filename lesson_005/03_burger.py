@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Создать модуль my_burger. В нем определить функции добавления инградиентов:
+# Создать модуль  В нем определить функции добавления инградиентов:
 #  - булочки
 #  - котлеты
 #  - огурчика
@@ -15,18 +15,15 @@
 # Создать рецепт своего бургера, по вашему вкусу.
 # Если не хватает инградиентов - создать соответствующие функции в модуле my_burger
 
-import lesson_005.my_burger as my_burger
-# TODO в таком случае на протяжении всей программы придётся указывать my_burger. при использовании каждой функции
-# TODO но есть хорошее решение! использовать подобную структуру импорта:
-# TODO from модуль import функия_1, функция_2 ...
-# TODO и тогда можно будет использовать функции сразу по их названию
-my_burger.bun(1)
-my_burger.mayonnaise()
-my_burger.pinnacle()
-my_burger.tomato()
-my_burger.cutlet(1)
-my_burger.cheese()
-my_burger.cutlet(2)
-my_burger.bun(2)
+from lesson_005.my_burger import bun,mayonnaise,pinnacle,tomato,cheese,cutlet
+
+bun(1)
+mayonnaise()
+pinnacle()
+tomato()
+cutlet(1)
+cheese()
+cutlet(2)
+bun(2)
 print('Большой и очень вкусный гамбургер готов! Приятного аппетита!')
 
