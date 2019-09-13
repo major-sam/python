@@ -33,7 +33,9 @@ while True:
         sep = ''
         cprint('Загаданное число: {}'.format(sep.join(secret_num)), 'blue', attrs=['reverse'])
         new_pick = input("Хотите еще партию? y/n\n")
-        if new_pick == 'y' or new_pick == 'Y':
+        if new_pick == 'y' or new_pick == 'Y':  # TODO вспоминаем проверку на месяцы в 3 модуле и оператор 'in'
+            # TODO это позволит упростить условие (+ легко добавить дополнительные возможные варинты
+            # TODO юзверь вполне может ввести Д, д, Да, yes и тд...Все их учитывать не обязательно, но парочку можно :)
             make_secret_num()
         else:
             break
