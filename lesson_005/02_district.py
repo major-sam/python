@@ -20,3 +20,5 @@ distinct_people = sep.join(
     central_h2_room2 + soviet_h1_room1 + soviet_h1_room2 +
     soviet_h2_room1 + soviet_h2_room2)
 print(distinct_people)
+
+#зачет!

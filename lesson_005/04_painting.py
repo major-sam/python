@@ -52,6 +52,7 @@ snowflake_shift_x = sd.random_number(-10, 10)
 random_snowflake_on_air_x = []
 random_snowflake_on_air_y = []
 random_snowflake_on_air_size = []
+
 for snow in range(total_num):
     random_snowflake_on_air_size.append(sd.random_number(10, 30))
     random_snowflake_on_air_y.append(sd.random_number(300, 500))
@@ -61,6 +62,7 @@ draw_snowfall(house_base_y, total_num, random_snowflake_on_air_x,
               random_snowflake_on_air_size)
 sd.rectangle(sd.get_point(0, 0), sd.get_point(1200, house_base_y), color=(61, 37, 0))
 sd.start_drawing()
+
 while True:
     draw_window(house_base_x, house_base_y, house_size_x, house_size_y)
     draw_smile(house_base_x, house_base_y, house_size_x, house_size_y, sd.random_color())
@@ -82,3 +84,7 @@ while True:
 # Анимировать картину.
 # Пусть слева идет снегопад, радуга переливается цветами, смайлик моргает, солнце крутит лучами, етс.
 # Задержку в анимировании все равно надо ставить, пусть даже 0.01 сек - так библиотека устойчивей работает.
+
+# Отличная работа!!!
+
+#зачет!
