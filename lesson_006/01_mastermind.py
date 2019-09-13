@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from termcolor import cprint
+from lesson_006.mastermind_engine import make_secret_num, user_try, secret_num, result, end_game, game_mech
 
 # Игра «Быки и коровы»
 # https://goo.gl/Go2mb9
@@ -20,7 +22,21 @@
 # Формат ответа компьютера
 # > быки - 1, коровы - 1
 
-
+make_secret_num()
+while True:
+    game_mech(user_try())
+    bulls = result()[1]
+    cprint('Попытка № {}\n'.format(result()[2]), 'green')
+    cprint('Быков: {}'.format(result()[0]), 'blue')
+    cprint('Коров: {}'.format(result()[1]), 'blue')
+    if end_game():
+        sep = ''
+        cprint('Загаданное число: {}'.format(sep.join(secret_num)), 'blue', attrs=['reverse'])
+        new_pick = input("Хотите еще партию? y/n\n")
+        if new_pick == 'y' or new_pick == 'Y':
+            make_secret_num()
+        else:
+            break
 # Составить отдельный модуль mastermind_engine, реализующий функциональность игры.
 # В этом модуле нужно реализовать функции:
 #   загадать_число()
@@ -42,5 +58,3 @@
 # Движок игры реализует только саму функциональность игры.
 # Это пример применения SOLID принципа (см https://goo.gl/GFMoaI) в архитектуре программ.
 # Точнее, в этом случае важен принцип единственной ответственности - https://goo.gl/rYb3hT
-
-# TODO здесь ваш код...
