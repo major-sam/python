@@ -24,7 +24,8 @@ from lesson_006.mastermind_engine import make_secret_num, user_try, secret_num, 
 
 make_secret_num()
 while True:
-    game_mech(user_try())
+    game_mech(user_try())  # TODO проверку можно сделать тут
+    # TODO желательно использовать continue
     bulls = result()[1]
     cprint('Попытка № {}\n'.format(result()[2]), 'green')
     cprint('Быков: {}'.format(result()[0]), 'blue')
