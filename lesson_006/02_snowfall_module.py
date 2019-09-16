@@ -22,11 +22,10 @@ while True:
     draw_snowfall(sd.background_color)
     #  сдвинуть_снежинки()
     shift_snowfall()
-
     #  нарисовать_снежинки_цветом(color)
     draw_snowfall(sd.COLOR_WHITE)
     #  если есть номера_достигших_низа_экрана() то
-    if snow_on_flour():
+    if snow_on_flour() is not None:
         #       удалить_снежинки(номера)
         snowflake_on_flour = on_flore_list()
         for remove_id in snowflake_on_flour:

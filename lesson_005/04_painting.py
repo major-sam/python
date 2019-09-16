@@ -33,7 +33,7 @@ sun_angle = 0
 switch = 1
 draw_sun(sun_point, color=sun_color, angle=sun_angle)
 
-house_base_x, house_base_y, house_size_x, house_size_y = 450, 50, 300, 400
+house_base_x, house_base_y, house_size_x, house_size_y = 400, 50, 300, 400
 draw_house(house_base_x, house_base_y, house_size_x, house_size_y, sd.COLOR_YELLOW)
 draw_window(house_base_x, house_base_y, house_size_x, house_size_y)
 draw_smile(house_base_x, house_base_y, house_size_x, house_size_y, sd.random_color())
