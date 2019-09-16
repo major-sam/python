@@ -27,8 +27,8 @@ while True:
     game_mech(user_try())  # TODO проверку можно сделать тут
     # TODO желательно использовать continue
     bulls = result()[1]
-    cprint('Попытка № {}\n'.format(result()[2]), 'green')
-    cprint('Быков: {}'.format(result()[0]), 'blue')
+    cprint('Попытка № {}\n'.format(result()[2]), 'green')  # TODO вместо повторных вызовов result()
+    cprint('Быков: {}'.format(result()[0]), 'blue')  # TODO сохраните результат в переменной и выводите его
     cprint('Коров: {}'.format(result()[1]), 'blue')
     if end_game():
         sep = ''
