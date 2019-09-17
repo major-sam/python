@@ -30,7 +30,7 @@ def user_try():
     global _try_counter
     while True:
         try_num = input(colored('Введите 4х значное число\n', 'green'))
-        try_list = list(try_num)
+        try_list = list(map(int, list(try_num)))
         _try_counter += 1
         err_counter = 0
         for n in try_list:
@@ -47,7 +47,7 @@ def user_try():
             continue
         else:
             break
-    return list(try_num)
+    return try_list
 
 
 def end_game():

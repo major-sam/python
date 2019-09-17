@@ -6,9 +6,9 @@ secret_num = []
 def make_secret_num():
     global secret_num
     secret_num.clear()
-    secret_num.append(str(randint(1, 9)))
+    secret_num.append(randint(1, 9))
     while len(secret_num) < 4:
-        new_num = str(randint(0, 9))
+        new_num = randint(0, 9)
         if secret_num.count(new_num) >= 1:
             continue
         else:
