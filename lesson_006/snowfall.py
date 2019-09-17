@@ -54,3 +54,4 @@ def remove_snowflake(id_to_remove):
     snowflake_size.pop(id_to_remove)
     snowflake_x.pop(id_to_remove)
     snowflake_y.pop(id_to_remove)
+#зачет!

@@ -16,6 +16,10 @@ def make_secret_num():
         else:
             secret_num.append(new_num)
 
+# TODO user_try, а именно ввод числа пользователем и проверку этого числа лучше вообще реализовать в 01_mastermind
+# TODO в этом же файле оставьте 2 функции - одну, изменяющую глобальную переменную с загаднным числом
+# TODO и вторую - принимающую попытку и возвращающую результат.
+
 
 def user_try():
     global _try_counter
@@ -34,7 +38,7 @@ def user_try():
     return list(try_num)
 
 
-def game_mech(try_input):
+def game_mech(try_input):  # TODO используйте название, которое отражает суть функции (проверку значений)
     global secret_num, res
     res = {'bulls': 0,
            'cows': 0}
@@ -44,14 +48,16 @@ def game_mech(try_input):
             res['bulls'] += 1
         elif try_input[num_id] in secret_num:
             # print('корова', try_input[num_id]) # не по правилам
-            res['cows'] += 1
+            res['cows'] += 1  # TODO результат не обязательно делать глобальным
+# TODO он будет использоваться только этой функцией, а обрабатываться в 01
+# TODO просто возвращайте его с помощью ретурна
 
 
-def end_game():
+def end_game():  # TODO конец игры тоже вынести из движка
     return res['bulls'] == 4
 
 
-def result():
+def result():  # TODO и результат тоже. В движке достаточно оставить изменение числа и проверку
     return res['bulls'], res['cows'], _try_counter
 
 
