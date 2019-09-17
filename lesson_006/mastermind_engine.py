@@ -15,8 +15,8 @@ def make_secret_num():
             secret_num.append(new_num)
 
 
-def game_mech(try_input):
-    global secret_num
+def game_mech(try_input):  # TODO нейминг! что это по сути? проверка_значений
+    global secret_num  # TODO и не забывайте, что имена функций должны быть глаголами
     res = {'bulls': 0,
            'cows': 0}
     for num_id in range(len(try_input)):
