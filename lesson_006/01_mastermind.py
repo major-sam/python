@@ -60,7 +60,7 @@ while True:
     num = user_try()
     res = game_mech(num)
     bulls, cows = res['bulls'], res['cows']
-    cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(num)), 'green')
+    cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(map(str, num))), 'green')
     cprint('Быков: {}'.format(bulls), 'blue')
     cprint('Коров: {}'.format(cows), 'blue')
     if end_game():
