@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from termcolor import cprint
-from lesson_006.mastermind_engine import make_secret_num, user_try, secret_num, result, end_game, game_mech
+from termcolor import cprint, colored
+from lesson_006.mastermind_engine import make_secret_num, secret_num, game_mech
 
 # Игра «Быки и коровы»
 # https://goo.gl/Go2mb9
@@ -21,23 +21,56 @@ from lesson_006.mastermind_engine import make_secret_num, user_try, secret_num, 
 #
 # Формат ответа компьютера
 # > быки - 1, коровы - 1
+# try_counter = 0
+res = {}
+_try_counter = 1
+
+
+def user_try():
+    global _try_counter
+    while True:
+        try_num = input(colored('Введите 4х значное число\n', 'green'))
+        try_list = list(try_num)
+        _try_counter += 1
+        err_counter = 0
+        for n in try_list:
+            if try_list.count(n) > 1:
+                err_counter += 1
+        if len(try_num) != 4:
+            cprint('Число должно состоять из четырех цифр', 'red')
+            continue
+        elif not try_num.isdigit():
+            cprint('Введены неверные символы', 'red')
+            continue
+        elif err_counter != 0:
+            cprint('В числе не должно быть одинаковых цифр', 'red', attrs=['reverse'])
+            continue
+        else:
+            break
+    return list(try_num)
+
+
+def end_game():
+    return res['bulls'] == 4
+
 
 make_secret_num()
 while True:
-    game_mech(user_try())  # TODO проверку можно сделать тут
-    # TODO желательно использовать continue
-    bulls = result()[1]
-    cprint('Попытка № {}\n'.format(result()[2]), 'green')  # TODO вместо повторных вызовов result()
-    cprint('Быков: {}'.format(result()[0]), 'blue')  # TODO сохраните результат в переменной и выводите его
-    cprint('Коров: {}'.format(result()[1]), 'blue')
+    sep = ''
+    num = user_try()
+    res = game_mech(num)
+    bulls, cows = res['bulls'], res['cows']
+    cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(num)), 'green')
+    cprint('Быков: {}'.format(bulls), 'blue')
+    cprint('Коров: {}'.format(cows), 'blue')
     if end_game():
-        sep = ''
         cprint('Загаданное число: {}'.format(sep.join(secret_num)), 'blue', attrs=['reverse'])
         new_pick = input("Хотите еще партию? y/n\n")
         if new_pick in ['Y', 'y', 'Yes', 'yes']:
             make_secret_num()
         else:
             break
+
 # Составить отдельный модуль mastermind_engine, реализующий функциональность игры.
 # В этом модуле нужно реализовать функции:
 #   загадать_число()
