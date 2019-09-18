@@ -26,7 +26,8 @@ res = {}
 _try_counter = 0
 
 
-def create_incoming_value():
+def create_incoming_value():  # TODO вместо value - лучше number, а то входящая стоимость звучит странно
+    # TODO Да, теперь проверяем и английский! :)
     global _try_counter
     while True:
         try_num = input(colored('Введите 4х значное число\n', 'green'))
@@ -46,7 +47,8 @@ def create_incoming_value():
             continue
         else:
             break
-    _try_counter += 1
+    _try_counter += 1  # TODO всё же счетчик лучше убрать в движок,
+    # TODO в value_check() - это ведь и есть попытка, которая считается, а здесь исключительно получение значения
     return list(map(int, try_list))
 
 
