@@ -7,7 +7,6 @@ start_num = []
 exclude_buffer = []
 bull_buffer = []
 res = {}
-_try_counter = 0
 
 recheck_flag = True
 in_bulls, in_cows = 0, 0
@@ -18,7 +17,6 @@ def end_game():
 
 
 def make_start_num():
-    global _try_counter
     _try_counter = 0
     start_num.clear()
     while len(start_num) < 4:
@@ -42,19 +40,21 @@ def make_exclude_buffer(start_num_list):
 
 
 def number_testing(some_num):
-    global res, _try_counter, bull_buffer
+    global res,  bull_buffer
     sep = ''
-    res = value_check(some_num)
+    res, try_counter = value_check(some_num)
     bulls, cows = res['bulls'], res['cows']
-    cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(map(str, some_num))), 'green')
+    cprint('Попытка № {0}\n\t{1}'.format(try_counter, sep.join(map(str, some_num))), 'green')
     cprint('Быков: {}'.format(bulls), 'blue')
     cprint('Коров: {}'.format(cows), 'blue')
-    _try_counter += 1
     if end_game():
         cprint('Загаданное число: {}'.format(sep.join(map(str, secret_num))), 'blue', attrs=['reverse'])
         new_pick = input("Хотите еще партию? y/n\n")
         if new_pick in ['Y', 'y', 'Yes', 'yes']:
             run_game_with_ai()
+        else:
+            print('good bay')
+            exit(0)
     return bulls, cows
 
 
@@ -130,9 +130,6 @@ def run_game_with_ai():
     bull_buffer = [-1, -1, -1, -1]
     while True:
         check_number()
-        if _try_counter > 100:
-            print('dead cycle - something wrong')
-            break
 
 
 run_game_with_ai()
