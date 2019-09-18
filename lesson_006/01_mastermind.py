@@ -30,7 +30,7 @@ def create_incoming_value():
     global _try_counter
     while True:
         try_num = input(colored('Введите 4х значное число\n', 'green'))
-        try_list = list(map(int, list(try_num)))
+        try_list = list(map(int, list(try_num)))  # TODO при вводе символов(не цифр) эта строка выдает ошибку
         err_counter = 0
         for try_number in try_list:
             if try_list.count(try_number) > 1:
@@ -38,7 +38,7 @@ def create_incoming_value():
         if len(try_num) != 4:
             cprint('Число должно состоять из четырех цифр', 'red')
             continue
-        elif not try_num.isdigit():
+        elif not try_num.isdigit():  # TODO эта проверка в итоге оказывается бесполезной(не там находится)
             cprint('Введены неверные символы', 'red')
             continue
         elif err_counter != 0:
