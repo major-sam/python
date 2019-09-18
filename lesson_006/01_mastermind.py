@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from termcolor import cprint, colored
 from lesson_006.mastermind_engine import make_secret_num, secret_num, value_check
-
 # Игра «Быки и коровы»
 # https://goo.gl/Go2mb9
 #
@@ -21,14 +20,10 @@ from lesson_006.mastermind_engine import make_secret_num, secret_num, value_chec
 #
 # Формат ответа компьютера
 # > быки - 1, коровы - 1
-# try_counter = 0
 res = {}
-_try_counter = 0
 
 
-def create_incoming_value():  # TODO вместо value - лучше number, а то входящая стоимость звучит странно
-    # TODO Да, теперь проверяем и английский! :)
-    global _try_counter
+def create_incoming_number():  # value - значение
     while True:
         try_num = input(colored('Введите 4х значное число\n', 'green'))
         try_list = list(try_num)
@@ -47,8 +42,6 @@ def create_incoming_value():  # TODO вместо value - лучше number, а 
             continue
         else:
             break
-    _try_counter += 1  # TODO всё же счетчик лучше убрать в движок,
-    # TODO в value_check() - это ведь и есть попытка, которая считается, а здесь исключительно получение значения
     return list(map(int, try_list))
 
 
@@ -56,21 +49,20 @@ def end_game():
     return res['bulls'] == 4
 
 
+make_secret_num()
 while True:
-    if _try_counter == 0:
-        make_secret_num()
     sep = ''
-    num = create_incoming_value()
-    res = value_check(num)
+    num = create_incoming_number()
+    res, try_counter = value_check(num)
     bulls, cows = res['bulls'], res['cows']
-    cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(map(str, num))), 'green')
+    cprint('Попытка № {0}\n\t{1}'.format(try_counter, sep.join(map(str, num))), 'green')
     cprint('Быков: {}'.format(bulls), 'blue')
     cprint('Коров: {}'.format(cows), 'blue')
     if end_game():
         cprint('Загаданное число: {}'.format(sep.join(map(str, secret_num))), 'blue', attrs=['reverse'])
         new_pick = input("Хотите еще партию? y/n\n")
         if new_pick in ['Y', 'y', 'Yes', 'yes']:
-            _try_counter = 0
+            make_secret_num()
         else:
             break
 
