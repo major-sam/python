@@ -1,7 +1,7 @@
 from random import randint
 
 from termcolor import cprint
-from lesson_006.mastermind_engine import make_secret_num, secret_num, game_mech
+from lesson_006.mastermind_engine import make_secret_num, secret_num, value_check
 
 make_secret_num()
 start_num = []
@@ -46,7 +46,7 @@ make_exclude_buffer(start_num)
 def test_run(some_num):
     global res, _try_counter, bull_buffer
     sep = ''
-    res = game_mech(some_num)
+    res = value_check(some_num)
     bulls, cows = res['bulls'], res['cows']
     cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(map(str, some_num))), 'green')
     cprint('Быков: {}'.format(bulls), 'blue')

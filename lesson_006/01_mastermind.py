@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from termcolor import cprint, colored
-from lesson_006.mastermind_engine import make_secret_num, secret_num, game_mech
+from lesson_006.mastermind_engine import make_secret_num, secret_num, value_check
 
 # Игра «Быки и коровы»
 # https://goo.gl/Go2mb9
@@ -23,22 +23,17 @@ from lesson_006.mastermind_engine import make_secret_num, secret_num, game_mech
 # > быки - 1, коровы - 1
 # try_counter = 0
 res = {}
-_try_counter = 1
+_try_counter = 0
 
 
-def user_try():
+def create_incoming_value():
     global _try_counter
     while True:
         try_num = input(colored('Введите 4х значное число\n', 'green'))
         try_list = list(map(int, list(try_num)))
-        _try_counter += 1
         err_counter = 0
-        for n in try_list:  # TODO и вновь нэйминг :) n в данном случае одно из чисел?
-            # TODO было бы гораздо понятнее так его и обозначить "число"
-            # TODO иначе в поисках ответа мы обращаемся к try_list, оттуда к try_num, а там уже читаем
-            # TODO сообщение, которое выводится пользователю, понимая наконец что хранится в переменной
-            # TODO а через 10 минут забываем и проделываем путь вновь (ну, я забываю :))
-            if try_list.count(n) > 1:
+        for try_number in try_list:
+            if try_list.count(try_number) > 1:
                 err_counter += 1
         if len(try_num) != 4:
             cprint('Число должно состоять из четырех цифр', 'red')
@@ -51,6 +46,7 @@ def user_try():
             continue
         else:
             break
+    _try_counter += 1
     return try_list
 
 
@@ -58,30 +54,21 @@ def end_game():
     return res['bulls'] == 4
 
 
-make_secret_num()  # TODO из-за того, что вы переносите в цикл част логики, которая выполняется функцией user_try()
-# TODO цикл излишне усложняется и вам приходится загадывать первое значение вне его.
-# TODO было бы лучше вынести всё лишнее в функцию, реализующую взаимодействие с пользователем
-# TODO в цикле же последовательно вызывать - загадывание номера --> разгадывание --> повтор?
-# TODO так цикл станет проще, исчезнет дублирование и сопутствующие ошибки.
 while True:
+    if _try_counter == 0:
+        make_secret_num()
     sep = ''
-    num = user_try()  # TODO кстати user_try() тоже не круто. Особенно с правками выше.
-    # TODO придумайте глагол, отражающий суть выполняемых действий, что-то вроде "играть"
-    res = game_mech(num)
+    num = create_incoming_value()
+    res = value_check(num)
     bulls, cows = res['bulls'], res['cows']
     cprint('Попытка № {0}\n\t{1}'.format(_try_counter, sep.join(map(str, num))), 'green')
-    # TODO немного нарушена логика попыток.
-    # TODO начинаются они со второй, а при ошибочных вводах - вообще не отображаются
-    # TODO реализуйте логику: попытка +1 --> выведение номера попытки --> ввод данных пользователем
-    # TODO счётчик при этом начинайте с 0
     cprint('Быков: {}'.format(bulls), 'blue')
     cprint('Коров: {}'.format(cows), 'blue')
     if end_game():
-        cprint('Загаданное число: {}'.format(sep.join(secret_num)), 'blue', attrs=['reverse'])
-        # TODO эта строка выдаёт ошибку, нужно исправить
+        cprint('Загаданное число: {}'.format(sep.join(map(str, secret_num))), 'blue', attrs=['reverse'])
         new_pick = input("Хотите еще партию? y/n\n")
         if new_pick in ['Y', 'y', 'Yes', 'yes']:
-            make_secret_num()
+            _try_counter = 0
         else:
             break
 
