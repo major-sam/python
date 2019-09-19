@@ -129,7 +129,7 @@ class Man:
 
     def shopping_cat_food(self):
         if self.house.money >= 50:
-            cprint('{} сходил в магазин за едой'.format(self.name), color='magenta')
+            cprint('{} сходил в магазин за кошачей едой'.format(self.name), color='magenta')
             self.house.money -= 50
             self.house.cat_food += 50
         else:
@@ -142,20 +142,20 @@ class Man:
         else:
             self.house.cleanness -= 100
 
-    def act(self):
+    def act(self, cats_count):
         if self.fullness <= 0:
             cprint('{} умер...'.format(self.name), color='red', attrs=['reverse'])
             return
         dice = randint(1, 8)
         if self.fullness < 20:
             self.eat()
-        elif self.house.food < 60:
+        elif self.house.food < 10:
             self.shopping()
-        elif self.house.money < 60:
+        elif self.house.money < 50:
             self.work()
-        elif self.house.cat_food < 60:
+        elif self.house.cat_food < 10 + 20*cats_count:
             self.shopping_cat_food()
-        elif self.house.cleanness > 80:
+        elif self.house.cleanness > 95 - 10*cats_count:
             self.clean_house()
         elif dice in [1, 2]:
             self.work()
@@ -188,7 +188,9 @@ cats = [
     Cat(name='Барсик'),
     Cat(name='Олёша'),
     Cat(name='Василь'),
-    Cat(name='Борис')
+    Cat(name='Борис'),
+    Cat(name='Лось'),
+    Cat(name='Пушистик')
 ]
 
 my_sweet_home = House()
@@ -198,7 +200,7 @@ for cat in cats:
     man.get_cat(cat)
 for day in range(1, 366):
     print('================ день {} =================='.format(day))
-    man.act()
+    man.act(len(cats))
     for cat in cats:
         cat.act()
     print(man)
