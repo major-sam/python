@@ -142,6 +142,8 @@ class Man:
         else:
             self.house.cleanness -= 100
 
+    # TODO а как же уменьшение сытости при уборке?
+
     def act(self, cats_count):
         if self.fullness <= 0:
             cprint('{} умер...'.format(self.name), color='red', attrs=['reverse'])
@@ -153,9 +155,9 @@ class Man:
             self.shopping()
         elif self.house.money < 50:
             self.work()
-        elif self.house.cat_food < 10 + 20*cats_count:
+        elif self.house.cat_food < 10 + 20 * cats_count:
             self.shopping_cat_food()
-        elif self.house.cleanness > 95 - 10*cats_count:
+        elif self.house.cleanness > 95 - 10 * cats_count:
             self.clean_house()
         elif dice in [1, 2]:
             self.work()
@@ -214,5 +216,3 @@ for day in range(1, 366):
 # Им всем вместе так же надо прожить 365 дней.
 
 # (Можно определить критическое количество котов, которое может прокормить человек...)
-
-
