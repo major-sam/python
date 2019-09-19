@@ -30,3 +30,4 @@ def value_check(try_input):
             # print('корова', try_input[num_id]) # не по правилам
             res['cows'] += 1
     return res, try_counter
+#зачет!
