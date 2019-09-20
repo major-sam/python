@@ -48,6 +48,7 @@ class Humans:
         self.name = name
         self.fullness = 30
         self.happiness = 100
+        self.home = House()
 
     def __str__(self):
         return '\t{}\nУровень сытости {}\nУровень счастья {}'.format(self.name, self.fullness, self.happiness)
@@ -65,6 +66,7 @@ class House:
         self.cash_amount = 100
         self.food_amount = 50
         self.cleanness = 0
+        self.cat_food = 30
 
     def __and__(self, other):
         return self.__str__(), other()
@@ -150,6 +152,8 @@ class Wife(Humans, House):
             self.eat()
         elif home.food_amount < 60:
             self.shopping()
+        elif home.cat_food < 30:
+            self.shopping_cat_food()
         elif home.cleanness > 90:
             self.clean_house()
         elif dice == 1:
@@ -172,7 +176,22 @@ class Wife(Humans, House):
             cprint('{} поела'.format(self.name), color='green')
             return
 
+    def get_cat(self, cat_name):
+        cprint('{} подобрал кота{}'.format(self.name, cat_name.name))
+        cat_name.house = self.home
+
     def shopping(self):
+        self.fullness -= 10
+        if home.cash_amount >= 50:
+            home.cash_amount -= 50
+            home.food_amount += 50
+            cprint('{} сходила в магазин за едой'.format(self.name), color='blue')
+            return
+        else:
+            cprint('{} деньги кончились!'.format(self.name), color='red', attrs=['reverse'])
+            return
+
+    def shopping_cat_food(self):
         self.fullness -= 10
         if home.cash_amount >= 50:
             home.cash_amount -= 50
@@ -204,14 +223,71 @@ class Wife(Humans, House):
             home.cleanness -= 100
 
 
+class Cat:
+
+    def __init__(self, name='Котан'):
+        self.name = name
+        self.fullness = 30
+        self.house = None
+
+    def __str__(self):
+        return 'Я кот {}, сытость {}'.format(
+            self.name, self.fullness)
+
+    def sleep(self):
+        cprint('{} поспал'.format(self.name), color='yellow')
+        self.fullness -= 10
+
+    def eat(self):
+        if self.house is None:
+            cprint('{} бездомный - жрать нечего'.format(self.name), color='red', attrs=['reverse'])
+            self.fullness -= 10
+        else:
+            if self.house.cat_food >= 10:
+                cprint('{} поел'.format(self.name), color='yellow')
+                self.fullness += 20
+                self.house.cat_food -= 10
+            else:
+                cprint('{} нет кошачей еды'.format(self.name), color='red', attrs=['reverse'])
+                self.fullness -= 10
+
+    def make_a_mess(self):
+        if self.house is None:
+            cprint('{} не может разводить бардак без дома'.format(self.name), color='red', attrs=['reverse'])
+            self.fullness -= 10
+        else:
+            self.house.cleanness += 5
+            self.fullness -= 10
+            cprint('{} развел бардак'.format(self.name), color='yellow')
+
+    def act(self):
+        if self.fullness <= 0:
+            cprint('{} умер...'.format(self.name), color='red', attrs=['reverse'])
+            return
+        dice = randint(1, 3)
+        if self.fullness < 20:
+            self.eat()
+        elif dice == 2:
+            self.make_a_mess()
+        else:
+            self.sleep()
+
+
 home = House()
 serge = Husband(name='Сережа')
 masha = Wife(name='Маша')
 
+cats = [
+    Cat(name='Сентябрь')
+]
+for cat in cats:
+    masha.get_cat(cat)
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
+    for cat in cats:
+        cat.act()
     home.make_mess()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
