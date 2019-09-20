@@ -141,8 +141,7 @@ class Man:
             self.house.cleanness = 0
         else:
             self.house.cleanness -= 100
-
-    # TODO а как же уменьшение сытости при уборке?
+        self.fullness -= 10
 
     def act(self, cats_count):
         if self.fullness <= 0:

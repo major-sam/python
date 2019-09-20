@@ -18,10 +18,6 @@
 # Примеры преобразований:
 #   print(Water(), '+', Air(), '=', Water() + Air())
 #   print(Fire(), '+', Air(), '=', Fire() + Air())
-# TODO приведите все return-ы к одному типу.
-# TODO где-то вы возвращается статичную строку, где-то name соответствующего класса
-# TODO я же путаюсь :(
-
 
 class Air:
     def __init__(self):
@@ -29,11 +25,11 @@ class Air:
 
     def __add__(self, other):
         if other.name == 'Water':
-            return 'Storm'
+            return Storm().name
         elif other.name == 'Fire':
-            return 'Lightning'
+            return Lightning().name
         elif other.name == 'Earth':
-            return 'Dust'
+            return Dust().name
         elif other.name == 'Void':
             return Void().name
         else:
@@ -49,11 +45,11 @@ class Water:
 
     def __add__(self, other):
         if other.name == 'Air':
-            return 'Storm'
+            return Storm().name
         elif other.name == 'Fire':
-            return 'Vapor'
+            return Vapor().name
         elif other.name == 'Earth':
-            return 'Dirt'
+            return Dirt().name
         elif other.name == 'Void':
             return Void().name
         else:
@@ -69,11 +65,11 @@ class Fire:
 
     def __add__(self, other):
         if other.name == 'Water':
-            return 'Vapor'
+            return Vapor().name
         elif other.name == 'Air':
-            return 'Lightning'
+            return Lightning().name
         elif other.name == 'Earth':
-            return 'Lava'
+            return Lava().name
         elif other.name == 'Void':
             return Void().name
         else:
@@ -89,11 +85,51 @@ class Earth:
 
     def __add__(self, other):
         if other.name == 'Air':
-            return 'Dust'
+            return Dust().name
         elif other.name == 'Fire':
-            return 'Lava'
+            return Lava().name
         elif other.name == 'Water':
-            return 'Dirt'
+            return Dirt().name
+        elif other.name == 'Void':
+            return Void().name
+        else:
+            return None
+
+    def __str__(self):
+        return self.name
+
+
+class Storm:
+    def __init__(self):
+        self.name = 'Storm'
+
+    def __add__(self, other):
+        if other.name == 'Air':
+            return self.name
+        elif other.name == 'Fire':
+            return self.name
+        elif other.name == 'Water':
+            return self.name
+        elif other.name == 'Void':
+            return Void().name
+        else:
+            return None
+
+    def __str__(self):
+        return self.name
+
+
+class Vapor:
+    def __init__(self):
+        self.name = 'Vapor'
+
+    def __add__(self, other):
+        if other.name == 'Air':
+            return Water().name
+        elif other.name == 'Fire':
+            return self.name
+        elif other.name == 'Water':
+            return Water().name
         elif other.name == 'Void':
             return Void().name
         else:
@@ -131,7 +167,7 @@ class Lava:
         if other.name == 'Air':
             return Earth().name
         elif other.name == 'Fire':
-            return 'Lava'
+            return self.name
         elif other.name == 'Water':
             return Earth().name
         elif other.name == 'Void':
@@ -202,4 +238,3 @@ print(Lightning() + Void())
 # Добавить еще элемент в игру.
 # Придумать что будет при сложении существующих элементов с новым.
 # я подозреваю, что я не понял задание.
-# TODO да нет, всё верно, просто ваш интересный элемент очень однообразно взаимодействует с остальными(поглощает) :)
