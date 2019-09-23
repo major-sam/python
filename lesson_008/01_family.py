@@ -43,7 +43,10 @@ from random import randint
 # Подвести итоги жизни за год: сколько было заработано денег, сколько сьедено еды, сколько куплено шуб.
 
 class Humans:
-
+    # TODO далее вы везде используеме переменную home для манипуляций с домом
+    # TODO это выглядит так, если бы вы в функции использовали вместо параметров переменные созданные вне её
+    # TODO задайте людям дом в параметрах(пример можете найти в практике,
+    # TODO где грузовикам и погрузчикам передавалось место)
     def __init__(self, name):
         self.name = name
         self.fullness = 30
@@ -78,7 +81,7 @@ class House:
                'Грязи в доме {}'.format(self.cash_amount, self.food_amount, self.cleanness)
 
     def make_mess(self):
-        self.cleanness += 5
+        self.cleanness += 5  # TODO cleanness - это ведь чистота? наверное нужно другое имя
 
 
 class Husband(Humans):

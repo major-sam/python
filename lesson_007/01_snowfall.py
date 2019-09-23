@@ -15,19 +15,19 @@ class Snowflake:
         self.snowflake_y = sd.random_number(500, 790)
         self.snowflake_x = sd.random_number(10, 590)
         self.snowflake_color = sd.COLOR_WHITE
-        self.point = None
+        self.point = None  # TODO это ведь не используется далее нигде, почему бы не удалить?
 
     def __del__(self):
         print('')
 
-    def draw(self, color):
+    def draw(self, color):  # TODO если задать тут стандартный цвет - белый, это уменьшит код при использовании
         if self.can_fall():
             self.snowflake_color = color
             flake_center = sd.Point(self.snowflake_x, self.snowflake_y)
             sd.snowflake(flake_center, self.snowflake_size, self.snowflake_color)
         # если не могут упасть то экземпляр объекта удаляется
 
-    def move(self):
+    def move(self):  # TODO сдвиг без условия может вытолкнуть снежинку за границы экрана
         self.snowflake_y -= sd.random_number(1, 15)
         self.snowflake_x -= sd.random_number(-10, 10)
 
@@ -63,7 +63,8 @@ def append_flakes(count):
 # flake = Snowflake()
 #
 # while True:
-#     flake.clear_previous_picture()
+#     flake.clear_previous_picture()  # TODO подобный метод нужен для соответствия заданию
+# TODO он будет вызывать return-ом draw с цветом фона
 #     flake.move()
 #     flake.draw()
 #     if not flake.can_fall():
