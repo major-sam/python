@@ -15,24 +15,28 @@ class Snowflake:
         self.snowflake_y = sd.random_number(500, 790)
         self.snowflake_x = sd.random_number(10, 590)
         self.snowflake_color = sd.COLOR_WHITE
-        self.point = None  # TODO это ведь не используется далее нигде, почему бы не удалить?
 
     def __del__(self):
         print('')
 
-    def draw(self, color):  # TODO если задать тут стандартный цвет - белый, это уменьшит код при использовании
+    def draw(self, color=sd.COLOR_WHITE):
         if self.can_fall():
             self.snowflake_color = color
             flake_center = sd.Point(self.snowflake_x, self.snowflake_y)
             sd.snowflake(flake_center, self.snowflake_size, self.snowflake_color)
         # если не могут упасть то экземпляр объекта удаляется
 
-    def move(self):  # TODO сдвиг без условия может вытолкнуть снежинку за границы экрана
-        self.snowflake_y -= sd.random_number(1, 15)
+    def move(self):
         self.snowflake_x -= sd.random_number(-10, 10)
+        self.snowflake_y -= sd.random_number(1, 15)
+        if self.snowflake_size > self.snowflake_y:
+            self.snowflake_y = self.snowflake_size
 
     def can_fall(self):
         return self.snowflake_y > self.snowflake_size
+
+    def clear_previous_picture(self):
+        return self.draw(color=sd.background_color)
 
 
 def get_flakes(count):
@@ -60,11 +64,11 @@ def append_flakes(count):
     for new_flake in range(count):
         flakes.append(Snowflake())
 
+
 # flake = Snowflake()
 #
 # while True:
-#     flake.clear_previous_picture()  # TODO подобный метод нужен для соответствия заданию
-# TODO он будет вызывать return-ом draw с цветом фона
+#     flake.clear_previous_picture()
 #     flake.move()
 #     flake.draw()
 #     if not flake.can_fall():
@@ -80,9 +84,9 @@ N = 25
 flakes = get_flakes(count=N)  # создать список снежинок
 while True:
     for flake in flakes:
-        flake.draw(color=sd.background_color)
+        flake.clear_previous_picture()
         flake.move()
-        flake.draw(color=sd.COLOR_WHITE)
+        flake.draw()
     fallen_flakes = get_fallen_flakes()  # подчитать сколько снежинок уже упало
     if fallen_flakes:
         append_flakes(count=len(fallen_flakes))  # добавить еще сверху
