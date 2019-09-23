@@ -130,7 +130,7 @@ class Husband(Humans):
         return
 
 
-class Wife(Humans, House):
+class Wife(Humans, House):  # TODO порождать жену от дома не нужно :)
 
     def __init__(self, name, home):
         super().__init__(name=name)
@@ -218,7 +218,7 @@ for day in range(365):
     cprint(masha, color='cyan')
     cprint(the_home, color='cyan')
 
-# TODO после реализации первой части - отдать на проверку учителю
+# TODO после поправок с женой, можно приступать к следующей части
 
 ######################################################## Часть вторая
 #

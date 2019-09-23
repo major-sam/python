@@ -19,13 +19,14 @@
 #   print(Water(), '+', Air(), '=', Water() + Air())
 #   print(Fire(), '+', Air(), '=', Fire() + Air())
 
+
 class Air:
     def __init__(self):
         self.name = 'Air'
 
-    def __add__(self, other):
-        if other.name == 'Water':
-            return Storm().name
+    def __add__(self, other):  # TODO нужно немного подсушить код.
+        if other.name == 'Water':  # TODO Названия, хранимые в атрибутах могут поменяться в ходе жизни обьекта.
+            return Storm().name  # TODO А вот имя класса - нет. Так же рассмотри возможность использования isinstance()
         elif other.name == 'Fire':
             return Lightning().name
         elif other.name == 'Earth':
@@ -237,4 +238,3 @@ print(Lightning() + Void())
 # Усложненное задание (делать по желанию)
 # Добавить еще элемент в игру.
 # Придумать что будет при сложении существующих элементов с новым.
-#зачет!
