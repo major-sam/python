@@ -205,20 +205,55 @@ class Wife(Humans):
             self.home.mess -= 100
 
 
+class Child(Humans):
+
+    def __init__(self, name, home):
+        super().__init__(name=name)
+        self.feed_to_live = 10
+        self.home = home
+        self.happiness = 100
+
+    def __str__(self):
+        return super().__str__()
+
+    def act(self):
+        dice = randint (1,3)
+        if self.fullness <= 10:
+            self.eat()
+        elif dice == 1:
+            self.eat()
+        else:
+            self.sleep()
+
+    def eat(self):
+        if self.home.food_amount < self.feed_to_live:
+            self.fullness -= 10
+            cprint('{} нет еды'.format(self.name), color='red', attrs=['reverse'])
+            return
+        else:
+            self.fullness += self.feed_to_live
+            self.home.food_amount -= self.feed_to_live
+            cprint('{} поел'.format(self.name), color='green')
+            return
+
+    def sleep(self):
+        self.fullness -= 10
+        cprint('{} поспал'.format(self.name), color='green')
+
+
 the_home = House()
 serge = Husband(name='Сережа', home=the_home)
 masha = Wife(name='Маша', home=the_home)
-
+kolya = Child(name='Коля', home=the_home)
 for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
+    kolya.act()
     the_home.make_mess()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     cprint(the_home, color='cyan')
-
-# TODO после поправок с женой, можно приступать к следующей части
 
 ######################################################## Часть вторая
 #
