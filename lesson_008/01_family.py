@@ -323,7 +323,6 @@ class Cat:
 the_home = House()
 serge = Husband(name='Сережа', house=the_home)
 masha = Wife(name='Маша', house=the_home)
-
 kolya = Child(name='Коля', home=the_home)
 cats = [
     Cat(name='Сентябрь'),
@@ -337,13 +336,17 @@ for day in range(365):
     cprint('================== День {} =================='.format(day), color='red')
     serge.act()
     masha.act()
+    the_home.make_mess()
+    for cat in cats:
+        cat.act()
     kolya.act()
     the_home.make_mess()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     cprint(kolya, color='cyan')
+    for cat in cats:
+        cprint(cat, color='cyan')
     cprint(the_home, color='cyan')
-
 ######################################################## Часть вторая
 #
 # После подтверждения учителем первой части надо
