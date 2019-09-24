@@ -47,6 +47,8 @@ class Humans:
         self.name = name
         self.fullness = 30
         self.happiness = 100
+        self.home = None
+        self.feed_to_live = None
 
     def __str__(self):
         return '\t{}\nУровень сытости {}\nУровень счастья {}'.format(self.name, self.fullness, self.happiness)
@@ -61,6 +63,23 @@ class Humans:
         self.fullness -= 10
         self.happiness += 5
         return '{} чесал кота'.format(self.name)
+
+    def get_cat(self, cat_name):
+        cprint('{} подобрал кота {}'.format(self.name, cat_name.name), color='blue')
+        cat_name.home = self.home
+        self.home.cat_count += 1
+        self.home.cat_in_house.append(cat_name)
+
+    def eat(self):
+        if self.home.food_amount < self.feed_to_live:
+            self.fullness -= 10
+            cprint('{} нет еды'.format(self.name), color='red', attrs=['reverse'])
+            return
+        else:
+            self.fullness += self.feed_to_live
+            self.home.food_amount -= self.feed_to_live
+            cprint('{} поел'.format(self.name), color='green')
+            return
 
 
 class House:
@@ -125,17 +144,6 @@ class Husband(Humans):
         else:
             self.gaming()
 
-    def eat(self):
-        if self.home.food_amount < self.feed_to_live:
-            self.fullness -= 10
-            cprint('{} нет еды'.format(self.name), color='red', attrs=['reverse'])
-            return
-        else:
-            self.fullness += self.feed_to_live
-            self.home.food_amount -= self.feed_to_live
-            cprint('{} поел'.format(self.name), color='green')
-            return
-
     def work(self):
         self.home.cash_amount += 150
         self.fullness -= 10
@@ -190,24 +198,6 @@ class Wife(Humans):
                 cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
         else:
             self.buy_fur_coat()
-
-    def eat(self):
-        if self.home.food_amount < self.feed_to_live:
-            self.fullness -= 10
-            cprint('{} нет еды'.format(self.name), color='red', attrs=['reverse'])
-            return
-        else:
-            self.fullness += self.feed_to_live
-            self.home.food_amount -= self.feed_to_live
-            cprint('{} поела'.format(self.name), color='green')
-            return
-
-    def get_cat(self, cat_name):  # TODO странно, что подбирать кошку может только жена :)
-        # TODO давайте перенесем метод в Humans
-        cprint('{} подобрал кота {}'.format(self.name, cat_name.name), color='blue')
-        cat_name.home = self.home
-        self.home.cat_count += 1
-        self.home.cat_in_house.append(cat_name)
 
     def shopping(self):
         self.fullness -= 10
@@ -310,9 +300,9 @@ serge = Husband(name='Сережа', house=the_home)
 masha = Wife(name='Маша', house=the_home)
 
 cats = [
-    Cat(name='Сентябрь', house=None),  # TODO None Ведь и так значение по умолчанию?
+    Cat(name='Сентябрь'),
     Cat(),
-    Cat(name='Барс', house=None)  # TODO думаю тогда здесь не обязательно это дописывать
+    Cat(name='Барс')
 ]
 
 for cat in cats:
@@ -330,8 +320,6 @@ for day in range(365):
     for cat in cats:
         cprint(cat, color='cyan')
     cprint(the_home, color='cyan')
-# TODO В целом правки небольшие - после их выполнения, можете приступать к следующей части
-
 ######################################################## Часть вторая
 #
 # После подтверждения учителем первой части надо
