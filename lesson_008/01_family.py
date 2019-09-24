@@ -314,7 +314,6 @@ for day in range(365):
     the_home.make_mess()
     for cat in cats:
         cat.act()
-    the_home.make_mess()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
     for cat in cats:
