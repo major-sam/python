@@ -70,7 +70,7 @@ class House:
 
     def __str__(self):
         return '\tДом\n' \
-               'Денег в тумбочке {},\n' \
+               'Денег в тумбочке {}\n' \
                'Еды в холодильнике {}\n ' \
                'Грязи в доме {}'.format(self.cash_amount, self.food_amount, self.mess)
 
