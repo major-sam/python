@@ -32,7 +32,6 @@ class Snowflake:
         if self.snowflake_size > self.snowflake_y:
             self.snowflake_y = self.snowflake_size
 
-
     def can_fall(self):
         return self.snowflake_y > self.snowflake_size
 
@@ -61,12 +60,17 @@ def get_fallen_flakes():
             # т.к.  ссылка лежит только в списке тут , то скорее всего сборщик мусора этот
             # экземпляр удалит.
             # А если передавать количество упавших, flakes.remove(flake_on_flour) уменьшит счетчик ссылок?
+            # TODO если удалить их из единственного списка, где они были - то сборщик их удалит
             # Или вообще без списков обойтись? и внутри move() и draw() делать проверку типа :
+            # TODO в draw уже есть проверка нужная, больше ничего не надо
+            # TODO в move - стоит заменить ту, которая есть, на подобную draw
+            # TODO чтобы лишние действия не производились
             # if self.can_fall():
             #     self.snowflake_y = self.snowflake_size
             # else:
             # и уже в else двигать и рисовать ее
             # но разве тогда он не будет держать ее до закрытия?
+            # TODO здесь же сделать счётчик: если не может падать, то +1 к счетчику и выкидываем из списка
     return flakes_on_flour
 
 
