@@ -253,6 +253,7 @@ for day in range(365):
     the_home.make_mess()
     cprint(serge, color='cyan')
     cprint(masha, color='cyan')
+    cprint(kolya, color='cyan')
     cprint(the_home, color='cyan')
 
 ######################################################## Часть вторая
