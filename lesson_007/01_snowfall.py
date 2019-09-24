@@ -32,6 +32,7 @@ class Snowflake:
         if self.snowflake_size > self.snowflake_y:
             self.snowflake_y = self.snowflake_size
 
+
     def can_fall(self):
         return self.snowflake_y > self.snowflake_size
 
@@ -56,11 +57,16 @@ def get_fallen_flakes():
             flakes.remove(flake_on_flour)
             del flake_on_flour  # удаляю же объекты по списку.
             # если не удалять он же память не отпустит
-            # TODO del flake_on_flour - это не удаление снежинки. это удаление связи между переменной и обьектом.
-            # TODO память отпускается асинхронно, через сборщик мусора garbage collector.
-            # TODO а он проверяет кол-во переменных и/или контейнеров, указывающих на этот обьект.
-            # TODO Таким образом - лучше посчитать количество упавших снежинок через переменную-счетчик
-            # TODO и вернуть не список с этими снежинками, а их число
+            # ну да, удаляется ссылка на объект, из списка и уменьшается счетчик ссылок,
+            # т.к.  ссылка лежит только в списке тут , то скорее всего сборщик мусора этот
+            # экземпляр удалит.
+            # А если передавать количество упавших, flakes.remove(flake_on_flour) уменьшит счетчик ссылок?
+            # Или вообще без списков обойтись? и внутри move() и draw() делать проверку типа :
+            # if self.can_fall():
+            #     self.snowflake_y = self.snowflake_size
+            # else:
+            # и уже в else двигать и рисовать ее
+            # но разве тогда он не будет держать ее до закрытия?
     return flakes_on_flour
 
 
