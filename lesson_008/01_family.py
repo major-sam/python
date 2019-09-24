@@ -130,7 +130,7 @@ class Husband(Humans):
         return
 
 
-class Wife(Humans, House):  # TODO порождать жену от дома не нужно :)
+class Wife(Humans):
 
     def __init__(self, name, home):
         super().__init__(name=name)
