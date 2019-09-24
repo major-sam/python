@@ -217,7 +217,7 @@ class Child(Humans):
         return super().__str__()
 
     def act(self):
-        dice = randint (1,3)
+        dice = randint (1,3)  # TODO подправить стиль
         if self.fullness <= 10:
             self.eat()
         elif dice == 1:
