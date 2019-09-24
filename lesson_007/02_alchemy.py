@@ -24,15 +24,15 @@ class Air:
     def __init__(self):
         self.name = 'Air'
 
-    def __add__(self, other):  # TODO нужно немного подсушить код.
-        if other.name == 'Water':  # TODO Названия, хранимые в атрибутах могут поменяться в ходе жизни обьекта.
-            return Storm().name  # TODO А вот имя класса - нет. Так же рассмотри возможность использования isinstance()
-        elif other.name == 'Fire':
-            return Lightning().name
-        elif other.name == 'Earth':
-            return Dust().name
-        elif other.name == 'Void':
-            return Void().name
+    def __add__(self, other):
+        if isinstance(other, Water):
+            return Storm()
+        elif isinstance(other, Fire):
+            return Lightning()
+        elif isinstance(other, Earth):
+            return Dust()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -45,14 +45,14 @@ class Water:
         self.name = 'Water'
 
     def __add__(self, other):
-        if other.name == 'Air':
-            return Storm().name
-        elif other.name == 'Fire':
-            return Vapor().name
-        elif other.name == 'Earth':
-            return Dirt().name
-        elif other.name == 'Void':
-            return Void().name
+        if isinstance(other, Air):
+            return Air()
+        elif isinstance(other, Fire):
+            return Vapor()
+        elif isinstance(other, Earth):
+            return Dirt()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -65,14 +65,14 @@ class Fire:
         self.name = 'Fire'
 
     def __add__(self, other):
-        if other.name == 'Water':
-            return Vapor().name
-        elif other.name == 'Air':
-            return Lightning().name
-        elif other.name == 'Earth':
-            return Lava().name
-        elif other.name == 'Void':
-            return Void().name
+        if isinstance(other, Water):
+            return Vapor()
+        elif isinstance(other, Air):
+            return Lightning()
+        elif isinstance(other, Earth):
+            return Lava()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -85,14 +85,14 @@ class Earth:
         self.name = 'Earth'
 
     def __add__(self, other):
-        if other.name == 'Air':
-            return Dust().name
-        elif other.name == 'Fire':
-            return Lava().name
-        elif other.name == 'Water':
-            return Dirt().name
-        elif other.name == 'Void':
-            return Void().name
+        if isinstance(other, Air):
+            return Dust()
+        elif isinstance(other, Fire):
+            return Lava()
+        elif isinstance(other, Water):
+            return Dirt()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -105,14 +105,14 @@ class Storm:
         self.name = 'Storm'
 
     def __add__(self, other):
-        if other.name == 'Air':
+        if isinstance(other, Air):
             return self.name
-        elif other.name == 'Fire':
+        elif isinstance(other, Fire):
             return self.name
-        elif other.name == 'Water':
+        elif isinstance(other, Water):
             return self.name
-        elif other.name == 'Void':
-            return Void().name
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -125,14 +125,14 @@ class Vapor:
         self.name = 'Vapor'
 
     def __add__(self, other):
-        if other.name == 'Air':
-            return Water().name
-        elif other.name == 'Fire':
+        if isinstance(other, Air):
+            return Water()
+        elif isinstance(other, Fire):
             return self.name
-        elif other.name == 'Water':
-            return Water().name
-        elif other.name == 'Void':
-            return Void().name
+        elif isinstance(other, Water):
+            return Water()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -145,14 +145,14 @@ class Lightning:
         self.name = 'Lightning'
 
     def __add__(self, other):
-        if other.name == 'Air':
+        if isinstance(other, Air):
             return self.name
-        elif other.name == 'Fire':
+        elif isinstance(other, Fire):
             return self.name
-        elif other.name == 'Water':
+        elif isinstance(other, Water):
             return self.name
-        elif other.name == 'Void':
-            return Void().name
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -165,14 +165,14 @@ class Lava:
         self.name = 'Lava'
 
     def __add__(self, other):
-        if other.name == 'Air':
-            return Earth().name
-        elif other.name == 'Fire':
+        if isinstance(other, Air):
+            return Earth()
+        elif isinstance(other, Fire):
             return self.name
-        elif other.name == 'Water':
-            return Earth().name
-        elif other.name == 'Void':
-            return Void().name
+        elif isinstance(other, Water):
+            return Earth()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -185,14 +185,14 @@ class Dust:
         self.name = 'Dust'
 
     def __add__(self, other):
-        if other.name == 'Air':
+        if isinstance(other, Air):
             return self.name
-        elif other.name == 'Fire':
-            return Earth().name
-        elif other.name == 'Water':
-            return Dirt().name
-        elif other.name == 'Void':
-            return Void().name
+        elif isinstance(other, Fire):
+            return Earth()
+        elif isinstance(other, Water):
+            return Dirt()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
@@ -205,14 +205,14 @@ class Dirt:
         self.name = 'Dust'
 
     def __add__(self, other):
-        if other.name == 'Air':
-            return Earth().name
-        elif other.name == 'Fire':
-            return Earth().name
-        elif other.name == 'Water':
-            return Dirt().name
-        elif other.name == 'Void':
-            return Void().name
+        if isinstance(other, Air):
+            return Earth()
+        elif isinstance(other, Fire):
+            return Earth()
+        elif isinstance(other, Water):
+            return Dirt()
+        elif isinstance(other, Void):
+            return Void()
         else:
             return None
 
