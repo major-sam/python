@@ -202,7 +202,8 @@ class Wife(Humans):
             cprint('{} поела'.format(self.name), color='green')
             return
 
-    def get_cat(self, cat_name):
+    def get_cat(self, cat_name):  # TODO странно, что подбирать кошку может только жена :)
+        # TODO давайте перенесем метод в Humans
         cprint('{} подобрал кота {}'.format(self.name, cat_name.name), color='blue')
         cat_name.home = self.home
         self.home.cat_count += 1
@@ -309,9 +310,9 @@ serge = Husband(name='Сережа', house=the_home)
 masha = Wife(name='Маша', house=the_home)
 
 cats = [
-    Cat(name='Сентябрь', house=None),
+    Cat(name='Сентябрь', house=None),  # TODO None Ведь и так значение по умолчанию?
     Cat(),
-    Cat(name='Барс', house=None)
+    Cat(name='Барс', house=None)  # TODO думаю тогда здесь не обязательно это дописывать
 ]
 
 for cat in cats:
@@ -329,6 +330,7 @@ for day in range(365):
     for cat in cats:
         cprint(cat, color='cyan')
     cprint(the_home, color='cyan')
+# TODO В целом правки небольшие - после их выполнения, можете приступать к следующей части
 
 ######################################################## Часть вторая
 #
