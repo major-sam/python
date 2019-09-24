@@ -127,7 +127,7 @@ class Husband(Humans):
         dice = randint(1, 5)
         if self.fullness < 40:
             self.eat()
-        elif self.home.cash_amount < 300:
+        elif self.home.cash_amount < 500:
             self.work()
         elif dice == 1:
             self.work()
@@ -174,14 +174,14 @@ class Wife(Humans):
             return
         if self.home.mess > 90:
             self.happiness -= 5
-        dice = randint(1, 6)
+        dice = randint(1, 8)
         if self.fullness < 30:
             self.eat()
         elif self.home.food_amount < 30 * self.home.humans_count:
             self.shopping()
         elif self.home.cat_food < 25 * self.home.cat_count:
             self.shopping_cat_food()
-        elif self.home.mess > 90:
+        elif self.home.mess > 50:
             self.clean_house()
         elif dice == 1:
             self.clean_house()
@@ -191,11 +191,21 @@ class Wife(Humans):
             self.shopping()
         elif dice == 4:
             cat_to_scratch = choice(self.home.cat_in_house)
-            if self.home.cat_in_house is None or cat_to_scratch.die():  # вот тут не очень явно получилось
+            if self.home.cat_in_house is None or cat_to_scratch.die():
                 cprint('Некого чесать', color='red', attrs=['reverse'])
                 self.happiness -= 10
             else:
                 cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
+        elif dice == 5:
+            if self.home.cash_amount > 400:
+                self.buy_fur_coat()
+            else:
+                cat_to_scratch = choice(self.home.cat_in_house)
+                if self.home.cat_in_house is None or cat_to_scratch.die():
+                    cprint('Некого чесать', color='red', attrs=['reverse'])
+                    self.happiness -= 10
+                else:
+                    cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
         else:
             self.buy_fur_coat()
 
@@ -254,6 +264,9 @@ class Child(Humans):
         return super().__str__()
 
     def act(self):
+        if super().die():
+            cprint(super().die(), color='red', attrs=['reverse'])
+            return
         dice = randint(1, 3)
         if self.fullness <= 10:
             self.eat()
@@ -340,9 +353,8 @@ for day in range(365):
     for cat in cats:
         cat.act()
     kolya.act()
-    the_home.make_mess()
-    cprint(serge, color='cyan')
     cprint(masha, color='cyan')
+    cprint(serge, color='cyan')
     cprint(kolya, color='cyan')
     for cat in cats:
         cprint(cat, color='cyan')
