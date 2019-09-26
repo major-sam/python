@@ -27,14 +27,16 @@ from pprint import pprint
 class TextAnalyse:
 
     def __init__(self, file_name):
+        self.result = []
         self.file_name = file_name
         self.stat = {}
-        self.sorted_stat = {}
+        self.sorted_stat = []
+        self.spacer = '+{txt:-^21}+'.format(txt='+')
 
     def unzip(self):
         zfile = zipfile.ZipFile(self.file_name, 'r')
         for filename in zfile.namelist():
-            zfile.extract(filename, path='python_snippets\\')
+            zfile.extract(filename, path='\\python_snippets\\')
             self.file_name = 'python_snippets\\' + filename
             break  # читаю 1 файл
 
@@ -55,6 +57,15 @@ class TextAnalyse:
         else:
             print(sort_type, 'not supported')
 
+    def printresult(self, sort_type):
+        self.collect(sort_type=sort_type)
+        print(self.spacer)
+        print('|{txt0:^10}|{txt1:^10}|'.format(txt0='буква', txt1='количество'))
+        print(self.spacer)
+        for i in range(len(self.sorted_stat)):
+            print('|{txt0:^10}|{txt1:^10}|'.format(txt0=self.sorted_stat[i][0], txt1=self.sorted_stat[i][1]))
+        print(self.spacer)
+
     def _get_stat(self, line):
         for char in line:
             if char.isalpha():
@@ -67,9 +78,7 @@ class TextAnalyse:
 
 
 analyse = TextAnalyse(file_name='python_snippets\\voyna-i-mir.txt.zip')
-res = analyse.collect(sort_type=0)  # или нужно свой алгоритм сортировки реализовать?
-pprint(res)
-
+analyse.printresult(sort_type=0)  # или нужно свой алгоритм сортировки реализовать?
 # После выполнения первого этапа нужно сделать упорядочивание статистики
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
