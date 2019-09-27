@@ -25,7 +25,6 @@ class LogParser:
     def __init__(self, file_name):
         self.print_line = None
         self.condition = 0
-        self.splitted_line = []
         self.file = file_name
         self.ok_counter, self.nok_counter, self.sort_lvl = 0, 0, 0
         self.prev_year, self.prev_month, self.prev_day,\
