@@ -195,8 +195,8 @@ class Wife(Humans):
             if self.home.cat_in_house is None or cat_to_scratch.die():
                 # cprint('Некого чесать', color='red', attrs=['reverse'])
                 self.happiness -= 10
-            #else:
-                #cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
+            # else:
+            # cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
         elif dice == 5:
             if self.home.cash_amount > 400:
                 self.buy_fur_coat()
@@ -205,8 +205,8 @@ class Wife(Humans):
                 if self.home.cat_in_house is None or cat_to_scratch.die():
                     cprint('Некого чесать', color='red', attrs=['reverse'])
                     self.happiness -= 10
-                else:
-                    cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
+               # else:
+                   # cprint(self.scratch_cat() + ' ' + cat_to_scratch.name, color='blue', attrs=['bold'])
         else:
             self.buy_fur_coat()
 
@@ -260,6 +260,7 @@ class Child(Humans):
         self.feed_to_live = 10
         self.home = home
         self.happiness = 100
+        self.feed_to_live = 10
 
     def __str__(self):
         return super().__str__()
@@ -278,7 +279,7 @@ class Child(Humans):
 
     def sleep(self):
         self.fullness -= 10
-        cprint('{} поспал'.format(self.name), color='green')
+        #cprint('{} поспал'.format(self.name), color='green')
 
 
 class Cat:
@@ -385,6 +386,7 @@ class Simulation:
             the_home = House()
             serge = Husband(name='Сережа', house=the_home)
             masha = Wife(name='Маша', house=the_home)
+            kolya = Child(name='Коля', home=the_home)
             serge.salary = money
             dead = False
             for cat in cats:
@@ -400,14 +402,15 @@ class Simulation:
                     the_home.cash_amount = the_home.cash_amount // 2
                 serge.act()
                 masha.act()
+                kolya.act()
                 the_home.make_mess()
                 for cat in cats:
                     cat.act()
                     if cat.die():
                         dead = True
-                if serge.die() or masha.die() or dead:
+                if serge.die() or masha.die() or kolya.die() or dead:
                     # cprint('\nКому-то не хватило еды на {} день'.format(day), color='red')
-                    dead = True
+                    dead_cat = True
                     break
             if dead:
                 break
@@ -427,56 +430,29 @@ for food_incidents in range(6):
 # the_home = House()
 # serge = Husband(name='Сережа', house=the_home)
 # masha = Wife(name='Маша', house=the_home)
-#
+# kolya = Child(name='Коля', home=the_home)
 # cats = [
-#     Cat(name='Сентябрь', house=None),
+#     Cat(name='Сентябрь'),
 #     Cat(),
-#     Cat(name='Барс', house=None)
+#     Cat(name='Барс')
 # ]
+#
 # for cat in cats:
 #     masha.get_cat(cat)
 # for day in range(365):
-#     # cprint('================== День {} =================='.format(day), color='red')
+#     cprint('================== День {} =================='.format(day), color='red')
 #     serge.act()
 #     masha.act()
 #     the_home.make_mess()
 #     for cat in cats:
 #         cat.act()
-#     the_home.make_mess()
-#     # cprint(serge, color='cyan')
-#     # cprint(masha, color='cyan')
+#     kolya.act()
+#     cprint(masha, color='cyan')
+#     cprint(serge, color='cyan')
+#     cprint(kolya, color='cyan')
 #     for cat in cats:
-#         # cprint(cat, color='cyan')
-#     # cprint(the_home, color='cyan')
-
-the_home = House()
-serge = Husband(name='Сережа', house=the_home)
-masha = Wife(name='Маша', house=the_home)
-kolya = Child(name='Коля', home=the_home)
-cats = [
-    Cat(name='Сентябрь'),
-    Cat(),
-    Cat(name='Барс')
-]
-
-for cat in cats:
-    masha.get_cat(cat)
-for day in range(365):
-    cprint('================== День {} =================='.format(day), color='red')
-    serge.act()
-    masha.act()
-    the_home.make_mess()
-    for cat in cats:
-        cat.act()
-    kolya.act()
-    cprint(masha, color='cyan')
-    cprint(serge, color='cyan')
-    cprint(kolya, color='cyan')
-    for cat in cats:
-        cprint(cat, color='cyan')
-    cprint(the_home, color='cyan')
-
-
+#         cprint(cat, color='cyan')
+#     cprint(the_home, color='cyan')
 
 ######################################################## Часть вторая
 #
@@ -595,4 +571,4 @@ for day in range(365):
 #       for salary in range(50, 401, 50):
 #           max_cats = life.experiment(salary)
 #           print(f'При зарплате {salary} максимально можно прокормить {max_cats} котов')
-#зачет!
+# зачет!
