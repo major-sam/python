@@ -64,7 +64,7 @@ class LogParser:
             condition = (self.log_hour != self.prev_hour)
             print_line = f'[{self.log_year}-{self.log_month}-{self.log_day} {self.prev_hour}] {self.nok_counter}'
         elif self.sort_lvl == 2:  # day
-            condition = ({self.log_day} != self.prev_day)
+            condition = (self.log_day != self.prev_day)
             print_line = f'[{self.log_year}-{self.log_month}-{self.log_day}] {self.nok_counter}'
         elif self.sort_lvl == 3:  # mouth
             condition = (self.log_month != self.prev_month)
@@ -102,7 +102,7 @@ class LogParser:
 #
 log_file = 'events.txt'
 action = LogParser(file_name=log_file)
-action.parse(0)
+action.parse(2)
 # ok_counter = 0
 # nok_counter = 0
 # prev_hour = -1
