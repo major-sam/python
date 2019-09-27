@@ -27,14 +27,20 @@ class LogParser:
         self.condition = 0
         self.file = file_name
         self.ok_counter, self.nok_counter, self.sort_lvl = 0, 0, 0
+        # TODO Вместо 5 переменных для прошлого и настоящего не лучше ли завести по словарю с ними?
         self.prev_year, self.prev_month, self.prev_day,\
             self.prev_hour, self.prev_min = -1, -1, -1, -1, -1
         self.log_year, self.log_month, self.log_day, \
             self.log_hour, self.log_min, self.log_status = 0, 0, 0, 0, 0, 0
-        self.time_separator = ':'
-        self.date_separator = '-'
+        self.time_separator = ':'  # TODO Вот это интересный способ, но лучше передавать эти разделители
+        self.date_separator = '-'  # TODO В функцию, параметрами. Они ведь используются только в одном методе.
 
     def parse(self, sort_lvl):
+        # TODO Разделяем обязанности - один метод для чтения файла
+        # TODO Другой для обработки данных
+        # TODO Чтобы получать по одной линии - можно использовать yield line в цикле
+        # TODO Тогда при каждом обращении будет выдаваться по строке
+
         self.sort_lvl = sort_lvl
         with open(self.file, 'r') as file:
             for line in file:
@@ -54,8 +60,18 @@ class LogParser:
         self.log_hour = log_time.split(sep=self.time_separator)[0]
         self.log_min = log_time.split(sep=self.time_separator)[1]
         self.log_status = split_line[2]
+        # TODO Этот метод можно переименовать в формирование записи лога.
+        # TODO Перенести сюда часть из сорт, которая это делает
+        # TODO А return-ом возвращать строку.
+        # TODO Тогда при простом вызове - это обновит текущие данные
+        # TODO А при вызове в принте - выведет строку на консоль (или запишет в файл)
 
-    def sort(self):
+    def sort(self):  # TODO Название пишите без сокращений пожалуйста и поподробнее
+        # TODO Здесь выполняется 2 логики, которые стоит разделить на разные методы
+        # TODO 1) Проверка на новый день - условие можно возвращать ретурном
+        # TODO Это избавит нас от одного из атрибутов
+        # TODO 2) Формирование записи лога - print_line можно будет возвращать ретурном при вызове
+        # TODO Это избавит нас от другого атрибута
         if self.sort_lvl == 0:  # min
             condition = (self.log_min != self.prev_min)
             print_line = f'[{self.log_year}-{self.log_month}-{self.log_day} {self.prev_hour}:{self.prev_min}] {self.nok_counter}'
@@ -79,19 +95,23 @@ class LogParser:
         self.print_line = print_line
 
     def print_nok(self, last=False):
-        if self.prev_day == -1:
+        # TODO Считаются ли события, которые попадают в первый, последний день и в смену дней?
+        # TODO Это одна из причин, почему плохо смешивать разные обязанности в одном методе.
+        # TODO Если этот метод должен выводить информацию - пусть выводит
+        # TODO Счёт же ведите в другом.
+        if self.prev_day == -1:  # TODO В первый день выходит шифт сработает и тут...
             self.shift()
         elif last:
             self.sort()
             print(self.print_line)
-        elif self.condition:
-            print(self.print_line)
+        elif self.condition:  # TODO первая дата (например 14 число) не попадает сюда
+            print(self.print_line)  # TODO Печатается дата после смены (15 число) и счетчик.нок для 14-ого числа
             self.nok_counter, self.ok_counter = 0, 0
         elif self.log_status == 'NOK':
             self.nok_counter += 1
         elif self.log_status == 'OK':
             self.ok_counter += 1
-        self.shift()
+        self.shift()  # TODO ...И тут?
 
     def shift(self):
         self.prev_year, self.prev_month, self.prev_day, self.prev_hour, self.prev_min =\
@@ -108,7 +128,8 @@ action.parse(2)
 # prev_min = -1
 # prev_date = -1
 #
-#
+# TODO Запись в файл оформить в виде метода класса
+# TODO И попроще - метод получает строку - пишет её в файл.
 # with open(log_file, 'r') as file:
 #     for line in file:
 #         formatted_line = ''.join(char for char in line if char not in '[]\n')

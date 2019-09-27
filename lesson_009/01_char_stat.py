@@ -27,41 +27,53 @@ class TextAnalyse:
 
     def __init__(self, file_name):
         self.result = []
-        self.file_name = file_name
+        self.file_name = file_name  # TODO Чтобы не путаться - назовите путь_к_файлу
         self.stat = {}
         self.sorted_stat = []
         self.spacer = '+{txt:-^21}+'.format(txt='+')
 
-    def unzip(self):
+    def unzip(self):  # TODO Было бы лучше, если бы этот метод получал два пути
+        # TODO Один путь к архиву, другой - место назначения.
         zfile = zipfile.ZipFile(self.file_name, 'r')
         for filename in zfile.namelist():
             zfile.extract(filename, path='\\python_snippets\\')
-            self.file_name = 'python_snippets\\' + filename
+            # TODO строка выдает ошибку, лишние "\\" перед пайтон сниппетс
+            # TODO С путями много проблем, особенно из-за различий в ОС-и. В данном случае проще
+            self.file_name = 'python_snippets\\' + filename  # TODO Тогда и тут путь будет без пайтон_сниппетс
             break  # читаю 1 файл
 
     def collect(self, sort_type):
         if self.file_name.endswith('.zip'):
             self.unzip()
         with open(self.file_name, 'r', encoding='cp1251') as file:
+            # TODO Всю конструкцию, касающуюся получения данных из файлов - в один метод
+            # TODO И назвать как-нибудь вроде чтение_файла, вместо анзип.
+            # TODO Если методу даём зип - делается анзип, читается файл
+            # TODO Открыли файл - прочли - вернули его ретурном
+            # TODO Или можно yield-ом возвращать по одной линии
             for line in file:
                 self._get_stat(line=line[:-1])
-        if sort_type == 0:
+        if sort_type == 0:  # TODO Сортировку вынести в отдельный метод
+            # TODO А где сортировка по частоте - по убыванию?
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1])
             return self.sorted_stat
         elif sort_type == 1:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0])
         elif sort_type == 2:
-            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0], reverse=True)
+            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0], reverse=True)  # TODO в reverse
+            # TODO Можно передать значение параметром:
+            # TODO сортировка(по_алфавиту/по-частоте, reverse=True/False)
             return self.sorted_stat
         else:
             print(sort_type, 'not supported')
 
-    def printresult(self, sort_type):
+    def printresult(self, sort_type):  # TODO Тут бы в названии "_" не помешал
         self.collect(sort_type=sort_type)
         print(self.spacer)
         print('|{txt0:^10}|{txt1:^10}|'.format(txt0='буква', txt1='количество'))
         print(self.spacer)
-        for i in range(len(self.sorted_stat)):
+        for i in range(len(self.sorted_stat)):  # TODO почему не for stat in self.sorted_stat:
+            # TODO stat[0] & stat[1] были бы - красивее же
             print('|{txt0:^10}|{txt1:^10}|'.format(txt0=self.sorted_stat[i][0], txt1=self.sorted_stat[i][1]))
         print(self.spacer)
 
@@ -77,7 +89,7 @@ class TextAnalyse:
 
 
 analyse = TextAnalyse(file_name='python_snippets\\voyna-i-mir.txt.zip')
-analyse.printresult(sort_type=0)  # или нужно свой алгоритм сортировки реализовать?
+analyse.printresult(sort_type=1)  # или нужно свой алгоритм сортировки реализовать?
 # После выполнения первого этапа нужно сделать упорядочивание статистики
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
