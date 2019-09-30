@@ -19,6 +19,7 @@
 # +---------+----------+
 #
 # Упорядочивание по частоте - по убыванию. Ширину таблицы подберите по своему вкусу
+# TODO Вот где по частоте - по убыванию :)
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 import zipfile
 
@@ -43,10 +44,13 @@ class TextAnalyse:
             unzipped_file = None
             for filename in zfile.namelist():
                 zfile.extract(filename, path=destination_file_name)
-                if destination_file_name is None:
+                if destination_file_name is None:  # TODO Подобные условия проще записывать if destination_file_name:
+                    # TODO Это становится возможно благодаря ассоциации None. 0 или пустых объектов с False
                     unzipped_file = filename
                 else:
                     unzipped_file = source_file_name + '\\' + filename
+                    # TODO для такой склейки лучше использовать os.path.join(path1, path2)
+                    # TODO Она учитывает особенности ОС
             return unzipped_file
         else:
             return self.file_name
@@ -62,7 +66,7 @@ class TextAnalyse:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1])
         elif sort_type == 1:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1], reverse=reverse)
-            return self.sorted_stat
+            return self.sorted_stat  # TODO Почему тут ретурн/ или почему ретурн только тут?
         elif sort_type == 2:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0])
         elif sort_type == 3:

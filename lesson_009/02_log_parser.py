@@ -83,7 +83,10 @@ class LogParser:
         self.log_status = split_line[2]
 
     @staticmethod
-    def _get_match_params(sort_lvl):
+    def _get_match_params(sort_lvl):  # TODO Этот сорт_лвл крайне не понятен со стороны
+        # TODO Передавайте прямо 'min'/'hour'/'day'/'month'/'year'
+        # TODO Может это не так удобно при написании кода
+        # TODO Но поможет при его чтении
         if sort_lvl == 0:  # min
             _condition = 'min'
         elif sort_lvl == 1:  # hour
@@ -138,7 +141,7 @@ class LogParser:
         elif self.previous_date_status[condition] != self.current_date_status[condition]:
             self._print_nok(sort_lvl)
             if self.log_status == 'NOK':  # сделал 2 if  только на случай доп значений статуса
-                self.nok_counter = 1
+                self.nok_counter = 1  # TODO Мне кажется это избыточное усложнение
             else:
                 self.nok_counter = 0
             if self.log_status == 'OK':
@@ -146,7 +149,8 @@ class LogParser:
             else:
                 self.ok_counter = 0
             self.shift()
-        elif self.log_status == 'NOK':
+        elif self.log_status == 'NOK':  # TODO Если эти два условия выделить в отдельный блок if/elif
+            # TODO То при переходе к новой части нужно будет только обнулить нок/ок и щифт сделать
             self.nok_counter += 1
         elif self.log_status == 'OK':
             self.ok_counter += 1
@@ -162,7 +166,7 @@ class LogParser:
 
 log_file = 'events.txt'
 action = LogParser(file_name=log_file)
-action.parse(0)
+action.parse(2)
 
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам

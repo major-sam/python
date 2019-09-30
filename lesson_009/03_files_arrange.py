@@ -42,7 +42,8 @@ class HomeLib:
     def __init__(self, filename):
         self.file_name = filename
 
-    def unzip_file(self):
+    def unzip_file(self):  # TODO Это отлично работает, но далековато от ТЗ
+        # TODO Нужен метод, получающий 2 директории. Из одной берет файлы, в другую сортирует.
         with zipfile.ZipFile(self.file_name, 'r') as zfile:
             for info in zfile.infolist():
                 if info.is_dir():
@@ -51,7 +52,9 @@ class HomeLib:
                 file_name = os.path.basename(info.filename)
                 creation_date = datetime.datetime(*info.date_time)
                 source_file = info.filename
-                destination_file = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
+                # TODO путь лучше вынести в отдельную переменную, длинные строки оставлять не желательно
+                destination_file = os.path.normpath(
+                    f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
                 os.makedirs(destination_file, exist_ok=True)
                 shutil.copy2(source_file, destination_file)
 
@@ -63,7 +66,10 @@ class HomeLib:
                 file_name = os.path.basename(info.filename)
                 creation_date = datetime.datetime(*info.date_time)
                 source = zfile.open(info)
-                destination_file = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
+                # TODO И тут
+                # TODO А чтобы не дублировать - можно использовать os.path.split(путь)
+                destination_file = os.path.normpath(
+                    f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
                 destination_path = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\')
                 os.makedirs(destination_path, exist_ok=True)
                 with open(destination_file, 'wb') as destination:
@@ -72,8 +78,8 @@ class HomeLib:
 
 
 lib = HomeLib('icons.zip')
-lib.unzip()
-# lib.unzip_file()
+#lib.unzip()
+lib.unzip_file()
 # Усложненное задание (делать по желанию)  TODO С этим справились отлично! :)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
 # Основная функция должна брать параметром имя zip-файла и имя целевой папки.
