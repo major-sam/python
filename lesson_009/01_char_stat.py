@@ -25,56 +25,57 @@ import zipfile
 
 class TextAnalyse:
 
-    def __init__(self, file_name):
+    def __init__(self, path_to_file):
         self.result = []
-        self.file_name = file_name  # TODO Чтобы не путаться - назовите путь_к_файлу
+        self.file_name = path_to_file
         self.stat = {}
         self.sorted_stat = []
         self.spacer = '+{txt:-^21}+'.format(txt='+')
 
-    def unzip(self):  # TODO Было бы лучше, если бы этот метод получал два пути
-        # TODO Один путь к архиву, другой - место назначения.
-        zfile = zipfile.ZipFile(self.file_name, 'r')
-        for filename in zfile.namelist():
-            zfile.extract(filename, path='\\python_snippets\\')
-            # TODO строка выдает ошибку, лишние "\\" перед пайтон сниппетс
-            # TODO С путями много проблем, особенно из-за различий в ОС-и. В данном случае проще
-            self.file_name = 'python_snippets\\' + filename  # TODO Тогда и тут путь будет без пайтон_сниппетс
-            break  # читаю 1 файл
+    def start_analyze(self, sort_type=0, sort_reverse=False):
+        self.open_file()
+        self.sort_lines(sort_type=sort_type, reverse=sort_reverse)
+        self.print_result()
 
-    def collect(self, sort_type):
+    def unzip(self, source_file_name, destination_file_name=None):
         if self.file_name.endswith('.zip'):
-            self.unzip()
-        with open(self.file_name, 'r', encoding='cp1251') as file:
-            # TODO Всю конструкцию, касающуюся получения данных из файлов - в один метод
-            # TODO И назвать как-нибудь вроде чтение_файла, вместо анзип.
-            # TODO Если методу даём зип - делается анзип, читается файл
-            # TODO Открыли файл - прочли - вернули его ретурном
-            # TODO Или можно yield-ом возвращать по одной линии
+            zfile = zipfile.ZipFile(source_file_name, 'r')
+            unzipped_file = None
+            for filename in zfile.namelist():
+                zfile.extract(filename, path=destination_file_name)
+                if destination_file_name is None:
+                    unzipped_file = filename
+                else:
+                    unzipped_file = source_file_name + '\\' + filename
+            return unzipped_file
+        else:
+            return self.file_name
+
+    def open_file(self):
+        file_to_open = self.unzip(source_file_name=self.file_name)
+        with open(file_to_open, 'r', encoding='cp1251') as file:
             for line in file:
                 self._get_stat(line=line[:-1])
-        if sort_type == 0:  # TODO Сортировку вынести в отдельный метод
-            # TODO А где сортировка по частоте - по убыванию?
+
+    def sort_lines(self, sort_type, reverse):
+        if sort_type == 0:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1])
-            return self.sorted_stat
         elif sort_type == 1:
-            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0])
-        elif sort_type == 2:
-            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0], reverse=True)  # TODO в reverse
-            # TODO Можно передать значение параметром:
-            # TODO сортировка(по_алфавиту/по-частоте, reverse=True/False)
+            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1], reverse=reverse)
             return self.sorted_stat
+        elif sort_type == 2:
+            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0])
+        elif sort_type == 3:
+            self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0], reverse=reverse)
         else:
             print(sort_type, 'not supported')
 
-    def printresult(self, sort_type):  # TODO Тут бы в названии "_" не помешал
-        self.collect(sort_type=sort_type)
+    def print_result(self):
         print(self.spacer)
         print('|{txt0:^10}|{txt1:^10}|'.format(txt0='буква', txt1='количество'))
         print(self.spacer)
-        for i in range(len(self.sorted_stat)):  # TODO почему не for stat in self.sorted_stat:
-            # TODO stat[0] & stat[1] были бы - красивее же
-            print('|{txt0:^10}|{txt1:^10}|'.format(txt0=self.sorted_stat[i][0], txt1=self.sorted_stat[i][1]))
+        for char in self.sorted_stat:
+            print('|{txt0:^10}|{txt1:^10}|'.format(txt0=char[0], txt1=char[1]))
         print(self.spacer)
 
     def _get_stat(self, line):
@@ -88,9 +89,10 @@ class TextAnalyse:
                 continue
 
 
-analyse = TextAnalyse(file_name='python_snippets\\voyna-i-mir.txt.zip')
-analyse.printresult(sort_type=1)  # или нужно свой алгоритм сортировки реализовать?
+analyse = TextAnalyse(path_to_file='python_snippets\\voyna-i-mir.txt.zip')
+analyse.start_analyze()  # или нужно свой алгоритм сортировки реализовать?
 # После выполнения первого этапа нужно сделать упорядочивание статистики
+# в задании нет по частоте по убыванию
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
 #  - по алфавиту по убыванию
