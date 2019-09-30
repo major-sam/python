@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import os, time, shutil, datetime
-
+import datetime
+import os
+import shutil
 # Нужно написать скрипт для упорядочивания фотографий (вообще любых файлов)
 # Скрипт должен разложить файлы из одной папки по годам и месяцам в другую.
 # Например, так:
@@ -34,16 +35,25 @@ import os, time, shutil, datetime
 # Чтение документации/гугла по функциям - приветствуется. Как и поиск альтернативных вариантов :)
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
 import zipfile
-# TODO Зря удалили условие
-# TODO Упрощенную версию задания мне тоже хотелось бы увидеть
 
 
 class HomeLib:
 
     def __init__(self, filename):
         self.file_name = filename
-        self.time_separator = ':'  # TODO разделители передавайте прямо в метод, где они будут использоваться
-        self.date_separator = '-'
+
+    def unzip_file(self):
+        with zipfile.ZipFile(self.file_name, 'r') as zfile:
+            for info in zfile.infolist():
+                if info.is_dir():
+                    continue
+                zfile.extract(info)
+                file_name = os.path.basename(info.filename)
+                creation_date = datetime.datetime(*info.date_time)
+                source_file = info.filename
+                destination_file = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
+                os.makedirs(destination_file, exist_ok=True)
+                shutil.copy2(source_file, destination_file)
 
     def unzip(self):
         with zipfile.ZipFile(self.file_name, 'r') as zfile:
@@ -53,8 +63,8 @@ class HomeLib:
                 file_name = os.path.basename(info.filename)
                 creation_date = datetime.datetime(*info.date_time)
                 source = zfile.open(info)
-                destination_file = os.path.normpath(f'icons\\{creation_date.year}\\{creation_date.month}\\{file_name}')
-                destination_path = os.path.normpath(f'icons\\{creation_date.year}\\{creation_date.month}\\')
+                destination_file = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
+                destination_path = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\')
                 os.makedirs(destination_path, exist_ok=True)
                 with open(destination_file, 'wb') as destination:
                     with source, destination:
@@ -63,6 +73,7 @@ class HomeLib:
 
 lib = HomeLib('icons.zip')
 lib.unzip()
+# lib.unzip_file()
 # Усложненное задание (делать по желанию)  TODO С этим справились отлично! :)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
 # Основная функция должна брать параметром имя zip-файла и имя целевой папки.
