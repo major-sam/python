@@ -82,6 +82,14 @@ class LogParser:
         self.current_date_status['min'] = int(log_time.split(sep=time_separator)[1])
         self.log_status = split_line[2]
 
+    # TODO Меня очень смущаеют эти два метода
+    # TODO Давайте попробуем разобраться с ними с помощью шаблонного метода, указанного в самом низу
+    # TODO В этом классе эти методы сделайте абстрактными
+    # TODO Для этого используйте @abstractmethod
+    # TODO И вызовите исключение (вы ведь уже знакомы с ними из 10 урока?)
+    # TODO Нужен будет декоратор, определение функции - а внутри только raise NotImplementedError()
+    # TODO Далее породите от этого класса 4 других, где эти два метода будут переопределены
+    # TODO Чтобы в итоге в каждом под-классе был свой небольшой метод без повторяющегося кода
     @staticmethod
     def _get_match_params(sort_lvl):
         if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
@@ -91,7 +99,7 @@ class LogParser:
         elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:  # day
             _condition = 'day'
         elif sort_lvl in ['month', 'Month', 'MONTH']:  # mouth
-            _condition = 'mouth'
+            _condition = 'month'
         elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:  # year
             _condition = 'year'
         else:
@@ -156,7 +164,7 @@ class LogParser:
 
 log_file = 'events.txt'
 action = LogParser(file_name=log_file)
-action.parse(sort_lvl='min')
+action.parse(sort_lvl='month')
 
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам
