@@ -22,4 +22,35 @@
 # - поле возраст НЕ является числом от 10 до 99: ValueError
 # Вызов метода обернуть в try-except.
 
-# TODO здесь ваш код
+
+class NotNameError(Exception):
+    pass
+
+
+class NotEmailError(Exception):
+    pass
+
+
+with open('registrations.txt', encoding='utf8') as source_file:
+    for line in source_file:
+        try:
+            splitted_line = line.split(' ')
+            name = splitted_line[0]
+            mail = splitted_line[1]
+            age = splitted_line[2]
+            if len(splitted_line) < 3:
+                raise ValueError('not enough param in line')
+            elif [s for s in name if s.isdigit()]:
+                raise NotNameError(f' {name} is wrong name')
+            elif '@' not in mail or '.' not in mail or mail.isdigit():
+                raise NotEmailError(f'{mail} is wrong mail')
+            elif not age.isdigit() or not 10 < int(age) < 90:
+                raise ValueError(f'age {int(age)} is wrong')
+        except ValueError as exc:
+            print(exc)
+        except NotNameError as name_exc:
+            print(name_exc)
+        except NotEmailError as email_exc:
+            print(email_exc)
+        except Exception as exc:
+            print(exc)

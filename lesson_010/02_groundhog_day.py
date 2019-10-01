@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import random
 
 # День сурка
 #
@@ -19,6 +20,59 @@
 
 ENLIGHTENMENT_CARMA_LEVEL = 777
 
-# TODO здесь ваш код
+
+class IamGodError(Exception):
+    pass
+
+
+class DrunkError(Exception):
+    pass
+
+
+class CarCrashError(Exception):
+    pass
+
+
+class GluttonyError(Exception):
+    pass
+
+
+class DepressionError(Exception):
+    pass
+
+
+class SuicideError(Exception):
+    pass
+
+
+def day():
+    random_error = random.randint(1, 13)
+    random_carma = 0
+    if random_error == 13:
+        dice = random.randint(1, 6)
+        if dice == 1:
+            raise IamGodError('IDDQD')
+        elif dice == 2:
+            raise DrunkError("too drunk")
+        elif dice == 3:
+            raise CarCrashError("in car crush")
+        elif dice == 4:
+            raise GluttonyError("eat too much food")
+        elif dice == 5:
+            raise DepressionError("too sad")
+        elif dice == 6:
+            raise SuicideError("too dead")
+    else:
+        random_carma = random.randint(1, 7)
+    return random_carma
+
+
+carma, day_number = 0, 0
+while carma < ENLIGHTENMENT_CARMA_LEVEL:
+    day_number += 1
+    try:
+        carma += day()
+    except Exception as exc:
+        print(f'on day {day_number} i am {exc}, current carma is {carma}')
 
 # https://goo.gl/JnsDqu
