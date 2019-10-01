@@ -19,8 +19,8 @@
 # +---------+----------+
 #
 # Упорядочивание по частоте - по убыванию. Ширину таблицы подберите по своему вкусу
-# TODO Вот где по частоте - по убыванию :)
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
+import os
 import zipfile
 
 
@@ -44,13 +44,10 @@ class TextAnalyse:
             unzipped_file = None
             for filename in zfile.namelist():
                 zfile.extract(filename, path=destination_file_name)
-                if destination_file_name is None:  # TODO Подобные условия проще записывать if destination_file_name:
-                    # TODO Это становится возможно благодаря ассоциации None. 0 или пустых объектов с False
+                if destination_file_name:
                     unzipped_file = filename
                 else:
-                    unzipped_file = source_file_name + '\\' + filename
-                    # TODO для такой склейки лучше использовать os.path.join(path1, path2)
-                    # TODO Она учитывает особенности ОС
+                    unzipped_file = os.path.join(os.path.dirname(source_file_name), filename)
             return unzipped_file
         else:
             return self.file_name
@@ -66,7 +63,6 @@ class TextAnalyse:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1])
         elif sort_type == 1:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[1], reverse=reverse)
-            return self.sorted_stat  # TODO Почему тут ретурн/ или почему ретурн только тут?
         elif sort_type == 2:
             self.sorted_stat = sorted(self.stat.items(), key=lambda x: x[0])
         elif sort_type == 3:
@@ -94,9 +90,8 @@ class TextAnalyse:
 
 
 analyse = TextAnalyse(path_to_file='python_snippets\\voyna-i-mir.txt.zip')
-analyse.start_analyze()  # или нужно свой алгоритм сортировки реализовать?
+analyse.start_analyze()
 # После выполнения первого этапа нужно сделать упорядочивание статистики
-# в задании нет по частоте по убыванию
 #  - по частоте по возрастанию
 #  - по алфавиту по возрастанию
 #  - по алфавиту по убыванию

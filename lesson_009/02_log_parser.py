@@ -40,7 +40,7 @@ class LogParser:
                                      'min': None
                                      }
 
-    def parse(self, sort_lvl, out_file='res.txt', date_separator='-', time_separator=':'):
+    def parse(self, sort_lvl='min', out_file='res.txt', date_separator='-', time_separator=':'):
         self.out_file = out_file
         match_param = self._get_match_params(sort_lvl)
         self.clear_result_file(out_file)
@@ -83,19 +83,16 @@ class LogParser:
         self.log_status = split_line[2]
 
     @staticmethod
-    def _get_match_params(sort_lvl):  # TODO Этот сорт_лвл крайне не понятен со стороны
-        # TODO Передавайте прямо 'min'/'hour'/'day'/'month'/'year'
-        # TODO Может это не так удобно при написании кода
-        # TODO Но поможет при его чтении
-        if sort_lvl == 0:  # min
+    def _get_match_params(sort_lvl):
+        if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
             _condition = 'min'
-        elif sort_lvl == 1:  # hour
+        elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:  # hour
             _condition = 'hour'
-        elif sort_lvl == 2:  # day
+        elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:  # day
             _condition = 'day'
-        elif sort_lvl == 3:  # mouth
+        elif sort_lvl in ['month', 'Month', 'MONTH']:  # mouth
             _condition = 'mouth'
-        elif sort_lvl == 4:  # year
+        elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:  # year
             _condition = 'year'
         else:
             _condition = False
@@ -103,29 +100,29 @@ class LogParser:
         return _condition
 
     def _get_print_params(self, sort_lvl):
-        if sort_lvl == 0:
+        if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
             _print_line = '[{}-{:0>2}-{:0>2} {:0>2}:{:0>2}] {}'.format(self.previous_date_status['year'],
                                                                        self.previous_date_status['month'],
                                                                        self.previous_date_status['day'],
                                                                        self.previous_date_status['hour'],
                                                                        self.previous_date_status['min'],
                                                                        self.nok_counter, )
-        elif sort_lvl == 1:
+        elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:
             _print_line = '[{}-{:0>2}-{:0>2} {:0>2}] {}'.format(self.previous_date_status['year'],
                                                                 self.previous_date_status['month'],
                                                                 self.previous_date_status['day'],
                                                                 self.previous_date_status['hour'],
                                                                 self.nok_counter, )
-        elif sort_lvl == 2:
+        elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:
             _print_line = '[{}-{:0>2}-{:0>2}] {}'.format(self.previous_date_status['year'],
                                                          self.previous_date_status['month'],
                                                          self.previous_date_status['day'],
                                                          self.nok_counter)
-        elif sort_lvl == 3:
+        elif sort_lvl in ['month', 'Month', 'MONTH']:
             _print_line = '[{}-{:0>2}] {}'.format(self.previous_date_status['year'],
                                                   self.previous_date_status['month'],
                                                   self.nok_counter)
-        elif sort_lvl == 4:
+        elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:
             _print_line = '[{}] {}'.format(self.previous_date_status['year'], self.nok_counter)
         else:
             _print_line = 'sort level must be in range from 0 to 4'
@@ -140,17 +137,10 @@ class LogParser:
             self._print_nok(sort_lvl)
         elif self.previous_date_status[condition] != self.current_date_status[condition]:
             self._print_nok(sort_lvl)
-            if self.log_status == 'NOK':  # сделал 2 if  только на случай доп значений статуса
-                self.nok_counter = 1  # TODO Мне кажется это избыточное усложнение
-            else:
-                self.nok_counter = 0
-            if self.log_status == 'OK':
-                self.ok_counter = 1
-            else:
-                self.ok_counter = 0
+            self.nok_counter = 0
+            self.ok_counter = 0
             self.shift()
-        elif self.log_status == 'NOK':  # TODO Если эти два условия выделить в отдельный блок if/elif
-            # TODO То при переходе к новой части нужно будет только обнулить нок/ок и щифт сделать
+        if self.log_status == 'NOK':
             self.nok_counter += 1
         elif self.log_status == 'OK':
             self.ok_counter += 1
@@ -158,7 +148,7 @@ class LogParser:
     def _print_nok(self, sort_lvl):
         line = self._get_print_params(sort_lvl)
         self.write_result_to_file(self.out_file, line)
-        print(line + ' of', self.nok_counter+self.ok_counter)
+        print(line + ' NOK of', self.nok_counter + self.ok_counter)
 
     def shift(self):
         self.previous_date_status = self.current_date_status.copy()
@@ -166,7 +156,7 @@ class LogParser:
 
 log_file = 'events.txt'
 action = LogParser(file_name=log_file)
-action.parse(2)
+action.parse(sort_lvl='min')
 
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам

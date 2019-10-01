@@ -39,37 +39,36 @@ import zipfile
 
 class HomeLib:
 
-    def __init__(self, filename):
-        self.file_name = filename
+    def __init__(self):
+        self.file_name = None
 
-    def unzip_file(self):  # TODO Это отлично работает, но далековато от ТЗ
-        # TODO Нужен метод, получающий 2 директории. Из одной берет файлы, в другую сортирует.
-        with zipfile.ZipFile(self.file_name, 'r') as zfile:
-            for info in zfile.infolist():
-                if info.is_dir():
-                    continue
-                zfile.extract(info)
-                file_name = os.path.basename(info.filename)
-                creation_date = datetime.datetime(*info.date_time)
-                source_file = info.filename
-                # TODO путь лучше вынести в отдельную переменную, длинные строки оставлять не желательно
-                destination_file = os.path.normpath(
-                    f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
+    @staticmethod
+    def sort_file(destination_dir='icons_by_year1', source_dir='icons'):
+        for folder in os.walk(source_dir):
+            if not folder[2]:
+                continue
+            file_dir = folder[0]
+            file_list = folder[2]
+            for file_name in file_list:
+                file_path = os.path.join(file_dir, file_name)
+                creation_date = datetime.datetime.utcfromtimestamp(os.path.getmtime(file_path))
+                destination_path = os.path.join(destination_dir, str(creation_date.year),
+                                                str(creation_date.month), file_name)
+                destination_file = os.path.normpath(destination_path)
                 os.makedirs(destination_file, exist_ok=True)
-                shutil.copy2(source_file, destination_file)
+                shutil.copy2(file_path, destination_file)
 
-    def unzip(self):
-        with zipfile.ZipFile(self.file_name, 'r') as zfile:
+    @staticmethod
+    def unzip(source_zip='icons.zip', destination_dir='icons_by_year'):
+        with zipfile.ZipFile(source_zip, 'r') as zfile:
             for info in zfile.infolist():
                 if info.is_dir():
                     continue
                 file_name = os.path.basename(info.filename)
                 creation_date = datetime.datetime(*info.date_time)
                 source = zfile.open(info)
-                # TODO И тут
-                # TODO А чтобы не дублировать - можно использовать os.path.split(путь)
-                destination_file = os.path.normpath(
-                    f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\{file_name}')
+                path = os.path.join(destination_dir, str(creation_date.year), str(creation_date.month), file_name)
+                destination_file = os.path.normpath(path)
                 destination_path = os.path.normpath(f'icons_by_year\\{creation_date.year}\\{creation_date.month}\\')
                 os.makedirs(destination_path, exist_ok=True)
                 with open(destination_file, 'wb') as destination:
@@ -77,10 +76,10 @@ class HomeLib:
                         shutil.copyfileobj(source, destination)
 
 
-lib = HomeLib('icons.zip')
+lib = HomeLib()
 #lib.unzip()
-lib.unzip_file()
-# Усложненное задание (делать по желанию)  TODO С этим справились отлично! :)
+lib.sort_file()
+# Усложненное задание (делать по желанию)
 # Нужно обрабатывать zip-файл, содержащий фотографии, без предварительного извлечения файлов в папку.
 # Основная функция должна брать параметром имя zip-файла и имя целевой папки.
 # Для этого пригодится шаблон проектирование "Шаблонный метод" см https://goo.gl/Vz4828
