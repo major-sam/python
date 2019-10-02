@@ -37,9 +37,11 @@ class NotEmailError(Exception):
 # TODO для обработки исключения и формирования строки для записи в файл
 class RegistrationCheck:
 
-    def __init__(self, file_name='registrations.txt', err_file_name='All errors.txt'):
+    def __init__(self, file_name='registrations.txt', ok_file_name='registrations_good.log',
+                 err_file_name='registrations_bad.log'):
         self.log_file = file_name
         self.err_file = err_file_name
+        self.ok_file = ok_file_name
 
     def open_file(self, in_file):
         with open(file=in_file, encoding='utf8') as source_file:
@@ -95,6 +97,9 @@ class RegistrationCheck:
                               .format(exc=str(exc), line=line[:-1], line_number=line_counter))
                 self.write_file(out_file=self.err_file, line=error_line)
                 self.write_file(out_file=exc_file, line=error_line)
+            else:
+                ok_file = self.ok_file
+                self.write_file(out_file=ok_file, line=line)
 
 
 file = RegistrationCheck()
