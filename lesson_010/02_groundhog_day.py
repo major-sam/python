@@ -74,5 +74,6 @@ while carma < ENLIGHTENMENT_CARMA_LEVEL:
         carma += day()
     except Exception as exc:
         print(f'on day {day_number} i am {exc}, current carma is {carma}')
-    # TODO Совсем мелочь, но прям не хватает строки с текущим днём и уровнем кармы.
+    else:
+        print(f'on day {day_number} i am ok, current carma is {carma}')
 # https://goo.gl/JnsDqu

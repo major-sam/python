@@ -10,7 +10,6 @@
 # - поле имени содержит только буквы
 # - поле емейл содержит @ и .
 # - поле возраст является числом от 10 до 99
-# TODO А где же логи?
 # В результате проверки нужно сформировать два файла
 # - registrations_good.log для правильных данных, записывать строки как есть
 # - registrations_bad.log для ошибочных, записывать строку и вид ошибки.
@@ -63,11 +62,6 @@ class RegistrationCheck:
         elif not int(age) or not 10 < int(age) < 100:
             raise ValueError(f'age {int(age)} is wrong')
 
-    # TODO Хорошо, только внимательнее прочитайте ТЗ
-    # TODO Данные с ошибками в один файл, хорошие данные в другой.
-    # В результате проверки нужно сформировать два файла
-    # - registrations_good.log для правильных данных, записывать строки как есть
-    # - registrations_bad.log для ошибочных, записывать строку и вид ошибки.
     def find_bad_users(self):
         lines = self.open_file(in_file=self.log_file)
         line_counter = 0
