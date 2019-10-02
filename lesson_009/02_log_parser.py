@@ -91,55 +91,6 @@ class LogParser:
     def _get_print_params(self):
         raise NotImplementedError()
 
-    # @staticmethod
-    # def _get_match_params(sort_lvl):
-    #     if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
-    #         _condition = 'min'
-    #     elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:  # hour
-    #         _condition = 'hour'
-    #     elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:  # day
-    #         _condition = 'day'
-    #     elif sort_lvl in ['month', 'Month', 'MONTH']:  # mouth
-    #         _condition = 'month'
-    #     elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:  # year
-    #         _condition = 'year'
-    #     else:
-    #         _condition = False
-    #         exit(1)
-    #     return _condition
-
-    # @abstractmethod
-    # def _get_print_params(self, sort_lvl):
-    #     if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
-    #         _print_line = '[{}-{:0>2}-{:0>2} {:0>2}:{:0>2}] {}'.format(self.previous_date_status['year'],
-    #                                                                    self.previous_date_status['month'],
-    #                                                                    self.previous_date_status['day'],
-    #                                                                    self.previous_date_status['hour'],
-    #                                                                    self.previous_date_status['min'],
-    #                                                                    self.nok_counter, )
-    #     elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:
-    #         _print_line = '[{}-{:0>2}-{:0>2} {:0>2}] {}'.format(self.previous_date_status['year'],
-    #                                                             self.previous_date_status['month'],
-    #                                                             self.previous_date_status['day'],
-    #                                                             self.previous_date_status['hour'],
-    #                                                             self.nok_counter, )
-    #     elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:
-    #         _print_line = '[{}-{:0>2}-{:0>2}] {}'.format(self.previous_date_status['year'],
-    #                                                      self.previous_date_status['month'],
-    #                                                      self.previous_date_status['day'],
-    #                                                      self.nok_counter)
-    #     elif sort_lvl in ['month', 'Month', 'MONTH']:
-    #         _print_line = '[{}-{:0>2}] {}'.format(self.previous_date_status['year'],
-    #                                               self.previous_date_status['month'],
-    #                                               self.nok_counter)
-    #     elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:
-    #         _print_line = '[{}] {}'.format(self.previous_date_status['year'], self.nok_counter)
-    #     else:
-    #         _print_line = 'sort level must be in range from 0 to 4'
-    #         _condition = False
-    #         exit(1)
-    #     return _print_line
-
     def match_prev_line(self, condition, last=False):
         if self.previous_date_status[condition] is None:
             self.shift()
@@ -243,3 +194,4 @@ action.parse()
 #  - по месяцу
 #  - по году
 # Для этого пригодится шаблон проектирование "Шаблонный метод" см https://goo.gl/Vz4828
+#зачет!
