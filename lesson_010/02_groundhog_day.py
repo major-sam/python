@@ -51,7 +51,7 @@ def day():
     if random_error == 13:
         dice = random.randint(1, 6)
         if dice == 1:
-            raise IamGodError('IDDQD')
+            raise IamGodError('IDDQD')  # Оригинальная отсылка :)
         elif dice == 2:
             raise DrunkError("too drunk")
         elif dice == 3:
@@ -74,5 +74,5 @@ while carma < ENLIGHTENMENT_CARMA_LEVEL:
         carma += day()
     except Exception as exc:
         print(f'on day {day_number} i am {exc}, current carma is {carma}')
-
+    # TODO Совсем мелочь, но прям не хватает строки с текущим днём и уровнем кармы.
 # https://goo.gl/JnsDqu

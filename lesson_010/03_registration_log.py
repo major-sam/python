@@ -10,7 +10,7 @@
 # - поле имени содержит только буквы
 # - поле емейл содержит @ и .
 # - поле возраст является числом от 10 до 99
-#
+# TODO А где же логи?
 # В результате проверки нужно сформировать два файла
 # - registrations_good.log для правильных данных, записывать строки как есть
 # - registrations_bad.log для ошибочных, записывать строку и вид ошибки.
@@ -30,7 +30,10 @@ class NotNameError(Exception):
 class NotEmailError(Exception):
     pass
 
-
+# TODO Нужен класс и методы :)
+# TODO Отдельные методы для записи в файл
+# TODO для проверки линии и запуска исключения
+# TODO для обработки исключения и формирования строки для записи в файл
 with open('registrations.txt', encoding='utf8') as source_file:
     for line in source_file:
         try:
@@ -40,11 +43,11 @@ with open('registrations.txt', encoding='utf8') as source_file:
             age = splitted_line[2]
             if len(splitted_line) < 3:
                 raise ValueError('not enough param in line')
-            elif [s for s in name if s.isdigit()]:
+            elif [s for s in name if s.isdigit()]:  # TODO Можно попроще - not name.isalpha()
                 raise NotNameError(f' {name} is wrong name')
             elif '@' not in mail or '.' not in mail or mail.isdigit():
                 raise NotEmailError(f'{mail} is wrong mail')
-            elif not age.isdigit() or not 10 < int(age) < 90:
+            elif not age.isdigit() or not 10 < int(age) < 90:  # За что же вы так со старичками от 90 до 99?
                 raise ValueError(f'age {int(age)} is wrong')
         except ValueError as exc:
             print(exc)
