@@ -18,6 +18,7 @@
 #
 # Входные параметры: файл для анализа, файл результата
 # Требования к коду: он должен быть готовым к расширению функциональности. Делать сразу на классах.
+from abc import abstractmethod
 
 
 class LogParser:
@@ -40,16 +41,16 @@ class LogParser:
                                      'min': None
                                      }
 
-    def parse(self, sort_lvl='min', out_file='res.txt', date_separator='-', time_separator=':'):
+    def parse(self, out_file='res.txt', date_separator='-', time_separator=':'):
         self.out_file = out_file
-        match_param = self._get_match_params(sort_lvl)
+        match_param = self._get_match_params()
         self.clear_result_file(out_file)
         lines = self.open_file()
         for line in lines:
             split_line = self.split_line_by_special_char_and_spaces(line)
             self.split_line_to_dict(split_line, date_separator, time_separator)
-            self.match_prev_line(condition=match_param, sort_lvl=sort_lvl)
-        self.match_prev_line(condition=match_param, sort_lvl=sort_lvl, last=True)
+            self.match_prev_line(match_param)
+        self.match_prev_line(match_param, last=True)
 
     def open_file(self):
         with open(self.file, 'r') as file:
@@ -82,69 +83,70 @@ class LogParser:
         self.current_date_status['min'] = int(log_time.split(sep=time_separator)[1])
         self.log_status = split_line[2]
 
-    # TODO Меня очень смущаеют эти два метода
-    # TODO Давайте попробуем разобраться с ними с помощью шаблонного метода, указанного в самом низу
-    # TODO В этом классе эти методы сделайте абстрактными
-    # TODO Для этого используйте @abstractmethod
-    # TODO И вызовите исключение (вы ведь уже знакомы с ними из 10 урока?)
-    # TODO Нужен будет декоратор, определение функции - а внутри только raise NotImplementedError()
-    # TODO Далее породите от этого класса 4 других, где эти два метода будут переопределены
-    # TODO Чтобы в итоге в каждом под-классе был свой небольшой метод без повторяющегося кода
-    @staticmethod
-    def _get_match_params(sort_lvl):
-        if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
-            _condition = 'min'
-        elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:  # hour
-            _condition = 'hour'
-        elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:  # day
-            _condition = 'day'
-        elif sort_lvl in ['month', 'Month', 'MONTH']:  # mouth
-            _condition = 'month'
-        elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:  # year
-            _condition = 'year'
-        else:
-            _condition = False
-            exit(1)
-        return _condition
+    @abstractmethod
+    def _get_match_params(self):
+        raise NotImplementedError()
 
-    def _get_print_params(self, sort_lvl):
-        if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
-            _print_line = '[{}-{:0>2}-{:0>2} {:0>2}:{:0>2}] {}'.format(self.previous_date_status['year'],
-                                                                       self.previous_date_status['month'],
-                                                                       self.previous_date_status['day'],
-                                                                       self.previous_date_status['hour'],
-                                                                       self.previous_date_status['min'],
-                                                                       self.nok_counter, )
-        elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:
-            _print_line = '[{}-{:0>2}-{:0>2} {:0>2}] {}'.format(self.previous_date_status['year'],
-                                                                self.previous_date_status['month'],
-                                                                self.previous_date_status['day'],
-                                                                self.previous_date_status['hour'],
-                                                                self.nok_counter, )
-        elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:
-            _print_line = '[{}-{:0>2}-{:0>2}] {}'.format(self.previous_date_status['year'],
-                                                         self.previous_date_status['month'],
-                                                         self.previous_date_status['day'],
-                                                         self.nok_counter)
-        elif sort_lvl in ['month', 'Month', 'MONTH']:
-            _print_line = '[{}-{:0>2}] {}'.format(self.previous_date_status['year'],
-                                                  self.previous_date_status['month'],
-                                                  self.nok_counter)
-        elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:
-            _print_line = '[{}] {}'.format(self.previous_date_status['year'], self.nok_counter)
-        else:
-            _print_line = 'sort level must be in range from 0 to 4'
-            _condition = False
-            exit(1)
-        return _print_line
+    @abstractmethod
+    def _get_print_params(self):
+        raise NotImplementedError()
 
-    def match_prev_line(self, condition, sort_lvl, last=False):
+    # @staticmethod
+    # def _get_match_params(sort_lvl):
+    #     if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
+    #         _condition = 'min'
+    #     elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:  # hour
+    #         _condition = 'hour'
+    #     elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:  # day
+    #         _condition = 'day'
+    #     elif sort_lvl in ['month', 'Month', 'MONTH']:  # mouth
+    #         _condition = 'month'
+    #     elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:  # year
+    #         _condition = 'year'
+    #     else:
+    #         _condition = False
+    #         exit(1)
+    #     return _condition
+
+    # @abstractmethod
+    # def _get_print_params(self, sort_lvl):
+    #     if sort_lvl in ['min', 'Min', 'MIN', 'minute']:
+    #         _print_line = '[{}-{:0>2}-{:0>2} {:0>2}:{:0>2}] {}'.format(self.previous_date_status['year'],
+    #                                                                    self.previous_date_status['month'],
+    #                                                                    self.previous_date_status['day'],
+    #                                                                    self.previous_date_status['hour'],
+    #                                                                    self.previous_date_status['min'],
+    #                                                                    self.nok_counter, )
+    #     elif sort_lvl in ['hour', 'Hour', 'HOUR', 'h', 'H']:
+    #         _print_line = '[{}-{:0>2}-{:0>2} {:0>2}] {}'.format(self.previous_date_status['year'],
+    #                                                             self.previous_date_status['month'],
+    #                                                             self.previous_date_status['day'],
+    #                                                             self.previous_date_status['hour'],
+    #                                                             self.nok_counter, )
+    #     elif sort_lvl in ['day', 'Day', 'DAY', 'd', 'D']:
+    #         _print_line = '[{}-{:0>2}-{:0>2}] {}'.format(self.previous_date_status['year'],
+    #                                                      self.previous_date_status['month'],
+    #                                                      self.previous_date_status['day'],
+    #                                                      self.nok_counter)
+    #     elif sort_lvl in ['month', 'Month', 'MONTH']:
+    #         _print_line = '[{}-{:0>2}] {}'.format(self.previous_date_status['year'],
+    #                                               self.previous_date_status['month'],
+    #                                               self.nok_counter)
+    #     elif sort_lvl in ['year', 'Year', 'YEAR', 'y', 'Y']:
+    #         _print_line = '[{}] {}'.format(self.previous_date_status['year'], self.nok_counter)
+    #     else:
+    #         _print_line = 'sort level must be in range from 0 to 4'
+    #         _condition = False
+    #         exit(1)
+    #     return _print_line
+
+    def match_prev_line(self, condition, last=False):
         if self.previous_date_status[condition] is None:
             self.shift()
         elif last:
-            self._print_nok(sort_lvl)
+            self._print_nok()
         elif self.previous_date_status[condition] != self.current_date_status[condition]:
-            self._print_nok(sort_lvl)
+            self._print_nok()
             self.nok_counter = 0
             self.ok_counter = 0
             self.shift()
@@ -153,8 +155,8 @@ class LogParser:
         elif self.log_status == 'OK':
             self.ok_counter += 1
 
-    def _print_nok(self, sort_lvl):
-        line = self._get_print_params(sort_lvl)
+    def _print_nok(self):
+        line = self._get_print_params()
         self.write_result_to_file(self.out_file, line)
         print(line + ' NOK of', self.nok_counter + self.ok_counter)
 
@@ -162,9 +164,79 @@ class LogParser:
         self.previous_date_status = self.current_date_status.copy()
 
 
+class LogParsePerMinute(LogParser):
+
+    def _get_match_params(self):
+        _condition = 'min'
+        return _condition
+
+    def _get_print_params(self):
+        _print_line = '[{}-{:0>2}-{:0>2} {:0>2}:{:0>2}] {}'.format(self.previous_date_status['year'],
+                                                                   self.previous_date_status['month'],
+                                                                   self.previous_date_status['day'],
+                                                                   self.previous_date_status['hour'],
+                                                                   self.previous_date_status['min'],
+                                                                   self.nok_counter)
+        return _print_line
+
+
+class LogParsePerHour(LogParser):
+
+    def _get_match_params(self):
+        _condition = 'hour'
+        return _condition
+
+    def _get_print_params(self):
+        _print_line = '[{}-{:0>2}-{:0>2} {:0>2}] {}'.format(self.previous_date_status['year'],
+                                                            self.previous_date_status['month'],
+                                                            self.previous_date_status['day'],
+                                                            self.previous_date_status['hour'],
+                                                            self.nok_counter, )
+        return _print_line
+
+
+class LogParsePerDay(LogParser):
+
+    def _get_match_params(self):
+        _condition = 'day'
+        return _condition
+
+    def _get_print_params(self):
+        _print_line = '[{}-{:0>2}-{:0>2}] {}'.format(self.previous_date_status['year'],
+                                                     self.previous_date_status['month'],
+                                                     self.previous_date_status['day'],
+                                                     self.nok_counter, )
+        return _print_line
+
+
+class LogParsePerMonth(LogParser):
+
+    def _get_match_params(self):
+        _condition = 'month'
+        return _condition
+
+    def _get_print_params(self):
+        _print_line = '[{}-{:0>2}] {}'.format(self.previous_date_status['year'],
+                                              self.previous_date_status['month'],
+                                              self.nok_counter, )
+        return _print_line
+
+
+class LogParsePerYear(LogParser):
+
+    def _get_match_params(self):
+        _condition = 'year'
+        return _condition
+
+    def _get_print_params(self):
+        _print_line = '[{}] {}'.format(self.previous_date_status['year'],
+                                       self.nok_counter, )
+        return _print_line
+
+
 log_file = 'events.txt'
-action = LogParser(file_name=log_file)
-action.parse(sort_lvl='month')
+action = LogParsePerDay(file_name=log_file)
+action.parse()
 
 # После выполнения первого этапа нужно сделать группировку событий
 #  - по часам
