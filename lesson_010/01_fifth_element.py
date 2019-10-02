@@ -8,19 +8,14 @@ try:
     input_data = input('Если хочешь что-нибудь сделать, сделай это сам: ')
     leeloo = int(input_data[4])
     result = BRUCE_WILLIS * leeloo
-# TODO Диалоги я оценил :) но надо добавить хоят бы намёк на причину ошибки
-# TODO Value, Index - введено не число, короткая строка
-# TODO А в exception желательно прямо вывести само исключение
-# TODO Для этого удобнее записать except Exception as exc
-# TODO А exc вывеси в f-строке
-except ValueError:
+except ValueError as exc:
     print(
-        'Корбен, Корбен, У меня нет огня! Корбен! И спичек нет! Может у тебя есть!?\n А!? Я бросил курить, это ужасно,'
-        ' верно!? Святой Отец, Вы курите!? Нам ведь нужно немного огня!\n Нет!? Нет! Мы все умрем!')
-except IndexError:
-    print('Бада бум!')
-except Exception:
-    print('Кто-нибудь ещё хочет вести переговоры?')
+        'Корбен, Корбен, У меня нет огня! Корбен! И спичек нет! Может у тебя есть!? А!? Я бросил курить, это ужасно,\n'
+        f' верно!? {exc}, Вы курите!? Нам ведь нужно немного огня!\n Нет!? Нет! Мы все умрем!')
+except IndexError as exc:
+    print(f'Бада бум!{exc}')
+except Exception as exc:
+    print(f'Кто-нибудь ещё хочет вести переговоры? {exc}')
 else:
     print(f"- Leeloo Dallas! Multi-pass № {result}!")
 
