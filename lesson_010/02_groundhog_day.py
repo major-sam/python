@@ -77,3 +77,4 @@ while carma < ENLIGHTENMENT_CARMA_LEVEL:
     else:
         print(f'on day {day_number} i am ok, current carma is {carma}')
 # https://goo.gl/JnsDqu
+#зачет!
