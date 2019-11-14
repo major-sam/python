@@ -49,5 +49,7 @@ def get_data():
 
 
 arr = get_data()
-for a, b in arr:
+for a, b in arr:  # TODO Нэйминг! :)
     print(a, b)
+
+# TODO В остальном верно
