@@ -34,10 +34,15 @@ class PrimeNumbers:
 
     def __next__(self):
         self.num += 1
+        self.res = None
         if self.num < self.end:
             if self.is_prime(self.num, self.list):
                 self.list.append(self.num)
-                return self.num
+                self.res = self.num
+            if self.res is None:
+                return next(self)
+            else:
+                return self.res
         else:
             raise StopIteration()
 
@@ -48,29 +53,58 @@ class PrimeNumbers:
         return True
 
 
-prime_number_iterator = PrimeNumbers(n=10000)
-for number in prime_number_iterator:
-    if number is not None:  # как это внести в итератор?
-        # TODO Можно проверить переменную перед возвратом
-        # TODO Если она == None, запустить себя же
-        # вернее как при определенных условиях перейти в следующую итерацию без ретурна? в уроке нет, нагуглить не вышло
-        print(number)
+#
+# prime_number_iterator = PrimeNumbers(n=10000)
+# for number in prime_number_iterator:
+#     print(number)
 
-# TODO После правки можете приступать ко второй части
-# TODO после подтверждения части 1 преподователем, можно делать
+
 # Часть 2
 # Теперь нужно создать генератор, который выдает последовательность простых чисел до n
 # Распечатать все простые числа до 10000 в столбик
 
 
 def prime_numbers_generator(n):
-    pass
-    # TODO здесь ваш код
-#
-#
-# for number in prime_numbers_generator(n=10000):
-#     print(number)
+    prime_numbers = []
+    lucky = False
+    for number in range(2999, n + 1):
+        for prime in prime_numbers:
+            if number % prime == 0:
+                break
+        else:
+            prime_numbers.append(number)
+            num_list = [int(x) for x in str(number)]
+            int_len = len(num_list)
+            if int_len > 1:
+                left_num_list, right_num_list = [], []
+                buffer = 0
+                nums = int_len // 2
+                while buffer < nums:
+                    # print(num_list[buffer], "<>", num_list[int_len - 1 - buffer])
+                    left_num_list.append(num_list[buffer])
+                    right_num_list.append(num_list[int_len - 1 - buffer])
+                    buffer += 1
+                left_num = summarization(left_num_list)
+                right_num = summarization(right_num_list)
+                lucky = left_num == right_num
+                # print(left_num, "<?>", right_num)
+            yield number, lucky
 
+
+def summarization(num):
+    sum = 0
+    for n in num:
+        sum += n
+    list_sum = [int(x) for x in str(sum)]
+    if len(list_sum) == 1:
+        return sum
+    else:
+        return summarization(list_sum)
+
+
+for number, lucky in prime_numbers_generator(n=10000):
+    if lucky:
+        print(number,  " is lucky")
 # Часть 3
 # Написать несколько функций-фильтров, которые выдает True, если число:
 # 1) "счастливое" в обыденном пониманиии - сумма первых цифр равна сумме последних
