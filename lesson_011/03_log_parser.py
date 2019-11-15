@@ -49,7 +49,6 @@ def get_data():
 
 
 arr = get_data()
-for a, b in arr:  # TODO Нэйминг! :)
-    print(a, b)
+for date, count in arr:
+    print(date, count)
 
-# TODO В остальном верно
