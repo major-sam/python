@@ -49,5 +49,6 @@ def get_data():
 
 
 arr = get_data()
-for a, b in arr:
-    print(a, b)
+for date, count in arr:
+    print(date, count)
+
