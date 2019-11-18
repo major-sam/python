@@ -75,7 +75,6 @@ def prime_numbers_generator(n):
             prime_numbers.append(number)
             lucky = is_lucky(number)
             yield number, lucky
-            # TODO Проверку на lucky лучше вынести в отдельную функцию
 
 
 def is_lucky(number):
