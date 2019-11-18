@@ -67,49 +67,46 @@ class PrimeNumbers:
 def prime_numbers_generator(n):
     prime_numbers = []
     lucky = False
-    for number in range(2999, n + 1):  # Почему начинаете с 2999?)
+    for number in range(2, n + 1):
         for prime in prime_numbers:
             if number % prime == 0:
                 break
         else:
             prime_numbers.append(number)
-            # TODO Проверку на lucky лучше вынести в отдельную функцию
-            num_list = [int(x) for x in str(number)]
-            int_len = len(num_list)
-            if int_len > 1:
-                left_num_list, right_num_list = [], []
-                buffer = 0
-                nums = int_len // 2
-                while buffer < nums:
-                    # print(num_list[buffer], "<>", num_list[int_len - 1 - buffer])
-                    left_num_list.append(num_list[buffer])
-                    right_num_list.append(num_list[int_len - 1 - buffer])
-                    buffer += 1
-                left_num = summarization(left_num_list)
-                right_num = summarization(right_num_list)
-                lucky = left_num == right_num
-                # print(left_num, "<?>", right_num)
+            lucky = is_lucky(number)
             yield number, lucky
+            # TODO Проверку на lucky лучше вынести в отдельную функцию
+
+
+def is_lucky(number):
+    num_list = [int(x) for x in str(number)]
+    int_len = len(num_list)
+    if int_len > 1:
+        left_num_list, right_num_list = [], []
+        buffer = 0
+        nums = int_len // 2
+        while buffer < nums:
+            # print(num_list[buffer], "<>", num_list[int_len - 1 - buffer])
+            left_num_list.append(num_list[buffer])
+            right_num_list.append(num_list[int_len - 1 - buffer])
+            buffer += 1
+        left_num = summarization(left_num_list)
+        right_num = summarization(right_num_list)
+        # print(left_num, "<?>", right_num)
+        return left_num == right_num
 
 
 def summarization(num):
     sum = 0
     for n in num:
         sum += n
-    list_sum = [int(x) for x in str(sum)]
-    if len(list_sum) == 1:
-        return sum
-    else:
-        return summarization(list_sum)
+    return sum
 
 
 for number, lucky in prime_numbers_generator(n=10000):
     if lucky:
         print(number,  " is lucky")
-        # TODO А вы проверяли результат? 9871  is lucky например не очень похоже на счастливое
-        # TODO Как минимум в обыденном понимании. Понятно что 9 + 8 = 17, 1 + 7 = 8 и 7 + 1 = 8
 
-# TODO Можете приступать к 3 части
 # Часть 3
 # Написать несколько функций-фильтров, которые выдает True, если число:
 # 1) "счастливое" в обыденном пониманиии - сумма первых цифр равна сумме последних
