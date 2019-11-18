@@ -52,3 +52,4 @@ arr = get_data()
 for date, count in arr:
     print(date, count)
 
+#зачет!
