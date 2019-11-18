@@ -67,12 +67,13 @@ class PrimeNumbers:
 def prime_numbers_generator(n):
     prime_numbers = []
     lucky = False
-    for number in range(2999, n + 1):
+    for number in range(2999, n + 1):  # Почему начинаете с 2999?)
         for prime in prime_numbers:
             if number % prime == 0:
                 break
         else:
             prime_numbers.append(number)
+            # TODO Проверку на lucky лучше вынести в отдельную функцию
             num_list = [int(x) for x in str(number)]
             int_len = len(num_list)
             if int_len > 1:
@@ -105,6 +106,10 @@ def summarization(num):
 for number, lucky in prime_numbers_generator(n=10000):
     if lucky:
         print(number,  " is lucky")
+        # TODO А вы проверяли результат? 9871  is lucky например не очень похоже на счастливое
+        # TODO Как минимум в обыденном понимании. Понятно что 9 + 8 = 17, 1 + 7 = 8 и 7 + 1 = 8
+
+# TODO Можете приступать к 3 части
 # Часть 3
 # Написать несколько функций-фильтров, которые выдает True, если число:
 # 1) "счастливое" в обыденном пониманиии - сумма первых цифр равна сумме последних
