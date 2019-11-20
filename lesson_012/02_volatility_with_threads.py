@@ -71,7 +71,7 @@ class TickerClass(threading.Thread):
 
     def run(self):
         self.get_data()
-        self.sec_id_volatility = self.do_math()
+        self.sec_id_volatility = {**self.sec_id_volatility, **self.do_math()}
 
 
 def sort_and_print(data):
