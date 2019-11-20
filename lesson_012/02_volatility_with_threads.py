@@ -22,7 +22,7 @@ import os
 import statistics
 import threading
 
-#from utils import time_track
+from utils import time_track
 
 
 class TickerClass(threading.Thread):
@@ -91,7 +91,7 @@ def sort_and_print(data):
     print(', '.join(zero_data))
 
 
-#@time_track
+@time_track
 def main():
     files = TickerClass(None).list_files(source_folder="trades")
     sum_dict = {}
@@ -106,6 +106,7 @@ def main():
     threads = [TickerClass([file, None]) for file in big_files]
     multi_file_thread = TickerClass(small_files)
     multi_file_thread.start()
+    multi_file_thread.join()
     # print(f'I am new multi_file_thread {multi_file_thread}')
     for thread in threads:
         # print(f'I am new thread {thread}')
@@ -115,8 +116,9 @@ def main():
         sum_dict = {**sum_dict, **thread.sec_id_volatility}
     sum_dict = {**sum_dict, **multi_file_thread.sec_id_volatility}
     sort_and_print(sum_dict)
-    print(multi_file_thread.is_alive(), thread.is_alive())
-    # TODO Добавил принт, не хватает ожидания окончания треда multi_file_thread
+    print(multi_file_thread.is_alive())
+    for _thread in threads:
+        print(_thread.is_alive())
 
 
 if __name__ == '__main__':
