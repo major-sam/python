@@ -76,6 +76,8 @@ import itertools
 import os
 import statistics
 
+from utils import time_track
+
 
 class TickerClass:
 
@@ -84,16 +86,19 @@ class TickerClass:
         self.bad_big_dictionary = {}
         self.sec_id_volatility = {}
 
+    @time_track
     def list_files(self):
         for file in os.listdir(self.source_folder):
             yield os.path.join(self.source_folder, file)
 
+    @time_track
     def read_file(self, file):
         with open(file, 'r') as file:
             file.readline()
             for line in file:
                 yield line
 
+    @time_track
     def get_data(self):
         files = self.list_files()
         for file in files:
@@ -110,6 +115,7 @@ class TickerClass:
                     self.bad_big_dictionary[sec_id][2].append(quantity)
             # print(f'scan {file}\n')
 
+    @time_track
     def do_math(self):
         my_dict = self.bad_big_dictionary
         for key in my_dict.keys():
@@ -120,6 +126,7 @@ class TickerClass:
             volatility = ((max_val - min_val) * 100) / mean_val
             self.sec_id_volatility[key] = volatility
 
+    @time_track
     def do_sort_and_print(self):
         data = self.sec_id_volatility
         zero_data = [k for k, v in data.items() if v == 0]
@@ -137,6 +144,7 @@ class TickerClass:
         print("Нулевая волатильность")
         print(', '.join(zero_data))
 
+    @time_track
     def run(self):
         self.get_data()
         self.do_math()
@@ -144,11 +152,11 @@ class TickerClass:
 
 
 TickerClass().run()
-# Возможно ли вместо словаря использовать объекты класса? у меня получилось только создавать объекты и складывать
-# ссылки на них в список. При попытки вытащить их - начинался бардак.
 
 # Не очень понял, по сути вы можете написать Класс, похожий на словарь :) и его использовать, так что ответ да, возможно
 
-# оставил на словаре - гдето на stackoverflow замеряли время между заполнением словаря и созданием объектов
-# - словарь оказался бысрее на 15%
-#зачет!
+
+# я имел ввиде что каждый  тикер - это новый объект класса, в котором считаются параметры по формулам прописанным
+# в классе. И манипулировать уже не словарем а объектами.
+
+# зачет!
