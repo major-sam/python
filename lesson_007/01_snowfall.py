@@ -16,20 +16,17 @@ class Snowflake:
         self.snowflake_x = sd.random_number(10, 590)
         self.snowflake_color = sd.COLOR_WHITE
 
-    def __del__(self):
-        print('')
-
     def draw(self, color=sd.COLOR_WHITE):
         if self.can_fall():
             self.snowflake_color = color
             flake_center = sd.Point(self.snowflake_x, self.snowflake_y)
             sd.snowflake(flake_center, self.snowflake_size, self.snowflake_color)
-        # если не могут упасть то экземпляр объекта удаляется
 
     def move(self):
-        self.snowflake_x -= sd.random_number(-10, 10)
-        self.snowflake_y -= sd.random_number(1, 15)
-        if self.snowflake_size > self.snowflake_y:
+        if self.can_fall():
+            self.snowflake_x -= sd.random_number(-10, 10)
+            self.snowflake_y -= sd.random_number(1, 15)
+        else:
             self.snowflake_y = self.snowflake_size
 
     def can_fall(self):
@@ -49,18 +46,11 @@ def get_flakes(count):
 
 def get_fallen_flakes():
     global flakes
-    flakes_on_flour = []
+    flakes_on_flour = 0
     for flake_on_flour in flakes:
         if not flake_on_flour.can_fall():
-            flakes_on_flour.append(flake_on_flour)
+            flakes_on_flour += 1
             flakes.remove(flake_on_flour)
-            del flake_on_flour  # удаляю же объекты по списку.
-            # если не удалять он же память не отпустит
-            # TODO del flake_on_flour - это не удаление снежинки. это удаление связи между переменной и обьектом.
-            # TODO память отпускается асинхронно, через сборщик мусора garbage collector.
-            # TODO а он проверяет кол-во переменных и/или контейнеров, указывающих на этот обьект.
-            # TODO Таким образом - лучше посчитать количество упавших снежинок через переменную-счетчик
-            # TODO и вернуть не список с этими снежинками, а их число
     return flakes_on_flour
 
 
@@ -94,7 +84,7 @@ while True:
         flake.draw()
     fallen_flakes = get_fallen_flakes()  # подчитать сколько снежинок уже упало
     if fallen_flakes:
-        append_flakes(count=len(fallen_flakes))  # добавить еще сверху
+        append_flakes(count=fallen_flakes)  # добавить еще сверху
     sd.sleep(0.1)
     if sd.user_want_exit():
         break
