@@ -72,5 +72,83 @@
 #
 #     def run(self):
 #         <обработка данных>
+import itertools
+import os
+import statistics
 
-# TODO написать код в однопоточном/однопроцессорном стиле
+
+class TickerClass:
+
+    def __init__(self):
+        self.source_folder = 'trades'
+        self.bad_big_dictionary = {}
+        self.sec_id_volatility = {}
+
+    def list_files(self):
+        for file in os.listdir(self.source_folder):
+            yield os.path.join(self.source_folder, file)
+
+    def read_file(self, file):
+        with open(file, 'r') as file:
+            file.readline()
+            for line in file:
+                yield line
+
+    def get_data(self):
+        files = self.list_files()
+        for file in files:
+            lines = self.read_file(file)
+            for line in lines:
+                line_to_arr = line.replace("\n", "").split(",")
+                sec_id, trade_time, price, quantity = line_to_arr
+                if self.bad_big_dictionary.get(sec_id) is None:
+                    # print(f'found {sec_id}')
+                    self.bad_big_dictionary[sec_id] = [[trade_time], [price], [int(quantity)]]
+                else:
+                    self.bad_big_dictionary[sec_id][0].append(trade_time)
+                    self.bad_big_dictionary[sec_id][1].append(price)
+                    self.bad_big_dictionary[sec_id][2].append(quantity)
+            # print(f'scan {file}\n')
+
+    def do_math(self):
+        my_dict = self.bad_big_dictionary
+        for key in my_dict.keys():
+            # print(f'do math for {key}')
+            min_val = min(float(sub) for sub in my_dict.get(key)[1])
+            max_val = max(float(sub) for sub in my_dict.get(key)[1])
+            mean_val = float("%.2f" % statistics.mean((float(sub) for sub in my_dict.get(key)[1])))
+            volatility = ((max_val - min_val) * 100) / mean_val
+            self.sec_id_volatility[key] = volatility
+
+    def do_sort_and_print(self):
+        data = self.sec_id_volatility
+        zero_data = [k for k, v in data.items() if v == 0]
+        data_sorted_min = {k: v for k, v in sorted(data.items(), key=lambda x: x[1]) if v != 0}
+        out_min = dict(itertools.islice(data_sorted_min.items(), 3))
+        data_sorted_max = {k: v for k, v in sorted(data.items(), key=lambda x: x[1], reverse=True)}
+        out_max = dict(itertools.islice(data_sorted_max.items(), 3))
+        print("\n\r+++++++++++++++++++++++++++++++\n\r   Максимальная волатильность:")
+        for key, value in out_max.items():
+            print(f'{key}  :  {value}  %')
+
+        print("   Минимальная волатильность:")
+        for key, value in out_min.items():
+            print(f'{key}  :  {value}  %')
+        print("Нулевая волатильность")
+        print(', '.join(zero_data))
+
+    def run(self):
+        self.get_data()
+        self.do_math()
+        self.do_sort_and_print()
+
+
+TickerClass().run()
+# Возможно ли вместо словаря использовать объекты класса? у меня получилось только создавать объекты и складывать
+# ссылки на них в список. При попытки вытащить их - начинался бардак.
+
+# Не очень понял, по сути вы можете написать Класс, похожий на словарь :) и его использовать, так что ответ да, возможно
+
+# оставил на словаре - гдето на stackoverflow замеряли время между заполнением словаря и созданием объектов
+# - словарь оказался бысрее на 15%
+#зачет!
