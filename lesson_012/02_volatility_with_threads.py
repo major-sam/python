@@ -61,7 +61,6 @@ class TickerClass(threading.Thread):
     def do_math(self):
         sec_id_volatility = {}
         for key in self.ticker_dictionary.keys():
-            # print(f'do math for {key}')
             min_val = min(float(sub) for sub in self.ticker_dictionary.get(key)[1])
             max_val = max(float(sub) for sub in self.ticker_dictionary.get(key)[1])
             mean_val = float("%.2f" % statistics.mean((float(sub) for sub in self.ticker_dictionary.get(key)[1])))
@@ -98,7 +97,6 @@ def main():
     big_files = []
     small_files = []
     for file in files:
-        print(file[0], file[1])
         if file[1] > 1000000:
             big_files.append(file[0])
         else:
@@ -107,18 +105,13 @@ def main():
     multi_file_thread = TickerClass(small_files)
     multi_file_thread.start()
     multi_file_thread.join()
-    # print(f'I am new multi_file_thread {multi_file_thread}')
     for thread in threads:
-        # print(f'I am new thread {thread}')
         thread.start()
     for thread in threads:
         thread.join()
         sum_dict = {**sum_dict, **thread.sec_id_volatility}
     sum_dict = {**sum_dict, **multi_file_thread.sec_id_volatility}
     sort_and_print(sum_dict)
-    print(multi_file_thread.is_alive())
-    for _thread in threads:
-        print(_thread.is_alive())
 
 
 if __name__ == '__main__':
