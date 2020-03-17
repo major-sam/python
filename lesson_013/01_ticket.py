@@ -18,14 +18,15 @@ FONT_SIZE_SMALL = 14
 FONT_PATH = os.path.join("fonts", "ofont.ru_Ubuntu.ttf")
 FONT_COLOR = 'black'
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--fio', help='Customer Full Name', type=str, required=True, nargs='+')
 parser.add_argument('--from', help='Departure Airport', dest='from_', type=str, required=True)
 parser.add_argument('--to', help='Destination Airport', type=str, required=True)
 parser.add_argument('--date', help='Departure Date in dd.mm.yyyy format',
                     type=lambda d: datetime.strptime(d, '%d.%m.%Y'), required=True)
-parser.add_argument('--save_to', help='Save Ticket in another folder', required=False, default='ticket.png')
+parser.add_argument('--save-to', help='Save Ticket in another folder in PNG format. Example:  c:\my ticket.png',
+                    dest='save_to', required=False,
+                    default='ticket.png', nargs='+')
 my_namespace = parser.parse_args()
 
 
@@ -47,7 +48,7 @@ def make_ticket(fio, from_, to, departure_date, out_path):
     draw.text(from_position, from_, font=font, fill=ImageColor.colormap[FONT_COLOR])
     draw.text(to_position, to, font=font, fill=ImageColor.colormap[FONT_COLOR])
     draw.text(date_position, departure_date, font=small_font, fill=ImageColor.colormap[FONT_COLOR])
-    image_template.show()
+    # image_template.show()
     out_path = out_path if out_path else 'ticket.png'
     image_template.save(out_path)
     print(f'Post card saved as {out_path}')
@@ -56,11 +57,8 @@ def make_ticket(fio, from_, to, departure_date, out_path):
 name_separator = " "
 name, departure, destination = name_separator.join(my_namespace.fio), my_namespace.from_, my_namespace.to
 date = my_namespace.date.strftime('%d.%m.%Y')
-save_to = os.path.normpath(my_namespace.save_to)
+save_to = os.path.normpath(name_separator.join(my_namespace.save_to))
 make_ticket(name, departure, destination, date, save_to)
-
-
-
 
 # Усложненное задание (делать по желанию).
 # Написать консольный скрипт c помощью встроенного python-модуля agrparse.
