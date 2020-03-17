@@ -30,6 +30,7 @@ parser.add_argument('--save-to', help='Save Ticket in another folder in PNG form
 my_namespace = parser.parse_args()
 
 
+# TODO определение функций должно располагаться в начале кода
 def make_ticket(fio, from_, to, departure_date, out_path):
     font = ImageFont.truetype(FONT_PATH, size=FONT_SIZE)
     small_font = ImageFont.truetype(FONT_PATH, size=FONT_SIZE_SMALL)
@@ -50,10 +51,13 @@ def make_ticket(fio, from_, to, departure_date, out_path):
     draw.text(date_position, departure_date, font=small_font, fill=ImageColor.colormap[FONT_COLOR])
     # image_template.show()
     out_path = out_path if out_path else 'ticket.png'
+    # TODO путь на всякий случай стоит нормализовать через os path normpath или использовать Path из pathlib
+    # https://habr.com/ru/post/453862/
     image_template.save(out_path)
     print(f'Post card saved as {out_path}')
 
 
+# TODO Эти операции, как мне кажется, лучше поместить в функцию
 name_separator = " "
 name, departure, destination = name_separator.join(my_namespace.fio), my_namespace.from_, my_namespace.to
 date = my_namespace.date.strftime('%d.%m.%Y')
