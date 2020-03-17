@@ -63,3 +63,4 @@ make_ticket(my_namespace.fio, my_namespace.from_, my_namespace.to, my_namespace.
 #   --date - обязательный, когда летим.
 #   --save_to - необязательный, путь для сохранения заполненнего билета.
 # и заполнять билет.
+#зачет!
