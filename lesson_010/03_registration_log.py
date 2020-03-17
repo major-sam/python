@@ -30,7 +30,6 @@ class NotEmailError(Exception):
     pass
 
 
-
 class RegistrationCheck:
 
     def __init__(self, file_name='registrations.txt', ok_file_name='registrations_good.log',
@@ -100,4 +99,4 @@ class RegistrationCheck:
 
 file = RegistrationCheck()
 file.find_bad_users()
-#зачет!
+# зачет!
