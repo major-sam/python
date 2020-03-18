@@ -39,6 +39,7 @@ my_namespace = parser.parse_args()
 try:
     result = my_namespace.result[0][0]
     # есть возможность не запаковывать строку в 2 листа? иначе он не читает нормально слэши и минус в начале
+    # TODO Возможно вам нужны raw строки r'...' они подавляют экранирование
     print(f'Количество очков для результатов {result} - {Bowling().get_result(result)}')
     print(f'Random score results for future tests: {Bowling().play_bowling()}')
 except Exception as exc:

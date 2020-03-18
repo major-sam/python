@@ -17,6 +17,8 @@ class Bowling:
         self.game_result_points = 0
         self.next_round = False
 
+    # TODO Формировать результат вам по сути не нужно
+    # TODO Нжуно принимать готовую строку и выдавать расчёт
     def roll_the_ball(self):
         self.roll_result = randint(0, self.skittles)
         self.skittles = self.skittles - self.roll_result
@@ -32,7 +34,8 @@ class Bowling:
             self.results.append(self.roll_result)
 
     def get_result(self, game_result):
-        try:
+        try:  # TODO Здесь try/except не нужен, тут только raise исключений
+            # TODO А вызов функции уже можно оборачивать в try/except
             for result in game_result:
                 if result == "X":
                     self.game_result_points += 20
@@ -50,9 +53,12 @@ class Bowling:
                 else:
                     self.game_result_points += int(result)
                 self.index += 1
+                # TODO Как подобные if/elif блоки учитывают ситуацию
+                # TODO Когда результатом будет например строка 9999999?
         except ValueError:
             raise ScoreError("Only X,/,- character and numbers allowed for bowling score")
         return self.game_result_points
+    # TODO Где проверяется размер строки? Должно быть ровно 10 фреймов
 
     def play_bowling(self):
         attempts = self.attempts

@@ -1,7 +1,9 @@
 from bowling import Bowling, ScoreError
 import unittest
 
-
+# TODO Тестов нужно будет побольше
+# TODO Как минимум должны быть: неправильные (пустые, длинные, с неверными символами, с верными символами в неверном
+# TODO порядке), правильные (простые, сложные)
 class BowlingScoreTest(unittest.TestCase):
 
     def test_sum(self):
