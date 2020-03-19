@@ -63,7 +63,8 @@ class SecondRoll(State):
             return 15, True
         elif not points.isdigit():
             raise Exception(f"{points} is illegal character")
-        elif int(points) + int(prev_round) > 10:
+        elif int(points) + int(prev_round) > 10:  # TODO Если равны 10, то тоже надо исключение бросать
+            # TODO + наверное стоит явно объединить сумму в скобки, чтобы порядок сравнений не нарушился вдруг
             raise Exception(f"There too match points({points}) for {10 - int(prev_round)} skittles")
         else:
             # print(f'SECOND ROLL IS {points}  PREVIOUS ROLL {prev_round}')
