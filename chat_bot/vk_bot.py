@@ -1,3 +1,5 @@
+from random import randint
+
 from chat_bot.vk_token import token, group_id
 import vk_api
 import vk_api.bot_longpoll
@@ -9,6 +11,7 @@ class Bot:
         self.token = token
         self.vk = vk_api.VkApi(token=token)
         self.long_poller = vk_api.bot_longpoll.VkBotLongPoll(self.vk, self.group_id)
+        self.api = self.vk.get_api()
 
     def run(self):
         for event in self.long_poller.listen():
@@ -18,7 +21,13 @@ class Bot:
                 print(exc)
 
     def on_event(self, event):
-        print(event)
+        if event.type == vk_api.bot_longpoll.VkBotEventType.MESSAGE_NEW:
+            print(event.object.message['text'])
+            print(event.object)
+            self.api.messages.send(message=f"yr msg is {event.object.message['text']}",
+                                   random_id=randint(0, 2 ** 24),
+                                   peer_id=event.object.message['peer_id'],
+                                   )
 
 
 if __name__ == "__main__":

@@ -41,36 +41,41 @@ class State(ABC):
 class FirstRoll(State):
     def roll(self, points, prev_round) -> tuple:
         if points == '/':
-            raise Exception("Round can't start with /")
+            raise ScoreError("Round can't start with /")
         elif points == 'X':
             return 20, True
+        elif points == '-':
+            self.context.transition_to(SecondRoll(), prev_round=0)
+            return 0, False
         elif points.isdigit():
-            self.context.transition_to(SecondRoll(), points)
+            self.context.transition_to(SecondRoll(), prev_round=points)
             return 0, False
             # print(f'FIRST ROLL IS {points}')
             # print("NEXT ROLL.")
         else:
-            raise Exception(f"{points} is illegal character")
+            raise ScoreError(f"{points} is illegal character")
 
 
 class SecondRoll(State):
 
     def roll(self, points, prev_round) -> tuple:
         if points == 'X':
-            raise Exception("Second round can't ends with X")
+            raise ScoreError("Second round can't ends with X")
         elif points == '/':
             self.context.transition_to(FirstRoll(), 0)
             return 15, True
-        elif not points.isdigit():
-            raise Exception(f"{points} is illegal character")
-        elif int(points) + int(prev_round) > 10:  # TODO Если равны 10, то тоже надо исключение бросать
-            # TODO + наверное стоит явно объединить сумму в скобки, чтобы порядок сравнений не нарушился вдруг
-            raise Exception(f"There too match points({points}) for {10 - int(prev_round)} skittles")
-        else:
-            # print(f'SECOND ROLL IS {points}  PREVIOUS ROLL {prev_round}')
-            # print("ConcreteStateB wants to change the state of the context.")
+        elif points == '-':
             self.context.transition_to(FirstRoll(), 0)
-            return int(points) + int(prev_round), True
+            return int(prev_round), True
+        elif not points.isdigit():
+            raise ScoreError(f"{points} is illegal character")
+        elif (int(points) + int(prev_round)) > 10:
+            raise ScoreError(f"There too match points({points}) for {10 - int(prev_round)} skittles")
+        elif (int(points) + int(prev_round)) == 10:
+            raise ScoreError(f"Wrong character ({points}) mast be '/'")
+        else:
+            self.context.transition_to(FirstRoll(), 0)
+            return (int(points) + int(prev_round)), True
 
 
 class Bowling:
@@ -91,7 +96,7 @@ class Bowling:
         if self.round_state:
             return self.game_points
         else:
-            raise Exception("Round not ended")
+            raise ScoreError("Round not ended")
 
     def check_result(self, item):
         return self.context.roll_it(item)
@@ -110,8 +115,6 @@ class BowlingGame:
         self.next_round = False
         self.game_tarted = False
 
-    # TODO Формировать результат вам по сути не нужно
-    # TODO Нжуно принимать готовую строку и выдавать расчёт
     def roll_the_ball(self):
         self.roll_result = randint(0, self.skittles)
         self.skittles = self.skittles - self.roll_result
@@ -127,8 +130,7 @@ class BowlingGame:
             self.results.append(self.roll_result)
 
     def get_result(self, game_result):
-        try:  # TODO Здесь try/except не нужен, тут только raise исключений
-            # TODO А вызов функции уже можно оборачивать в try/except
+        try:
             for result in game_result:
                 if result == "X":
                     self.game_result_points += 20
@@ -146,13 +148,9 @@ class BowlingGame:
                 else:
                     self.game_result_points += int(result)
                 self.index += 1
-                # TODO Как подобные if/elif блоки учитывают ситуацию
-                # TODO Когда результатом будет например строка 9999999?
         except ValueError:
             raise ScoreError("Only X,/,- character and numbers allowed for bowling score")
         return self.game_result_points
-
-    # TODO Где проверяется размер строки? Должно быть ровно 10 фреймов
 
     def play_bowling(self):
         attempts = self.attempts
@@ -176,7 +174,8 @@ class BowlingGame:
 
 
 # BowlingGame().play_bowling()
-try:
-    print(f" total score is {Bowling().get_result(result='1231451/X')}")
-except Exception as exc:
-    print(exc)
+# try:
+#     test_score = '3545-6X9-9-X6/1/26'
+#     print(f"for {test_score} total score is {Bowling().get_result(test_score)}")
+# except Exception as exc:
+#     print(exc)
