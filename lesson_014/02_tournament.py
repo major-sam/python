@@ -25,8 +25,83 @@
 #
 # Из текущего файла сделать консольный скрипт для формирования файла с результатами турнира.
 # Параметры скрипта: --input <файл протокола турнира> и --output <файл результатов турнира>
+from pprint import pprint
 
-# TODO тут ваш код
+from bowling import Bowling
+
+
+class TournamentResult:
+
+    def __init__(self):
+        self.tournament_result_dict = {}
+        self.file = 'tournament.txt'
+        self.out_file = 'tournament_result.txt'
+        self.tour = None
+        self.total_score = {}
+
+    def read_file(self, file):
+        with open(file, encoding='utf8') as file:
+            for line in file:
+                yield line
+
+    def get_winner(self, tour):
+        sorted_table = sorted(tour, key=lambda i: i[2], reverse=True)
+        return sorted_table[0][0]
+
+    def get_data(self):
+        lines = self.read_file(self.file)
+        for line in lines:
+            line = line.replace("\n", "")
+            if line.startswith("### Tour "):
+                self.tour = line
+                self.write_file(line)
+                self.tournament_result_dict[self.tour] = []
+            elif line == "":
+                continue
+            elif line == "winner is .........":
+                winner = self.get_winner(self.tournament_result_dict[self.tour])
+                self.tournament_result_dict[self.tour].append(f"winner is {winner}")
+                self.write_file(f"winner is {winner}\n")
+                self.total_score[winner][1] += 1
+            else:
+                name, score = line.split("\t")
+                try:
+                    points = Bowling().get_result(score)
+                except Exception as exc:
+                    points = 0
+                    print(f'{exc} in score {score} - no points for {name}')
+                self.tournament_result_dict[self.tour].append([name, score, points])
+                self.write_file(f"{name}\t{score}\t{points}")
+                if name in self.total_score and name is not None:
+                    self.total_score[name][0] += 1
+                else:
+                    self.total_score[name] = [0, 0]
+        self.print_total_score()
+
+    def write_file(self, line, write_param='a+'):
+        with open(file=self.out_file, mode=write_param, encoding='utf8') as source_file:
+            source_file.write(f"{line}\n")
+
+    def print_total_score(self):
+        list_for_sort = []
+        for player in self.total_score:
+            total_games = self.total_score.get(player)[0]
+            total_wins = self.total_score.get(player)[1]
+            list_for_sort.append([player, total_games, total_wins])
+        list_for_sort.sort(key=lambda i: i[2], reverse=True)
+        print("+----------+------------------+--------------+\n" +
+              "| Игрок    |  сыграно матчей  |  всего побед |\n" +
+              "+----------+------------------+--------------+")
+        for item in list_for_sort:
+            print('|{name:<10}|{matches:^18}|{wins:^14}|'
+                  .format(name=item[0], matches=item[1], wins=item[2]))
+        print("+----------+------------------+--------------+\n")
+
+
+try:
+    TournamentResult().get_data()
+except Exception as exc:
+    print(exc)
 
 # Усложненное задание (делать по желанию)
 #
