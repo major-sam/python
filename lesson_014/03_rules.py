@@ -109,3 +109,4 @@ try:
                      output_file=my_namespace.output[0]).get_data(rules)
 except Exception as exc:
     print(exc)
+#Зачет!

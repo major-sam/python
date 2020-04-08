@@ -327,14 +327,3 @@ class BowlingGame:
         res_line = ''.join(map(str, self.results))
         self.get_result(res_line)
         return res_line
-
-
-# BowlingGame().play_bowling()
-# try:
-#     # test_score = 'XXX347/21'
-#     test_score = '3545-6X9-9-X6/1/26'
-#     # test_score ='X4/34'
-#     res = Bowling().get_result(test_score, True)
-#     print(f"for {test_score} total score is {res}")
-# except Exception as exc:
-#     print(exc)
