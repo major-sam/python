@@ -25,17 +25,17 @@
 #
 # Из текущего файла сделать консольный скрипт для формирования файла с результатами турнира.
 # Параметры скрипта: --input <файл протокола турнира> и --output <файл результатов турнира>
-from pprint import pprint
 
 from bowling import Bowling
+import argparse
 
 
 class TournamentResult:
 
-    def __init__(self):
+    def __init__(self, input_file='tournament.txt', output_file='tournament_result.txt'):
         self.tournament_result_dict = {}
-        self.file = 'tournament.txt'
-        self.out_file = 'tournament_result.txt'
+        self.file = input_file
+        self.out_file = output_file
         self.tour = None
         self.total_score = {}
 
@@ -69,7 +69,7 @@ class TournamentResult:
                     points = Bowling().get_result(score)
                 except Exception as exc:
                     points = 0
-                    print(f'{exc} in score {score} - no points for {name}')
+                    # print(f'{exc} in score {score} - no points for {name}')
                 self.tournament_result_dict[self.tour].append([name, score, points])
                 self.write_file(f"{name}\t{score}\t{points}")
                 if name in self.total_score and name is not None:
@@ -98,8 +98,17 @@ class TournamentResult:
         print("+----------+------------------+--------------+\n")
 
 
+parser = argparse.ArgumentParser()
+parser.add_argument('--input', help='файл протокола турнира'
+                    , required=True, nargs="+")
+parser.add_argument('--output', help='файл результатов турнира'
+                    , required=True, nargs='+')
+my_namespace = parser.parse_args()
+
+# print(f'input file  = {my_namespace.input[0]}')
+# # print(f'output file = {my_namespace.output[0]}')
 try:
-    TournamentResult().get_data()
+    TournamentResult(input_file=my_namespace.input[0], output_file=my_namespace.output[0]).get_data()
 except Exception as exc:
     print(exc)
 
