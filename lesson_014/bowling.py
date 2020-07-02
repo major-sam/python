@@ -240,12 +240,10 @@ class Bowling:
 
     def get_result(self, result, score_type=False):
         for item in result:
-            # print(item)
             round_info = self.check_result(item, score_type)
             self.round_end = round_info[1]
             self.round_points = round_info[0]
             self.game_points += self.round_points
-            # print(self.round_points, self.game_points)
         if self.round_end:
             return self.game_points
         else:
@@ -327,3 +325,5 @@ class BowlingGame:
         res_line = ''.join(map(str, self.results))
         self.get_result(res_line)
         return res_line
+
+

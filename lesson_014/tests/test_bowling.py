@@ -1,4 +1,4 @@
-from bowling import Bowling, BowlingGame, ScoreError
+from bowling import Bowling, BowlingGame, ScoreError, FirstRoll
 import unittest
 
 
@@ -40,5 +40,4 @@ class BowlingScoreTest(unittest.TestCase):
         score = BowlingGame().play_bowling()
         rounds = 10
         result = (len(score)+score.count('X'))/2
-        print("")
         self.assertEqual(result, rounds)
