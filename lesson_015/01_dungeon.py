@@ -92,11 +92,163 @@
 #
 # и так далее...
 
+import json
+import re
+from datetime import datetime
+from decimal import Decimal
+import csv
 
 remaining_time = '123456.0987654321'
 # если изначально не писать число в виде строки - теряется точность!
 field_names = ['current_location', 'current_experience', 'current_date']
 
-# TODO тут ваш код
 
 # Учитывая время и опыт, не забывайте о точности вычислений!
+
+
+class RpgGame:
+
+    def __init__(self):
+        self.dungeon_file = "python_base/lesson_015/rpg.json"
+        self.exp = 0
+        self.position = None
+        self.remaining_time = Decimal(remaining_time)
+        self.values = None
+        self.re_exp = r'exp(\d+)'
+        self.re_time = r'tm(\d+)'
+        self.log_buffer = []
+
+    def log_to_csv(self):
+        with open('python_base/lesson_015/dungeon.csv', 'w', newline='') as out_csv:
+            writer = csv.DictWriter(out_csv, delimiter=',', fieldnames=field_names)
+            writer.writeheader()
+            writer.writerows(self.log_buffer[0])
+
+    def log_to_buffer(self, location, experience, date):
+        event_list = [{field_names[0]: location, field_names[1]: experience, field_names[2]: date}]
+        self.log_buffer.append(event_list)
+
+    def get_dungeon(self):
+        with open(self.dungeon_file, 'r') as read_file:
+            loaded_dungeon = json.load(read_file)
+        return loaded_dungeon
+
+    def get_position(self, dungeon):
+        self.position = list(dungeon.keys())[0]
+        self.values = list(dungeon.values())[0]
+        return self.position, self.values
+
+    def get_option_list(self, actions):
+        room_list = []
+        mob_list = []
+        for i in actions:
+            if type(i) is str:
+                mob_list.append(i)
+            elif type(i) is dict:
+                room_list.append(str(list(i.keys())[0]))
+        return mob_list, room_list
+
+    def print_position(self):
+        print(f'Вы находитесь в {self.position}\n'
+              f'У вас {self.exp} опыта и осталось {self.remaining_time} секунд до наводнения'
+              f'Прошло уже 0:00:00')
+        if self.remaining_time < 0:
+            self.death("time")
+        self.log_to_buffer(self.position, self.exp, str(datetime.now()))
+
+    def print_option_list(self, mob_list, room_list):
+        self.print_position()
+        print("Внутри вы видите:")
+        if len(mob_list) > 0:
+            for mob in mob_list:
+                print(f' — Монстра {mob}')
+        for room in room_list:
+            print(f' — Вход в локацию:{room}')
+
+    def fight_mob(self, mob_list):
+        kill_mob = mob_list.pop()
+        self.exp += int(re.search(self.re_exp, kill_mob)[1])
+        self.remaining_time -= Decimal(re.search(self.re_time, kill_mob)[1])
+        return mob_list
+
+    def action(self, mob_list, room_list):
+        if len(mob_list) > 0:
+            act = input('Выберите действие:\n'
+                        '1.Атаковать монстра\n'
+                        '2.Перейти в другую локацию\n'
+                        '3.Сдаться и выйти из игры\n')
+            if act == "1":
+                mob_list = self.fight_mob(mob_list)
+                self.print_option_list(mob_list, room_list)
+                self.action(mob_list, room_list)
+            elif act == "2":
+                self.change_room(room_list)
+            else:
+                self.death()
+        else:
+            act = input('Выберите действие:\n'
+                        '1.Перейти в другую локацию\n'
+                        '2.Сдаться и выйти из игры\n')
+            if act == "1":
+                self.change_room(room_list)
+            else:
+                self.death()
+
+    def change_room(self, rooms):
+        index = 1
+        if len(rooms) == 1 and rooms[0] == "Hatch_tm159.098765432":
+            if self.exp < 280:
+                self.death("exp")
+            else:
+                for val in self.values:
+                    if type(val) is dict:
+                        print(val.get(rooms[0]))
+                        self.log_to_csv()
+                        exit(0)
+        elif len(rooms) == 1:
+            self.position = rooms[0]
+        elif len(rooms) == 0:
+            self.death("dead end")
+        else:
+            print('Выберите комнату')
+            for room in rooms:
+                print(f'{index}. {room}')
+                index += 1
+            choose_index = input()
+            self.position = rooms[int(choose_index) - 1]
+        self.remaining_time -= Decimal(re.search(self.re_time, self.position)[1])
+        for item in self.values:
+            if type(item) is dict and list(item.keys())[0] is self.position:
+                self.values = item
+        pos, val = self.get_position(self.values)
+        mob_list, room_list = self.get_option_list(val)
+        self.print_option_list(mob_list, room_list)
+        self.action(mob_list, room_list)
+
+    def death(self, reason=None):
+        self.log_to_csv()
+        if reason == "exp":
+            print("Недостаточно опыта для открытия люка")
+        elif reason == "time_off":
+            print("Время вышло. Воздух тоже")
+        elif reason == "dead end":
+            print("Тут тупик, деваться некуда")
+        else:
+            print("Удачно упавший камень с потолка заканчивает ваш рейд")
+            exit(0)
+        self.resurrection()
+
+    def resurrection(self):
+        print("Вас благополучно воскресили, не спрашивайте как.")
+        self.log_buffer = []
+        self.start()
+
+    def start(self):
+        dungeon = self.get_dungeon()
+        self.position, self.values = self.get_position(dungeon)
+        mobs, rooms = self.get_option_list(self.values)
+        self.print_option_list(mobs, rooms)
+        self.action(mobs, rooms)
+
+
+RpgGame().start()
