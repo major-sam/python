@@ -108,7 +108,8 @@ field_names = ['current_location', 'current_experience', 'current_date']
 class RpgGame:
 
     def __init__(self):
-        self.dungeon_file = "python_base/lesson_015/rpg.json"
+        self.dungeon_file = "rpg.json"
+        # TODO Старайтесь использовать пути относительно директории, в которой находится сам запускаемый файл
         self.exp = 0
         self.position = None
         self.remaining_time = Decimal(remaining_time)
@@ -118,7 +119,7 @@ class RpgGame:
         self.log_buffer = []
 
     def log_to_csv(self):
-        with open('python_base/lesson_015/dungeon.csv', 'w', newline='') as out_csv:
+        with open('dungeon.csv', 'w', newline='') as out_csv:  # TODO тут тоже
             writer = csv.DictWriter(out_csv, delimiter=',', fieldnames=field_names)
             writer.writeheader()
             writer.writerows(self.log_buffer[0])
@@ -246,6 +247,9 @@ class RpgGame:
         else:
             print("Удачно упавший камень с потолка заканчивает ваш рейд")
             exit(0)
+            # TODO При вызове этого метода нужно гарантировать, что все финализаторы всяких объектов отработают.
+            # TODO Это прокатит при их вызове в __del__, но не везде это возможно.
+            # TODO Старайтесь избегать вызова exit, давайте программе штатно завершиться
         self.resurrection()
 
     def resurrection(self):
@@ -262,3 +266,4 @@ class RpgGame:
 
 
 RpgGame().start()
+# TODO В csv надо записывать каждый переход героя на новую локацию
