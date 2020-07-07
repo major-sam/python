@@ -105,7 +105,6 @@ field_names = ['current_location', 'current_experience', 'current_date']
 
 # Учитывая время и опыт, не забывайте о точности вычислений!
 
-
 class RpgGame:
 
     def __init__(self):
@@ -181,18 +180,25 @@ class RpgGame:
                 mob_list = self.fight_mob(mob_list)
                 self.print_option_list(mob_list, room_list)
                 self.action(mob_list, room_list)
+                print("out of range")
             elif act == "2":
                 self.change_room(room_list)
-            else:
+            elif act == "3":
                 self.death()
+            else:
+                print("wrong command")
+                self.action(mob_list, room_list)
         else:
             act = input('Выберите действие:\n'
                         '1.Перейти в другую локацию\n'
                         '2.Сдаться и выйти из игры\n')
             if act == "1":
                 self.change_room(room_list)
-            else:
+            elif act == "2":
                 self.death()
+            else:
+                print("wrong command")
+                self.action(mob_list, room_list)
 
     def change_room(self, rooms):
         index = 1
@@ -215,7 +221,11 @@ class RpgGame:
                 print(f'{index}. {room}')
                 index += 1
             choose_index = input()
-            self.position = rooms[int(choose_index) - 1]
+            if int(choose_index) and len(rooms) >= int(choose_index) > 0:
+                self.position = rooms[int(choose_index) - 1]
+            else:
+                print("wrong command")
+                self.change_room(rooms)
         self.remaining_time -= Decimal(re.search(self.re_time, self.position)[1])
         for item in self.values:
             if type(item) is dict and list(item.keys())[0] is self.position:
