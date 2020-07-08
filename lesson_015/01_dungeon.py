@@ -110,7 +110,7 @@ field_names = ['current_location', 'current_experience', 'current_date']
 class RpgGame:
 
     def __init__(self):
-        self.dungeon_file = "python_base/lesson_015/rpg.json"
+        self.dungeon_file = "rpg.json"
         self.exp = None
         self.position = None
         self.remaining_time = None
@@ -118,7 +118,7 @@ class RpgGame:
         self.re_exp = r'exp(\d+)'
         self.re_time = r'tm(\d+)'
         self.log_buffer = []
-        self.dungeon_log = 'python_base/lesson_015/dungeon.csv'
+        self.dungeon_log = 'dungeon.csv'
         self.start_time = None
 
     def log_to_csv(self):
@@ -186,7 +186,7 @@ class RpgGame:
                 mob_list = self.fight_mob(mob_list)
                 self.print_option_list(mob_list, room_list)
                 self.action(mob_list, room_list)
-                #print("out of range")
+                # print("out of range")
             elif act == "2":
                 self.change_room(room_list)
             elif act == "3":
@@ -271,3 +271,4 @@ class RpgGame:
 
 
 RpgGame().start()
+#зачёт!
