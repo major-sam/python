@@ -93,9 +93,11 @@
 # и так далее...
 
 import json
+import os
 import re
 from datetime import datetime
 from decimal import Decimal
+import time
 import csv
 
 remaining_time = '123456.0987654321'
@@ -108,24 +110,26 @@ field_names = ['current_location', 'current_experience', 'current_date']
 class RpgGame:
 
     def __init__(self):
-        self.dungeon_file = "rpg.json"
-        # TODO Старайтесь использовать пути относительно директории, в которой находится сам запускаемый файл
-        self.exp = 0
+        self.dungeon_file = "python_base/lesson_015/rpg.json"
+        self.exp = None
         self.position = None
-        self.remaining_time = Decimal(remaining_time)
+        self.remaining_time = None
         self.values = None
         self.re_exp = r'exp(\d+)'
         self.re_time = r'tm(\d+)'
         self.log_buffer = []
+        self.dungeon_log = 'python_base/lesson_015/dungeon.csv'
+        self.start_time = None
 
     def log_to_csv(self):
-        with open('dungeon.csv', 'w', newline='') as out_csv:  # TODO тут тоже
+        with open(self.dungeon_log, 'a', newline='') as out_csv:
             writer = csv.DictWriter(out_csv, delimiter=',', fieldnames=field_names)
-            writer.writeheader()
-            writer.writerows(self.log_buffer[0])
+            if os.path.isfile(self.dungeon_log):
+                writer.writeheader()
+            writer.writerows(self.log_buffer)
 
     def log_to_buffer(self, location, experience, date):
-        event_list = [{field_names[0]: location, field_names[1]: experience, field_names[2]: date}]
+        event_list = {field_names[0]: location, field_names[1]: experience, field_names[2]: date}
         self.log_buffer.append(event_list)
 
     def get_dungeon(self):
@@ -149,11 +153,12 @@ class RpgGame:
         return mob_list, room_list
 
     def print_position(self):
+        in_game_time = time.gmtime((datetime.now() - self.start_time).total_seconds())
         print(f'Вы находитесь в {self.position}\n'
               f'У вас {self.exp} опыта и осталось {self.remaining_time} секунд до наводнения'
-              f'Прошло уже 0:00:00')
+              f' Прошло уже {time.strftime("%H:%M:%S", in_game_time)}')
         if self.remaining_time < 0:
-            self.death("time")
+            self.death("time_off")
         self.log_to_buffer(self.position, self.exp, str(datetime.now()))
 
     def print_option_list(self, mob_list, room_list):
@@ -181,7 +186,7 @@ class RpgGame:
                 mob_list = self.fight_mob(mob_list)
                 self.print_option_list(mob_list, room_list)
                 self.action(mob_list, room_list)
-                print("out of range")
+                #print("out of range")
             elif act == "2":
                 self.change_room(room_list)
             elif act == "3":
@@ -203,15 +208,14 @@ class RpgGame:
 
     def change_room(self, rooms):
         index = 1
-        if len(rooms) == 1 and rooms[0] == "Hatch_tm159.098765432":
-            if self.exp < 280:
-                self.death("exp")
-            else:
-                for val in self.values:
-                    if type(val) is dict:
-                        print(val.get(rooms[0]))
-                        self.log_to_csv()
-                        exit(0)
+        if len(rooms) == 1 and rooms[0] == "Hatch_tm159.098765432" and self.exp < 280:
+            self.death("exp")
+        elif len(rooms) == 1 and rooms[0] == "Hatch_tm159.098765432" and self.exp >= 280:
+            for val in self.values:
+                if type(val) is dict:
+                    print(val.get(rooms[0]))
+                    self.log_to_csv()
+                    exit(0)
         elif len(rooms) == 1:
             self.position = rooms[0]
         elif len(rooms) == 0:
@@ -237,27 +241,28 @@ class RpgGame:
         self.action(mob_list, room_list)
 
     def death(self, reason=None):
-        self.log_to_csv()
         if reason == "exp":
-            print("Недостаточно опыта для открытия люка")
+            print("Недостаточно опыта для открытия люка\n")
+            self.resurrection()
         elif reason == "time_off":
-            print("Время вышло. Воздух тоже")
+            print("Время вышло. Воздух тоже\n")
+            self.resurrection()
         elif reason == "dead end":
-            print("Тут тупик, деваться некуда")
+            print("Тут тупик, деваться некуда\n")
+            self.resurrection()
         else:
-            print("Удачно упавший камень с потолка заканчивает ваш рейд")
-            exit(0)
-            # TODO При вызове этого метода нужно гарантировать, что все финализаторы всяких объектов отработают.
-            # TODO Это прокатит при их вызове в __del__, но не везде это возможно.
-            # TODO Старайтесь избегать вызова exit, давайте программе штатно завершиться
-        self.resurrection()
+            print("Удачно упавший камень с потолка заканчивает ваш рейд\n")
 
     def resurrection(self):
+        self.log_to_csv()
         print("Вас благополучно воскресили, не спрашивайте как.")
         self.log_buffer = []
         self.start()
 
     def start(self):
+        self.exp = 0
+        self.remaining_time = Decimal(remaining_time)
+        self.start_time = datetime.now()
         dungeon = self.get_dungeon()
         self.position, self.values = self.get_position(dungeon)
         mobs, rooms = self.get_option_list(self.values)
@@ -266,4 +271,3 @@ class RpgGame:
 
 
 RpgGame().start()
-# TODO В csv надо записывать каждый переход героя на новую локацию
