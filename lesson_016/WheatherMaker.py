@@ -52,4 +52,4 @@ class WeatherMaker:
         return self.weather_dict
 
 
-WeatherMaker().get_data()
+#WeatherMaker().get_data()

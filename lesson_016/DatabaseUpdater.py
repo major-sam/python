@@ -4,7 +4,11 @@ import peewee
 from playhouse.db_url import connect
 import database as db
 from WheatherMaker import WeatherMaker as wm
-
+# TODO Вы всё подготовили для использования коннекта, но решили им не пользоваться?)
+# TODO По сути это ещё один способ создать тот же объект, внутри модуля с connect есть ассоциация
+# TODO 'sqlite': SqliteDatabase
+# TODO т.е. если вы используете путь вроде 'sqlite:///weather.db'
+# TODO то он сопоставит первую часть по словарю, и создаст такой же объект по пути, указанному во второй части
 sql_lite_database = peewee.SqliteDatabase("python_base\lesson_016\default2.db")
 db.proxy.initialize(sql_lite_database)
 sql_lite_database.create_tables([db.Date, db.DayStats, db.NightStats], safe=True)
@@ -42,6 +46,8 @@ def get_data(date):
     :return: dict
     """
     day, night = None, None
+    # TODO В целом тут это ещё терпимо, но если программа работает с объемами данных побольше
+    # TODO То ей нужно будет отдельно писать функцию/метод, чтобы тянуть сразу множество записей (не за один день)
     day_result = db.DayStats.select().where(db.DayStats.date == date)
     for result in day_result:
         day = {result.daytime: {'temperature': result.temperature,

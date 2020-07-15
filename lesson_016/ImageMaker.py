@@ -36,6 +36,9 @@ class ImageMaker:
     def map_color(self, color_schema):
         grad_by_line_image = self.card_template.copy()
         width, height = grad_by_line_image.shape[1], grad_by_line_image.shape[0]
+        # TODO много повторяющего кода
+        # TODO В идеале выбор нужно реализовать через словарь
+        # TODO и оставить тут только небольшую часть уникального кода
         if color_schema == "gray":
             for i in range(0, width):
                 color = self.gray_to_white(i, width)
@@ -135,6 +138,7 @@ class ImageMaker:
 
         matched_color = None
         matched_img = None
+        # TODO Такой выбор тоже стоит реализовывать через словарь (можно даже словарь вынести в доп модуль)
         if sky == "Ясно":
             matched_color = 'yellow'
             matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-0.png"
