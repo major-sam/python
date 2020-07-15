@@ -49,7 +49,6 @@ class WeatherMaker:
                          'pressure': night_pressure,
                          'humidity': night_humidity}
                  }]})
-        # pprint(self.weather_dict)
         return self.weather_dict
 
 

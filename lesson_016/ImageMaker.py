@@ -5,8 +5,8 @@ import re
 import cv2
 import numpy as np
 from PIL import ImageFont
-
-import WheatherMaker as wm
+from DatabaseUpdater import get_data as get_data_from_db
+from DatabaseUpdater import save_data as save_data_to_db
 
 
 class ImageMaker:
@@ -63,9 +63,8 @@ class ImageMaker:
     def make_card(self, date):
         bg_color, card_image_day, card_image_night, source_data = self.get_card_color(date)
         card_template = self.map_color(bg_color)
-        pprint(source_data)
         day_dict = (source_data.get(date))[0].get("День")
-        night_dict = (source_data.get(date))[0].get("Ночь")
+        night_dict = (source_data.get(date))[1].get("Ночь")
         day_text = self.make_text(day_dict)
         night_text = self.make_text(night_dict)
         day_img = cv2.imread(card_image_day, -1)
@@ -119,10 +118,10 @@ class ImageMaker:
 
         card_color, day_img, night_img, source_data = None, None, None, None
         if re.match(r'\d\d\d\d-\d\d-\d\d', date):
-            source_data = wm.WeatherMaker().get_data()
-            # print(source_data)
+            save_data_to_db()
+            source_data = get_data_from_db(date)
             day_sky = source_data.get(date)[0].get("День").get("sky")
-            night_sky = source_data.get(date)[0].get("Ночь").get("sky")
+            night_sky = source_data.get(date)[1].get("Ночь").get("sky")
             card_color, day_img = self.match_sky_to_image(day_sky)
             night_img = self.match_sky_to_image(night_sky, night_shift=2)[1]
         else:
@@ -196,7 +195,10 @@ class ImageMaker:
         elif sky == "Облачно и вероятность дождя с грозами":
             matched_color = 'blue'
             matched_img = f"python_base/lesson_016/img/png/IMG-{5 + night_shift}-5.png"
+        else:
+            matched_color = 'yellow'
+            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-5.png"
         return matched_color, matched_img
 
 
-ImageMaker().make_card("2020-07-15")
+#ImageMaker().make_card("2020-07-15")

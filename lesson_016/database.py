@@ -9,11 +9,11 @@ class BaseModel(pw.Model):
 
 
 class Date(BaseModel):
-    date = pw.CharField()
+    date = pw.CharField(index=True, unique=True)
 
 
 class DayStats(BaseModel):
-    date = pw.ForeignKeyField(Date)
+    date = pw.ForeignKeyField(Date, index=True, unique=True)
     daytime = pw.CharField()
     humidity = pw.CharField()
     pressure = pw.CharField()
@@ -24,7 +24,7 @@ class DayStats(BaseModel):
 
 
 class NightStats(BaseModel):
-    date = pw.ForeignKeyField(Date)
+    date = pw.ForeignKeyField(Date, index=True, unique=True)
     daytime = pw.CharField()
     humidity = pw.CharField()
     pressure = pw.CharField()

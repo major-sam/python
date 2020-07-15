@@ -1,0 +1,14 @@
+{"2020-01-10": [
+{"День": {"temperature": "+10",
+        "sky": "Облачно и слабый снег",
+        "temperature_feeling": "+10",
+        "rain_probability": "64%",
+        "pressure": "555",
+        "humidity": "12%"},
+"Ночь": {"temperature": "+5",
+        "sky": "Ясно",
+        "temperature_feeling": "+1",
+        "rain_probability": "14%",
+        "pressure": "555",
+        "humidity": "33%"}
+}]}
