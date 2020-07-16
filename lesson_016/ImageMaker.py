@@ -88,6 +88,8 @@ class ImageMaker:
         draw.text((100, 150), night_text, font=font, fill=(0, 0, 0, 0))
         card_template = np.array(img_pil)
         self.view_image(card_template, "test BGR")
+        # TODO Нужно добавить сохранение открыток в отдельную папку
+        # TODO В названиях стоит использовать дату прогноза
         return card_template
 
     def get_card_color(self, date):
