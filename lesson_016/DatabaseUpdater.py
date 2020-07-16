@@ -40,8 +40,6 @@ def get_data(dates):
     """
     res = {}
     day, night = None, None
-    print(dates)  # TODO тут идёт работа с [['2020-07-14', '2020-07-15', '2020-07-16']]
-    # TODO хотя вероятно один из списков лишний
     if len(dates) > 1:
         day_result = db.DayStats.select().where(db.DayStats.date.in_(dates))
         night_result = db.NightStats.select().where(db.NightStats.date.in_(dates))

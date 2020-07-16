@@ -11,7 +11,7 @@ from DatabaseUpdater import save_data as save_data_to_db
 class ImageMaker:
 
     def __init__(self):
-        self.card_template = cv2.imread("lesson_016/img/card.jpg", cv2.IMREAD_UNCHANGED)
+        self.card_template = cv2.imread("img/card.jpg", cv2.IMREAD_UNCHANGED)
 
     def view_image(self, image, name_of_window):
         cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
@@ -80,7 +80,7 @@ class ImageMaker:
                 in_j += 1
             in_i += 1
         cv2.putText(card_template, date, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-        font_path = r"lesson_016/python_snippets/external_data/fonts/Aller Cyrillic.ttf"
+        font_path = r"python_snippets/external_data/fonts/Aller Cyrillic.ttf"
         font = ImageFont.truetype(font_path, 14)
         img_pil = Image.fromarray(card_template)
         draw = ImageDraw.Draw(img_pil)
@@ -110,7 +110,7 @@ class ImageMaker:
         """:returns card_color as str, card_img as str
             :arg sky string from site
             :arg night_flag for nigh img"""
-        file = "lesson_016/dict.json"
+        file = "dict.json"
         with open(file, 'r', encoding='utf8') as file:
             s = file.read()
             match_dict = json.loads(s)
@@ -120,12 +120,11 @@ class ImageMaker:
             matched_img_night = match_dict.get(sky)[2]
         else:
             matched_color = 'yellow'
-            matched_img_day = "lesson_016/img/png/IMG-1-5.png"
-            matched_img_night = "lesson_016/img/png/IMG-3-5.png"
+            matched_img_day = "img/png/IMG-1-5.png"
+            matched_img_night = "img/png/IMG-3-5.png"
         if night_flag:
             return matched_color, matched_img_night
         else:
             return matched_color, matched_img_day
 
-
-#ImageMaker().make_card("2020-07-15")
+# ImageMaker().make_card("2020-07-15")
