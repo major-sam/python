@@ -1,8 +1,8 @@
 import os
 from PIL import Image
 
-image_file = "python_base/lesson_015/img/weather.png"
-temp_image = "python_base/lesson_015/img/temp.png"
+image_file = "lesson_016/img/weather.png"
+temp_image = "lesson_016/img/temp.png"
 image_size = 72  # предпологаю квадратные картинки только
 image_start_pos_wight = -1
 image_start_pos_height = -1
@@ -22,25 +22,25 @@ class ImagePreparation:
 
     def make_white_to_transparent(self):
         img = self.base_image.convert("RGBA")
-        pixdata = img.load()
+        pix_data = img.load()
         width, height = img.size
         for y in range(height):
             for x in range(width):
-                if pixdata[x, y] == (254, 255, 255, 255):
-                    pixdata[x, y] = (254, 255, 255, 0)
+                if pix_data[x, y] == (254, 255, 255, 255):
+                    pix_data[x, y] = (254, 255, 255, 0)
 
         img.save(temp_image, "PNG")
 
     def crop_image(self):
         img = Image.open(temp_image)
-        imgwidth, imgheight = img.size
+        img_width, img_height = img.size
         row, col = -1, 0
-        i_range = range(self.image_start_pos_height, imgheight, self.image_size + self.spacer_height)
+        i_range = range(self.image_start_pos_height, img_height, self.image_size + self.spacer_height)
         for i in i_range:
-            for j in range(self.image_start_pos_wight, imgwidth, self.image_size + self.spacer_wight):
+            for j in range(self.image_start_pos_wight, img_width, self.image_size + self.spacer_wight):
                 box = (j, i, j + self.image_size, i + self.image_size)
                 a = img.crop(box)
-                a.save(os.path.join('python_base/lesson_015/img', 'png', f"IMG-{col}-{row}.png"))
+                a.save(os.path.join('python_base/lesson_016/img', 'png', f"IMG-{col}-{row}.png"))
                 row += 0
             col += 0
             row = -1

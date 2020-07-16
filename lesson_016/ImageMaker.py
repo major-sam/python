@@ -1,5 +1,4 @@
-from pprint import pprint
-
+import json
 from PIL import Image, ImageDraw
 import re
 import cv2
@@ -12,7 +11,7 @@ from DatabaseUpdater import save_data as save_data_to_db
 class ImageMaker:
 
     def __init__(self):
-        self.card_template = cv2.imread("python_base\lesson_016\img\card.jpg", cv2.IMREAD_UNCHANGED)
+        self.card_template = cv2.imread("lesson_016/img/card.jpg", cv2.IMREAD_UNCHANGED)
 
     def view_image(self, image, name_of_window):
         cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
@@ -20,41 +19,17 @@ class ImageMaker:
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def blue_to_white(self, i, w):
-        return 255, i / w * 255, i / w * 255
-
-    def yellow_to_white(self, i, w):
-        return i / w * 255, 255, 255
-
-    def cyan_to_white(self, i, w):
-        return 255, 255, i / w * 255
-
-    def gray_to_white(self, i, w):
-        z = i / w * 255 + 90
-        return z, z, z
-
     def map_color(self, color_schema):
         grad_by_line_image = self.card_template.copy()
         width, height = grad_by_line_image.shape[1], grad_by_line_image.shape[0]
-        # TODO много повторяющего кода
-        # TODO В идеале выбор нужно реализовать через словарь
-        # TODO и оставить тут только небольшую часть уникального кода
-        if color_schema == "gray":
-            for i in range(0, width):
-                color = self.gray_to_white(i, width)
-                cv2.line(grad_by_line_image, (i, 0), (i, height), color, 1)
-        elif color_schema == "blue":
-            for i in range(0, width):
-                color = self.blue_to_white(i, width)
-                cv2.line(grad_by_line_image, (i, 0), (i, height), color, 1)
-        elif color_schema == "yellow":
-            for i in range(0, width):
-                color = self.yellow_to_white(i, width)
-                cv2.line(grad_by_line_image, (i, 0), (i, height), color, 1)
-        elif color_schema == "cyan":
-            for i in range(0, width):
-                color = self.cyan_to_white(i, width)
-                cv2.line(grad_by_line_image, (i, 0), (i, height), color, 1)
+        for i in range(0, width):
+            c_schema = {"gray": [[i / width * 255 + 90] * 3],
+                        "cyan": [255, 255, i / width * 255],
+                        "yellow": [i / width * 255, 255, 255],
+                        "blue": [255, i / width * 255, i / width * 255],
+                        }
+            color = c_schema.get(color_schema)
+            cv2.line(grad_by_line_image, (i, 0), (i, height), color, 1)
         return grad_by_line_image
 
     def make_text(self, data):
@@ -105,7 +80,7 @@ class ImageMaker:
                 in_j += 1
             in_i += 1
         cv2.putText(card_template, date, (10, 25), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2)
-        font_path = r"python_base/lesson_016/python_snippets/external_data/fonts/Aller Cyrillic.ttf"
+        font_path = r"lesson_016/python_snippets/external_data/fonts/Aller Cyrillic.ttf"
         font = ImageFont.truetype(font_path, 14)
         img_pil = Image.fromarray(card_template)
         draw = ImageDraw.Draw(img_pil)
@@ -122,87 +97,35 @@ class ImageMaker:
         card_color, day_img, night_img, source_data = None, None, None, None
         if re.match(r'\d\d\d\d-\d\d-\d\d', date):
             save_data_to_db()
-            source_data = get_data_from_db(date)
+            source_data = get_data_from_db([date])
             day_sky = source_data.get(date)[0].get("День").get("sky")
             night_sky = source_data.get(date)[1].get("Ночь").get("sky")
             card_color, day_img = self.match_sky_to_image(day_sky)
-            night_img = self.match_sky_to_image(night_sky, night_shift=2)[1]
+            night_img = self.match_sky_to_image(night_sky, night_flag=True)[1]
         else:
             print("wrong data")
         return card_color, day_img, night_img, source_data
 
-    def match_sky_to_image(self, sky, night_shift=0):
+    def match_sky_to_image(self, sky, night_flag=False):
         """:returns card_color as str, card_img as str
             :arg sky string from site
-            :arg night_shift shift image index"""
-
-        matched_color = None
-        matched_img = None
-        # TODO Такой выбор тоже стоит реализовывать через словарь (можно даже словарь вынести в доп модуль)
-        if sky == "Ясно":
-            matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-0.png"
-        elif sky == "Преимущественно ясно" or sky == "Преимущественно облачно" or sky == "Частично облачно":
-            matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-1.png"
-        elif sky == "Преимущественно ясно и кратковременные осадки":
-            matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-2.png"
-        elif sky == "Преимущественно ясно и слабый дождь":
-            matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-3.png"
-        elif sky == "Преимущественно ясно и дождь":
-            matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-4.png"
-        elif sky == "Частично облачно и вероятность дождя с грозами":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{0 + night_shift}-5.png"
-        elif sky == "Частично облачно и слабый мокрый снег":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-0.png"
-        elif sky == "Преимущественно ясно и временами мокрый снег":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-1.png"
-        elif sky == "Преимущественно ясно и мокрый снег":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-2.png"
-        elif sky == "Преимущественно ясно и слабый снег":
-            matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-3.png"
-        elif sky == "Преимущественно ясно и снег":
-            matched_color = 'cyan'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-4.png"
-        elif sky == "Облачно":
-            matched_color = 'gray'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{4 + night_shift}-0.png"
-        elif sky == "Облачно и слабый дождь":
-            matched_color = 'gray'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{4 + night_shift}-1.png"
-        elif sky == "Облачно и кратковременные осадки":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{4 + night_shift}-2.png"
-        elif sky == "Облачно и дождь":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{4 + night_shift}-3.png"
-        elif sky == "Облачно и слабый мокрый снег":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{4 + night_shift}-4.png"
-        elif sky == "Облачно и слабый снег":
-            matched_color = 'cyan'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{5 + night_shift}-0.png"
-        elif sky == "Облачно и временами снег":
-            matched_color = 'cyan'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{5 + night_shift}-1.png"
-        elif sky == "Облачно и снег":
-            matched_color = 'cyan'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{4 + night_shift}-2.png"
-        elif sky == "Облачно и вероятность дождя с грозами":
-            matched_color = 'blue'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{5 + night_shift}-5.png"
+            :arg night_flag for nigh img"""
+        file = "lesson_016/dict.json"
+        with open(file, 'r', encoding='utf8') as file:
+            s = file.read()
+            match_dict = json.loads(s)
+        if sky in match_dict.keys():
+            matched_color = match_dict.get(sky)[0]
+            matched_img_day = match_dict.get(sky)[1]
+            matched_img_night = match_dict.get(sky)[2]
         else:
             matched_color = 'yellow'
-            matched_img = f"python_base/lesson_016/img/png/IMG-{1 + night_shift}-5.png"
-        return matched_color, matched_img
+            matched_img_day = "lesson_016/img/png/IMG-1-5.png"
+            matched_img_night = "lesson_016/img/png/IMG-3-5.png"
+        if night_flag:
+            return matched_color, matched_img_night
+        else:
+            return matched_color, matched_img_day
 
 
 #ImageMaker().make_card("2020-07-15")

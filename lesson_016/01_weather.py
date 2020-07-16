@@ -85,7 +85,7 @@ def run_a(namespace):
             a_day_sky, a_day_temperature, a_day_temperature_fill, a_day_pressure, a_day_rain_prob, a_day_humidity \
                 = parse_stats(day_input)
             a_night_sky, a_night_temperature, a_night_temperature_fill, a_night_pressure, \
-            a_night_rain_prob, a_night_humidity = parse_stats(night_input)
+                a_night_rain_prob, a_night_humidity = parse_stats(night_input)
             console_data = {console_a_date: [
                 {'День': {'temperature': a_day_temperature,
                           'sky': a_day_sky,
@@ -124,21 +124,20 @@ def run_g(date_range):
             month_str = str(_date.month)
         _date_str = f"{str(_date.year)}-{month_str}-{day_str}"
         date_formatted_list.append(_date_str)
-    for _ in date_formatted_list:
-        run_p(_)
+    run_p(date_formatted_list)
 
 
 def run_c(input_data):
-    forecast = DatabaseUpdater.get_data(input_data[0])
+    forecast = DatabaseUpdater.get_data(input_data)
     stats_list = forecast.get(input_data[0])
     if stats_list[0] is None and stats_list[1] is None:
-        print(f"no forecast for{input_data[0]}")
+        print(f"no forecast for {input_data[0]}")
     else:
         ImageMaker().make_card(input_data[0])
 
 
 def run_p(input_data):
-    forecast = DatabaseUpdater.get_data(input_data)
+    forecast = DatabaseUpdater.get_data([input_data])
     stats_list = forecast.get(input_data)
     if stats_list[0] is None and stats_list[1] is None:
         print(f"no forecast for{input_data}")
@@ -155,12 +154,12 @@ parser.add_argument('--a', help='add weather forecast to db'
 parser.add_argument('--g', help='get weather forecast(format yyyy-mm-dd)', required=False, nargs='+')
 parser.add_argument('--c', help='get card(format yyyy-mm-dd yyyy-mm-dd)', required=False, nargs='+')
 parser.add_argument('--p', help='print weather forecast(format yyyy-mm-dd)', required=False, nargs='+')
-# my_namespace = parser.parse_args('--a test.txt'.split())
+my_namespace = parser.parse_args('--a lesson_016/test.json'.split())
 # my_namespace = parser.parse_args('--a 1234-12-12 aaa:(sasa,+10) nnnn:(cdcdc,-10)'.split())
 # my_namespace = parser.parse_args('--p 2020-07-14'.split())
 # my_namespace = parser.parse_args('--g 2020-07-14 2020-07-16'.split())
-# my_namespace = parser.parse_args('--c 1214-12-12'.split())
-my_namespace = parser.parse_args()
+# my_namespace = parser.parse_args('--c 2020-07-16'.split())
+# my_namespace = parser.parse_args()
 if my_namespace.a is not None:
     run_a(my_namespace.a)
 elif my_namespace.g is not None:
@@ -168,7 +167,7 @@ elif my_namespace.g is not None:
 elif my_namespace.c is not None:
     run_c(my_namespace.c)
 elif my_namespace.p is not None:
-    run_p(my_namespace.p[0])
+    run_p(my_namespace.p)
 else:
     print("please use help и консоль пашет только из корневого каталога")
 

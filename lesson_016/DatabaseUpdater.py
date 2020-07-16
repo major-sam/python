@@ -1,15 +1,9 @@
-from pprint import pprint
-
-import peewee
 from playhouse.db_url import connect
 import database as db
 from WheatherMaker import WeatherMaker as wm
-# TODO Вы всё подготовили для использования коннекта, но решили им не пользоваться?)
-# TODO По сути это ещё один способ создать тот же объект, внутри модуля с connect есть ассоциация
-# TODO 'sqlite': SqliteDatabase
-# TODO т.е. если вы используете путь вроде 'sqlite:///weather.db'
-# TODO то он сопоставит первую часть по словарю, и создаст такой же объект по пути, указанному во второй части
-sql_lite_database = peewee.SqliteDatabase("python_base\lesson_016\default2.db")
+
+db_url = 'sqlite:///lesson_016/default2.db'
+sql_lite_database = connect(db_url)
 db.proxy.initialize(sql_lite_database)
 sql_lite_database.create_tables([db.Date, db.DayStats, db.NightStats], safe=True)
 
@@ -39,16 +33,19 @@ def save_data(input_dict=None):
                         .execute()
 
 
-def get_data(date):
+def get_data(dates):
     """
-
-    :param date: str in \d\d\d\d-\d\d-\d\d format
+    :param dates:list of str in \d\d\d\d-\d\d-\d\d format
     :return: dict
     """
+    res = {}
     day, night = None, None
-    # TODO В целом тут это ещё терпимо, но если программа работает с объемами данных побольше
-    # TODO То ей нужно будет отдельно писать функцию/метод, чтобы тянуть сразу множество записей (не за один день)
-    day_result = db.DayStats.select().where(db.DayStats.date == date)
+    if len(dates) > 1:
+        day_result = db.DayStats.select().where(db.DayStats.date.in_(dates))
+        night_result = db.NightStats.select().where(db.NightStats.date.in_(dates))
+    else:
+        day_result = db.DayStats.select().where(db.DayStats.date == dates[0])
+        night_result = db.NightStats.select().where(db.NightStats.date == dates[0])
     for result in day_result:
         day = {result.daytime: {'temperature': result.temperature,
                                 'sky': result.sky,
@@ -57,7 +54,6 @@ def get_data(date):
                                 'pressure': result.pressure,
                                 'humidity': result.humidity}
                }
-    night_result = db.NightStats.select().where(db.NightStats.date == date)
     for result in night_result:
         night = {result.daytime: {'temperature': result.temperature,
                                   'sky': result.sky,
@@ -66,10 +62,10 @@ def get_data(date):
                                   'pressure': result.pressure,
                                   'humidity': result.humidity}
                  }
-    res = {date: [day, night]}
+    for date in dates:
+        res.update({date: [day, night]})
     return res
 
-
-#save_data()
-#get_data("2020-07-15")
-#print(get_data("1234-12-12"))
+# save_data()
+# pprint(get_data(["2020-07-15", "2020-07-16", "2020-07-17"]))
+# print(get_data("1234-12-12"))

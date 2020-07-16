@@ -1,4 +1,3 @@
-from pprint import pprint
 from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 import re
@@ -52,4 +51,4 @@ class WeatherMaker:
         return self.weather_dict
 
 
-#WeatherMaker().get_data()
+# WeatherMaker().get_data()
