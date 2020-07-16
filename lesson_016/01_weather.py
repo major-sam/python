@@ -68,6 +68,8 @@ def run_a(namespace):
     file = namespace[0]
     console_data = None
     if os.path.isfile(file):
+        # TODO В этой функции надо обращаться к параметрам, а не внешним переменным, которые возможно не будут
+        # TODO созданы
         print("data in file %s must be json like test.json file" % my_namespace.a[0])
         with open(file, 'r', encoding='utf8') as file:
             s = file.read()
@@ -129,6 +131,9 @@ def run_g(date_range):
 
 def run_c(input_data):
     forecast = DatabaseUpdater.get_data(input_data)
+    # TODO stats_list = forecast.get(input_data)
+    # TODO TypeError: unhashable type: 'list'
+    # TODO Вылезает такая ошибка, если поправить код в DatabaseUpdater.get_data
     stats_list = forecast.get(input_data[0])
     if stats_list[0] is None and stats_list[1] is None:
         print(f"no forecast for {input_data[0]}")
@@ -154,23 +159,27 @@ parser.add_argument('--a', help='add weather forecast to db'
 parser.add_argument('--g', help='get weather forecast(format yyyy-mm-dd)', required=False, nargs='+')
 parser.add_argument('--c', help='get card(format yyyy-mm-dd yyyy-mm-dd)', required=False, nargs='+')
 parser.add_argument('--p', help='print weather forecast(format yyyy-mm-dd)', required=False, nargs='+')
-my_namespace = parser.parse_args('--a lesson_016/test.json'.split())
+# my_namespace = parser.parse_args('--a test.json'.split())
 # my_namespace = parser.parse_args('--a 1234-12-12 aaa:(sasa,+10) nnnn:(cdcdc,-10)'.split())
 # my_namespace = parser.parse_args('--p 2020-07-14'.split())
 # my_namespace = parser.parse_args('--g 2020-07-14 2020-07-16'.split())
 # my_namespace = parser.parse_args('--c 2020-07-16'.split())
 # my_namespace = parser.parse_args()
-if my_namespace.a is not None:
-    run_a(my_namespace.a)
-elif my_namespace.g is not None:
-    run_g(my_namespace.g)
-elif my_namespace.c is not None:
-    run_c(my_namespace.c)
-elif my_namespace.p is not None:
-    run_p(my_namespace.p)
-else:
-    print("please use help и консоль пашет только из корневого каталога")
-
+# print(my_namespace.g,'+++')
+# if my_namespace.a is not None:
+#     run_a(my_namespace.a)
+# elif my_namespace.g is not None:
+#     run_g(my_namespace.g)
+# elif my_namespace.c is not None:
+#     run_c(my_namespace.c)
+# elif my_namespace.p is not None:
+#     print(my_namespace.p)
+#     my_namespace.p = my_namespace.p[0]
+#     run_p(my_namespace.p)
+# else:
+#     print("please use help и консоль пашет только из корневого каталога")
+# TODO Такой же предполагается формат ввода?
+run_g(['2020-07-14', '2020-07-16'])
 # Рекомендации:
 # Можно создать отдельный модуль для инициализирования базы данных.
 # Как далее использовать эту базу данных в движке:
