@@ -72,6 +72,7 @@ def run_a(namespace):
         # TODO созданы
         # всмысле?
         # TODO Я про my_namespace.a[0] и подобное
+        # ну этоже ввод пользователя ввиде листа
         print("data in file %s must be json like test.json file" % my_namespace.a[0])
         with open(file, 'r', encoding='utf8') as file:
             s = file.read()
