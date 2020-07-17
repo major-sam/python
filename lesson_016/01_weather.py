@@ -156,7 +156,7 @@ parser.add_argument('--a', help='add weather forecast to db'
                                 'PRESSURE(OPTIONAL),RAIN_PROBABILITY(OPTIONAL),HUMIDITY(OPTIONAL))'
                                 ' or put path to json file', required=False, nargs=argparse.REMAINDER)
 parser.add_argument('--g', help='get weather forecast(format: --g yyyy-mm-dd)', required=False, nargs='+')
-parser.add_argument('--c', help='get card(format: --c yyyy-mm-dd yyyy-mm-dd)', required=False, nargs='+')
+parser.add_argument('--c', help='get card(format: --c yyyy-mm-dd)', required=False, nargs='+')
 parser.add_argument('--p', help='print weather forecast(format: --p yyyy-mm-dd)', required=False, nargs='+')
 # ПРИМЕРЫ ВВОДА НИЖЕ
 # my_namespace = parser.parse_args('--a test.json'.split())

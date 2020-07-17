@@ -1,4 +1,6 @@
 import json
+import os
+
 from PIL import Image, ImageDraw
 import re
 import cv2
@@ -87,9 +89,11 @@ class ImageMaker:
         draw.text((100, 50), day_text, font=font, fill=(0, 0, 0, 0))
         draw.text((100, 150), night_text, font=font, fill=(0, 0, 0, 0))
         card_template = np.array(img_pil)
+        img = Image.fromarray(card_template)
+        if not os.path.isdir("cards"):
+            os.mkdir("cards")
+        img.save(f"cards/{date}.jpg")
         self.view_image(card_template, "test BGR")
-        # TODO Нужно добавить сохранение открыток в отдельную папку
-        # TODO В названиях стоит использовать дату прогноза
         return card_template
 
     def get_card_color(self, date):
