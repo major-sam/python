@@ -89,10 +89,9 @@ class ImageMaker:
         draw.text((100, 50), day_text, font=font, fill=(0, 0, 0, 0))
         draw.text((100, 150), night_text, font=font, fill=(0, 0, 0, 0))
         card_template = np.array(img_pil)
-        img = Image.fromarray(card_template)
         if not os.path.isdir("cards"):
             os.mkdir("cards")
-        img.save(f"cards/{date}.jpg")
+        cv2.imwrite(f"cards/{date}.jpg", card_template)
         self.view_image(card_template, "test BGR")
         return card_template
 
