@@ -2,14 +2,14 @@ from random import randint
 
 from chat_bot.vk_token import token, group_id
 import vk_api
-from vk_api.bot_longpoll import VkBotLongPoll,VkBotEventType
+from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 
 
 class Bot:
-    def __init__(self, group_id, token):
-        self.group_id = group_id
-        self.token = token
-        self.vk = vk_api.VkApi(token=token)
+    def __init__(self, my_group_id, my_token):
+        self.group_id = my_group_id
+        self.token = my_token
+        self.vk = vk_api.VkApi(token=self.token)
         self.long_poller = VkBotLongPoll(self.vk, self.group_id)
         self.api = self.vk.get_api()
 
@@ -29,7 +29,7 @@ class Bot:
                                    peer_id=event.object.message['peer_id'],
                                    )
         else:
-            print(f'not supported type{event.type}')
+            print(f'not supported type {event.type}')
 
 
 if __name__ == "__main__":
