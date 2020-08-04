@@ -95,8 +95,6 @@ class Dispatcher:
                     if first_departure_datetime > second_departure_datetime + timedelta(hours=2):
                         filtered_by_date_track[1][transit_track_in].remove(date)
                 result.append(filtered_by_date_track)
-            # else:
-            #   result = None
         return result if len(result) > 0 else None
 
     def create_graph_picks_dict(self):

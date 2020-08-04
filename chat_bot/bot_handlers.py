@@ -71,10 +71,18 @@ def format_flights(flights_list, straight_flight, reverse=False):
     return result
 
 
-def handler_from_city(text, context):
+def match_city(text):
     lower_text = text.lower()
-    r_text = re.search("^.{0,3}", lower_text).group(0)
-    match = [a for a in CITIES_LIST_LOWER if r_text in a]
+    match = [a for a in CITIES_LIST_LOWER if lower_text in a]
+    if len(match) == 1:
+        return match
+    else:
+        r_text = re.search("^.{0,3}", lower_text).group(0)
+        return [a for a in CITIES_LIST_LOWER if r_text in a]
+
+
+def handler_from_city(text, context):
+    match = match_city(text)
     if len(match) == 1 and len(text) > 3:
         context['from_city'] = match[0]
         context['straight_flight'] = True
@@ -84,9 +92,7 @@ def handler_from_city(text, context):
 
 
 def handler_to_city(text, context):
-    lower_text = text.lower()
-    r_text = re.search("^.{0,3}", lower_text).group(0)
-    match = [a for a in CITIES_LIST_LOWER if r_text in a]
+    match = match_city(text)
     if len(match) == 1:
         context['to_city'] = match[0]
         flights = dp(from_city=context['from_city'], to_city=context['to_city'],
@@ -132,9 +138,12 @@ def handler_return_flight_list(text, context):
                                "\n Например: Владивосток, 1, 1"
                 return [True, f"\n\n{format_flights(flights, context['straight_flight'])}\n\n{transfer}"]
             else:
-                return [False, f"\nРейсов на эту дату нет. Попробуйте ввести другую\n"
-                               f"Последние рейсы:\n"
-                               f"{format_flights(last_flights, context['straight_flight'], reverse=True)}"]
+                if last_flights:
+                    return [False, f"\nРейсов на эту дату нет. Попробуйте ввести другую\n"
+                                   f"Последние рейсы:\n"
+                                   f"{format_flights(last_flights, context['straight_flight'], reverse=True)}"]
+                else:
+                    return [False, "\n Нет рейсов с пересадками"]
         else:
             return [False, f"\n{text} - Дата не может быть прошедшим числом"]
     else:
@@ -157,8 +166,7 @@ def handler_flight_chooser(text, context):
             return [False, "\n Неопознанный ввод"]
     else:
         transfer_city = text.split(",")[0]
-        r_text = re.search("^.{0,3}", transfer_city).group(0)
-        match = [a for a in CITIES_LIST_LOWER if r_text in a]
+        match = match_city(transfer_city)
         if re.match(RE_FLIGHT_MATCH, text) and len(match) == 1:
             transfer_city = match[0]
             context['transfer_city'] = transfer_city
@@ -168,11 +176,9 @@ def handler_flight_chooser(text, context):
             flights_from_dict = flights[0]
             flights_from = f"{context['from_city']} - {transfer_city}"
             flight_from_dates = flights_from_dict.get(flights_from)
-
             flights_to_dict = flights[1]
             flights_to = f"{transfer_city} - {context['to_city']}"
             flight_to_dates = flights_to_dict.get(flights_to)
-
             if from_transfer < 5 and transfer_to < 5 and \
                     len(flight_from_dates) > from_transfer and len(flight_to_dates) > transfer_to:
                 flight_from_date = flight_from_dates[from_transfer]

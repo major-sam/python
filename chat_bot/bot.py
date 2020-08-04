@@ -4,8 +4,7 @@ from chat_bot.vk_token import token, group_id
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
 import logging
-from chat_bot.scenarios import SCENARIOS, INTENTS_MAIN, DEFAULT_ANSWER, NO_STRAIGHT_FLIGHT_SWITCHER, \
-    DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER, DEFAULT_HELP, DEFAULT_EXIT, CHECK_SWITCHER, CHANGE_DATA
+import chat_bot.scenarios as sc
 import chat_bot.bot_handlers as handlers
 
 log = logging.getLogger("bot")
@@ -58,27 +57,27 @@ class Bot:
         if event.type != VkBotEventType.MESSAGE_NEW:
             log.debug("not supported type %s", event.type)
             return
-        text = event.object.message['text']
+        text = event.object.message['text'].lower()
         user_id = event.object.message['peer_id']
-        if text.lower() in DEFAULT_EXIT[0]:
+        if text in sc.DEFAULT_EXIT[0]:
             if user_id in self.no_straight_flight_switcher_user_states:
                 self.no_straight_flight_switcher_user_states.pop(user_id)
             if user_id in self.registration_user_states:
                 self.registration_user_states.pop(user_id)
-            text_to_send = DEFAULT_EXIT[1]
-        elif text.lower() in DEFAULT_HELP:
-            text_to_send = DEFAULT_ANSWER
+            text_to_send = sc.DEFAULT_EXIT[1]
+        elif text in sc.DEFAULT_HELP:
+            text_to_send = sc.DEFAULT_ANSWER
         elif user_id in self.change_user_data:
-            for intent in CHANGE_DATA:
+            for intent in sc.CHANGE_DATA:
                 if any(_token in text for _token in intent['tokens']):
                     self.change_user_data[user_id].step_name = intent['next_step']
                     self.registration_user_states[user_id] = self.change_user_data.pop(user_id)
                     text_to_send = intent['answer']
                     break
             else:
-                text_to_send = f"Нет такого поля:\n{text}"
+                text_to_send = f"{sc.DEFAULT_WRONG_FIELD}\n{text}"
         elif user_id in self.switcher_check:
-            for intent in CHECK_SWITCHER:
+            for intent in sc.CHECK_SWITCHER:
                 if any(_token in text for _token in intent['tokens']):
                     if intent['name'] == 'yes':
                         text_to_send = intent['answer']
@@ -90,9 +89,9 @@ class Bot:
                         text_to_send = self.continue_scenario(user_id, text)
                     break
             else:
-                text_to_send = "Неопознаный ввод."
+                text_to_send = sc.DEFAULT_WRONG_INPUT
         elif user_id in self.no_straight_flight_switcher_user_states:
-            for intent in NO_STRAIGHT_FLIGHT_SWITCHER:
+            for intent in sc.NO_STRAIGHT_FLIGHT_SWITCHER:
                 if any(_token in text for _token in intent['tokens']):
                     if intent['next_step']:
                         self.no_straight_flight_switcher_user_states[user_id].step_name = intent['next_step']
@@ -105,11 +104,11 @@ class Bot:
                         text_to_send = intent['answer']
                     break
             else:
-                text_to_send = f"Неопознаный ввод.\n{DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER}"
+                text_to_send = f"Неопознаный ввод.\n{sc.DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER}"
         elif user_id in self.registration_user_states:
             text_to_send = self.continue_scenario(user_id, text)
         else:
-            for intent in INTENTS_MAIN:
+            for intent in sc.INTENTS_MAIN:
                 if any(_token in text for _token in intent['tokens']):
                     if intent['answer']:
                         text_to_send = intent['answer']
@@ -117,7 +116,7 @@ class Bot:
                         text_to_send = self.start_scenario(intent['scenario'], user_id)
                     break
             else:
-                text_to_send = DEFAULT_ANSWER
+                text_to_send = sc.DEFAULT_ANSWER
         log.info(event.type)
 
         self.api.messages.send(message=text_to_send,
@@ -125,7 +124,7 @@ class Bot:
                                peer_id=user_id)
 
     def start_scenario(self, scenario_name, user_id):
-        scenario = SCENARIOS[scenario_name]
+        scenario = sc.SCENARIOS[scenario_name]
         first_step = scenario['first_step']
         step = scenario['steps'][first_step]
         text_to_send = step['text']
@@ -134,7 +133,7 @@ class Bot:
 
     def continue_scenario(self, user_id, text):
         state = self.registration_user_states[user_id]
-        steps = SCENARIOS[state.scenario_name]['steps']
+        steps = sc.SCENARIOS[state.scenario_name]['steps']
         step = steps[state.step_name]
         handler = getattr(handlers, step['handler'])
         handler_result = handler(text=text, context=state.context)
@@ -149,7 +148,7 @@ class Bot:
             if step['switcher'] == 'no_straight_chooser' and handler_result[2]:
                 self.no_straight_flight_switcher_user_states[user_id] = self.registration_user_states.pop(user_id)
                 text_to_send = f"{state.context['from_city'].capitalize()} > {state.context['to_city'].capitalize()} " \
-                               f"{DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER} "
+                               f"{sc.DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER} "
             elif step['switcher'] == "switcher_check":
                 next_step = steps[step['next_step']]
                 self.switcher_check[user_id] = self.registration_user_states.pop(user_id)
