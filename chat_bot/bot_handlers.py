@@ -1,6 +1,6 @@
 import itertools
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import fly_dispatcher as fd
 from fly_dispatcher import Dispatcher as dp
@@ -113,7 +113,10 @@ def handler_return_flight_list(text, context):
     from_city = context['from_city']
     to_city = context['to_city']
     if DATE_PATTERN.match(text.lower()):
-        if datetime.strptime(text, DATE_TIME_PATTERN).replace(hour=12) > datetime.now():
+        h = datetime.now().hour
+        m = datetime.now().minute
+        if datetime.strptime(text, DATE_TIME_PATTERN).replace(hour=h, minute=m) + timedelta(
+                minutes=15) > datetime.now():
             context['input_date'] = text
             if context['straight_flight']:
                 flights = dp(from_city=from_city,
