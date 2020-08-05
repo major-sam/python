@@ -25,13 +25,6 @@ def config_logs():
     log.setLevel(logging.DEBUG)
 
 
-# class UserState:
-#    def __init__(self, scenario_name, step_name, context=None):
-#        self.scenario_name = scenario_name
-#        self.step_name = step_name
-#        self.context = context or {}
-
-
 class Bot:
     """
     Bot for flight ticket registration
@@ -50,11 +43,6 @@ class Bot:
             'Change Data': 3,
             'Change Data yes/no state': 30,
         }
-
-    #        self.no_straight_flight_switcher_user_states = dict()
-    #        self.registration_user_states = dict()
-    #        self.switcher_check = dict()
-    #        self.change_user_data = dict()
 
     def run(self):
         for event in self.long_poller.listen():
