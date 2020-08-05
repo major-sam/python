@@ -147,7 +147,7 @@ SCENARIOS = {
             "step07": {
                 "text": "",
                 "failure_text": "",
-                "handler": None,
+                "handler": 'handler_return_true',
                 "switcher": False,
                 "next_step": None,
 

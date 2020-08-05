@@ -1,4 +1,4 @@
-import chat_bot.scenarios as sc
+import scenarios as sc
 
 INPUTS = [
     [

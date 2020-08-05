@@ -2,8 +2,8 @@ import itertools
 import re
 from datetime import datetime
 
-import chat_bot.fly_dispatcher as fd
-from chat_bot.fly_dispatcher import Dispatcher as dp
+import fly_dispatcher as fd
+from fly_dispatcher import Dispatcher as dp
 
 CITIES_FILE = "json/avia_yandex_cites_id.json"
 RE_CITY = re.compile(r'^[\w\-\s]{3,40}')
