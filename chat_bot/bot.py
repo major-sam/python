@@ -1,5 +1,6 @@
 from random import randint
 
+import requests
 from pony.orm import db_session
 
 from vk_token import token, group_id
@@ -23,6 +24,60 @@ def config_logs():
     file_handler.setLevel(logging.DEBUG)
     log.addHandler(file_handler)
     log.setLevel(logging.DEBUG)
+
+
+@db_session
+def register_no_straight(state, context):
+    Registration(
+        user_id=state.user_id,
+        from_city=context['from_city'],
+        to_city=context['to_city'],
+        straight_flight=context['straight_flight'],
+        phone=context['phone'],
+        sits_count=context['sits_count'],
+        comment=context['comment'],
+        transfer_city=context['transfer_city'],
+        flight_to_date=context['flight_to_date'],
+        flight_from_date=context['flight_from_date']
+    )
+
+
+@db_session
+def register_straight(state, context):
+    Registration(
+        user_id=state.user_id,
+        from_city=context['from_city'],
+        to_city=context['to_city'],
+        straight_flight=['straight_flight'],
+        phone=context['phone'],
+        sits_count=context['sits_count'],
+        comment=context['comment'],
+        flight_date=context['flight_date']
+    )
+
+
+@db_session
+def start_scenario(scenario_name, user_id):
+    scenario = sc.SCENARIOS[scenario_name]
+    first_step = scenario['first_step']
+    step = scenario['steps'][first_step]
+    text_to_send = step['text']
+    UserState(user_id=user_id, scenario_name=scenario_name, step_name=first_step, context={}, sub_scenario_id=0)
+    return text_to_send
+
+
+@db_session
+def handle_state_none(text, user_id):
+    for intent in sc.INTENTS_MAIN:
+        if any(_token in text for _token in intent['tokens']):
+            if intent['answer']:
+                text_to_send = intent['answer']
+            else:
+                text_to_send = start_scenario(intent['scenario'], user_id)
+            break
+    else:
+        text_to_send = sc.DEFAULT_ANSWER
+    return text_to_send
 
 
 class Bot:
@@ -51,6 +106,60 @@ class Bot:
             except Exception:
                 log.exception("Ошибка в обработке события")
 
+    def change_flight_data(self, text, state):
+        for intent in sc.CHANGE_DATA:
+            if any(_token in text for _token in intent['tokens']):
+                state.step_name = intent['next_step']
+                state.sub_scenario_id = self.sub_states['Registration']
+                text_to_send = intent['answer']
+                break
+        else:
+            text_to_send = f"{sc.DEFAULT_WRONG_FIELD}\n{text}"
+        return text_to_send
+
+    def change_data_switcher(self, text, state):
+        for intent in sc.CHECK_SWITCHER:
+            if any(_token in text for _token in intent['tokens']):
+                if intent['name'] == 'yes':
+                    text_to_send = intent['answer']
+                    state.step_name = intent['next_step']
+                    state.sub_scenario_id = self.sub_states['Change Data']
+                else:
+                    state.step_name = intent['next_step']
+                    state.sub_scenario_id = self.sub_states['Registration']
+                    text_to_send = self.continue_scenario(text, state)
+                break
+        else:
+            text_to_send = sc.DEFAULT_WRONG_INPUT
+        return text_to_send
+
+    def switch_no_straight_flight(self, text, state):
+        for intent in sc.NO_STRAIGHT_FLIGHT_SWITCHER:
+            if any(_token in text for _token in intent['tokens']):
+                if intent['next_step']:
+                    state.step_name = intent['next_step']
+                    state.context['straight_flight'] = False
+                    state.sub_scenario_id = self.sub_states['Registration']
+                    text_to_send = self.continue_scenario(text, state)
+                else:
+                    state.delete()
+                    text_to_send = intent['answer']
+                break
+        else:
+            text_to_send = f"Неопознаный ввод.\n{sc.DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER}"
+        return text_to_send
+
+    def send_image(self, image, user_id):
+        upload_url = self.api.photos.getMessagesUploadServer()['upload_url']
+        upload_data = requests.post(url=upload_url, files={'photo': ('image.png', image, 'image/png')}).json()
+        image_data = self.api.photos.saveMessagesPhoto(**upload_data)
+        owner_id = image_data['owner_id']
+        media_id = image_data['id']
+        attachment_id = f"photo{owner_id}_{media_id}"
+        self.api.messages.send(attachment=attachment_id,
+                               random_id=randint(0, 2 ** 24),
+                               peer_id=user_id)
+
     @db_session
     def on_event(self, event):
         """on_event method for scenarios
@@ -68,67 +177,20 @@ class Bot:
             elif text in sc.DEFAULT_HELP:
                 text_to_send = sc.DEFAULT_ANSWER
             elif state.sub_scenario_id is self.sub_states['Change Data']:
-                for intent in sc.CHANGE_DATA:
-                    if any(_token in text for _token in intent['tokens']):
-                        state.step_name = intent['next_step']
-                        state.sub_scenario_id = self.sub_states['Registration']
-                        text_to_send = intent['answer']
-                        break
-                else:
-                    text_to_send = f"{sc.DEFAULT_WRONG_FIELD}\n{text}"
+                text_to_send = self.change_flight_data(text, state)
             elif state.sub_scenario_id is self.sub_states['Change Data yes/no state']:
-                for intent in sc.CHECK_SWITCHER:
-                    if any(_token in text for _token in intent['tokens']):
-                        if intent['name'] == 'yes':
-                            text_to_send = intent['answer']
-                            state.step_name = intent['next_step']
-                            state.sub_scenario_id = self.sub_states['Change Data']
-                        else:
-                            state.step_name = intent['next_step']
-                            state.sub_scenario_id = self.sub_states['Registration']
-                            text_to_send = self.continue_scenario(text, state)
-                        break
-                else:
-                    text_to_send = sc.DEFAULT_WRONG_INPUT
+                text_to_send = self.change_data_switcher(text, state)
             elif state.sub_scenario_id is self.sub_states['No straight flight yes/no state']:
-                for intent in sc.NO_STRAIGHT_FLIGHT_SWITCHER:
-                    if any(_token in text for _token in intent['tokens']):
-                        if intent['next_step']:
-                            state.step_name = intent['next_step']
-                            state.context['straight_flight'] = False
-                            state.sub_scenario_id = self.sub_states['Registration']
-                            text_to_send = self.continue_scenario(text, state)
-                        else:
-                            state.delete()
-                            text_to_send = intent['answer']
-                        break
-                else:
-                    text_to_send = f"Неопознаный ввод.\n{sc.DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER}"
+                text_to_send = self.switch_no_straight_flight(text, state)
             else:
                 text_to_send = self.continue_scenario(text, state)
         else:
-            for intent in sc.INTENTS_MAIN:
-                if any(_token in text for _token in intent['tokens']):
-                    if intent['answer']:
-                        text_to_send = intent['answer']
-                    else:
-                        text_to_send = self.start_scenario(intent['scenario'], user_id)
-                    break
-            else:
-                text_to_send = sc.DEFAULT_ANSWER
+            text_to_send = handle_state_none(text, user_id)
 
         log.info(event.type)
         self.api.messages.send(message=text_to_send,
                                random_id=randint(0, 2 ** 24),
                                peer_id=user_id)
-
-    def start_scenario(self, scenario_name, user_id):
-        scenario = sc.SCENARIOS[scenario_name]
-        first_step = scenario['first_step']
-        step = scenario['steps'][first_step]
-        text_to_send = step['text']
-        UserState(user_id=user_id, scenario_name=scenario_name, step_name=first_step, context={}, sub_scenario_id=0)
-        return text_to_send
 
     @db_session
     def continue_scenario(self, text, state):
@@ -144,26 +206,9 @@ class Bot:
                 if next_step['next_step'] is None:
                     context = dict(state.context)
                     if context['straight_flight']:
-                        Registration(
-                            from_city=context['from_city'],
-                            to_city=context['to_city'],
-                            straight_flight=['straight_flight'],
-                            phone=context['phone'],
-                            sits_count=context['sits_count'],
-                            comment=context['comment'],
-                            flight_date=context['flight_date']
-                        )
+                        register_straight(state, context)
                     else:
-                        Registration(
-                            from_city=context['from_city'],
-                            to_city=context['to_city'],
-                            straight_flight=context['straight_flight'],
-                            phone=context['phone'],
-                            sits_count=context['sits_count'],
-                            comment=context['comment'],
-                            flight_to_date=context['flight_to_date'],
-                            flight_from_date=context['flight_from_date']
-                        )
+                        register_no_straight(state, context)
                     state.delete()
                     text_to_send = f'{sc.DEFAULT_EXIT[1]}\n{text_to_send}'
             else:
