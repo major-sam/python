@@ -13,7 +13,8 @@ INPUTS = [
         '1',
         'Comment',
         'Нет',
-        '+79991235566'
+        '+79991235566',
+        "нет"
     ],
     [
         'Регистрация',
@@ -28,7 +29,8 @@ INPUTS = [
         '1',
         'Comment',
         'Нет',
-        '+79991235566'
+        '+79991235566',
+        "нет"
     ],
     [
         'Регистрация',
@@ -55,7 +57,9 @@ INPUTS = [
         '1',
         'Comment',
         'Нет',
-        '+79991235566'
+        '+79991235566',
+        '1212',
+        "да"
     ]
 ]
 
@@ -73,6 +77,7 @@ EXPECTED_OUTPUTS = [
         sc.SCENARIOS["registration"]['steps']['step7']['text'],
         sc.SCENARIOS["registration"]['steps']['step8']['text'],
         sc.SCENARIOS["registration"]['steps']['step9']['text'],
+        sc.SCENARIOS["registration"]['steps']['step10']['text'],
     ],
     [
         sc.SCENARIOS["registration"]['steps']['step1']['text'],
@@ -88,6 +93,7 @@ EXPECTED_OUTPUTS = [
         sc.SCENARIOS["registration"]['steps']['step7']['text'],
         sc.SCENARIOS["registration"]['steps']['step8']['text'],
         sc.SCENARIOS["registration"]['steps']['step9']['text'],
+        sc.SCENARIOS["registration"]['steps']['step10']['text'],
     ],
     [
         sc.SCENARIOS["registration"]['steps']['step1']['text'],
@@ -115,5 +121,7 @@ EXPECTED_OUTPUTS = [
         sc.SCENARIOS["registration"]['steps']['step7']['text'],
         sc.SCENARIOS["registration"]['steps']['step8']['text'],
         sc.SCENARIOS["registration"]['steps']['step9']['text'],
+        sc.DEFAULT_WRONG_INPUT,
+        sc.SCENARIOS["registration"]['steps']['step10']['text'],
     ]
 ]

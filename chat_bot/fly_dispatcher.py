@@ -138,13 +138,10 @@ class Dispatcher:
             date_list = self.scheduled_flights_dict[schedule_val]
             dates_result = []
             for date in date_list:
-                flight_raw_date = self.date_pattern.search(date).group(0)
-                requested_raw_date = self.date_pattern.search(self.dispatch_date).group(0)
-                sd, sm, sy = requested_raw_date.split("-")
-                searching_date = datetime(int(sy), int(sm), int(sd))
-                fd, fm, fy = flight_raw_date.split("-")
-                founded_date = datetime(int(fy), int(fm), int(fd))
-                if searching_date < founded_date:
+                date_pattern = '%d-%m-%Y %H:%M'
+                flight_dt = datetime.strptime(date, date_pattern)
+                req_dt = datetime.strptime(f'{self.dispatch_date} 00:00', date_pattern)
+                if req_dt - timedelta(hours=2) < flight_dt:
                     dates_result.append(date)
             if len(dates_result) > 0:
                 result.append({schedule_val: dates_result})

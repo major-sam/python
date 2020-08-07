@@ -48,9 +48,24 @@ CHECK_SWITCHER = [
     },
     {
         "name": "no",
-        "tokens": ("no",  "нет"),
+        "tokens": ("no", "нет"),
         "answer": None,
         "next_step": "step7"
+    }
+]
+PRINT_TICKET = [
+    {
+        "name": "yes",
+        "tokens": ("yes",  "да"),
+        "answer": None,
+        "handler": "send_image",
+        "next_step": 'step10'
+    },
+    {
+        "name": "no",
+        "tokens": ("no",  "нет"),
+        "answer": "Спасибо, что воспользовались нашим сервисом",
+        "next_step": 'step10'
     }
 ]
 NO_STRAIGHT_FLIGHT_SWITCHER = [
@@ -134,10 +149,17 @@ SCENARIOS = {
                 "text": "Введите номер телефона в формате: +71231234567",
                 "failure_text": "Неверный формат номера телефона",
                 "handler": "handler_phone_number",
-                "switcher": False,
+                "switcher": "switcher_ticket_copy",
                 "next_step": "step9",
             },
             "step9": {
+                "text": "Хотите получить копию билета в ответном сообщении?",
+                "failure_text": "Введите \"да\" или \"нет\"",
+                "handler": "handler_ticket_copy",
+                "switcher": False,
+                "next_step": "step10",
+            },
+            "step10": {
                 "text": "В ближайшее время с вами свяжется менеджер",
                 "failure_text": "",
                 "handler": "handler_end",
@@ -163,4 +185,3 @@ DEFAULT_EXIT = [["exit", "выход"], "Спасибо за то, что вос
 DEFAULT_HELP = ["help", "помощь"]
 DEFAULT_WRONG_FIELD = "Нет такого поля:"
 DEFAULT_WRONG_INPUT = "Неопознаный ввод."
-

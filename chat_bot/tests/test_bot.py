@@ -1,7 +1,7 @@
 import unittest
 from copy import deepcopy
-from unittest.mock import Mock, patch
-
+from unittest.mock import Mock, patch, MagicMock
+import requests
 from pony.orm import db_session, rollback
 from vk_api.bot_longpoll import VkBotMessageEvent
 from bot import Bot
@@ -33,9 +33,19 @@ def test_on_event_with_params(expected_inputs, expected_outputs):
         if arg == 'json/result.json':
             return flights_dict
 
+    def patcher_request(*args, **kwargs):
+        return Mock(json=lambda: {'owner_id': 'test_owner_id', 'media_id': 'test_media_id'})
+
+    def patcher_json(*args, **kwargs):
+        return args
+
     send_mock = Mock()
+    photos_mock = Mock(return_value={'upload_url': 'http://test_url'})
     api_mock = Mock()
+    save_mock = Mock(return_value=[{'owner_id': 'test_owner_id', 'id': 'test_media_id'}])
     api_mock.massages.send = send_mock
+    api_mock.photos.saveMessagesPhoto = save_mock
+    api_mock.photos.getMessagesUploadServer = photos_mock
     events = []
     for input_text in expected_inputs:
         event = deepcopy(TEST_EVENT)
@@ -44,14 +54,16 @@ def test_on_event_with_params(expected_inputs, expected_outputs):
     long_poller_mock = Mock()
     long_poller_mock.listen = Mock(return_value=events)
     with patch('bot.VkBotLongPoll', return_value=long_poller_mock), \
+         patch('requests.post', side_effect=patcher_request), \
          patch('fly_dispatcher.load_source', side_effect=patcher):
         bot = Bot("", "")
         bot.api = api_mock
         bot.run()
     result_list = []
     real_outputs = []
-    for call in api_mock.mock_calls:
-        real_outputs.append(call.kwargs['message'])
+    for call in api_mock.messages.mock_calls:
+        if 'message' in call.kwargs:
+            real_outputs.append(call.kwargs['message'])
     for row in real_outputs:
         string = expected_outputs[real_outputs.index(row)]
         if string in row:
@@ -72,13 +84,13 @@ def isolate_db(test_func):
 
 class MyTestCase(unittest.TestCase):
     def test_run(self):
+
         run_count = 2
         event = [{"1": "1"}]
         events = [event] * run_count
         long_poller_mock = Mock(return_value=events)
         long_poller_listen_mock = Mock()
         long_poller_listen_mock.listen = long_poller_mock
-
         with patch("bot.vk_api.VkApi"), \
              patch("bot.VkBotLongPoll", return_value=long_poller_listen_mock), \
              patch("bot_handlers.CITIES_FILE", return_value="test_cities.json"), \
@@ -88,6 +100,7 @@ class MyTestCase(unittest.TestCase):
             bot.run()
             bot.on_event.assert_called()
             bot.on_event.assert_any_call(event)
+            a = bot.on_event.call_count, run_count
             self.assertEqual(bot.on_event.call_count, run_count)
 
     @isolate_db
@@ -113,7 +126,7 @@ class MyTestCase(unittest.TestCase):
             bot = Bot("", "")
             bot.api = api_mock
             bot.run()
-        assert len(api_mock.mock_calls) == len(INPUTS[0])
+        self.assertEqual(api_mock.messages.send.call_count, len(INPUTS[0]))
 
     @isolate_db
     def test_on_event_0(self):
@@ -127,8 +140,9 @@ class MyTestCase(unittest.TestCase):
 
     @isolate_db
     def test_on_event_2(self):
-        result = test_on_event_with_params(expected_inputs=INPUTS[2], expected_outputs=EXPECTED_OUTPUTS[2])
-        self.assertTrue(result)
+        with patch('ticket_generator.get_name_by_id', return_value="тест тестович"):
+            result = test_on_event_with_params(expected_inputs=INPUTS[2], expected_outputs=EXPECTED_OUTPUTS[2])
+            self.assertTrue(result)
 
 
 if __name__ == '__main__':

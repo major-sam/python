@@ -1,8 +1,10 @@
-from random import randint
+from random import randint, sample
+from datetime import datetime, timedelta
 
+import ticket_generator as tg
 import requests
 from pony.orm import db_session
-
+import rstr
 from vk_token import token, group_id
 import vk_api
 from vk_api.bot_longpoll import VkBotLongPoll, VkBotEventType
@@ -38,7 +40,9 @@ def register_no_straight(state, context):
         comment=context['comment'],
         transfer_city=context['transfer_city'],
         flight_to_date=context['flight_to_date'],
-        flight_from_date=context['flight_from_date']
+        flight_from_date=context['flight_from_date'],
+        plane_to=context['plane_to'],
+        plane_from=context['plane_from'],
     )
 
 
@@ -52,6 +56,7 @@ def register_straight(state, context):
         phone=context['phone'],
         sits_count=context['sits_count'],
         comment=context['comment'],
+        plane=context['plane'],
         flight_date=context['flight_date']
     )
 
@@ -80,6 +85,70 @@ def handle_state_none(text, user_id):
     return text_to_send
 
 
+def get_images(state):
+    row = randint(1, 20)
+    context = state.context
+    images = []
+    time_pattern = '%H:%M'
+    if context['straight_flight']:
+        date_time = context['flight_date'].split(' ')
+        date = date_time[0]
+        time = date_time[1]
+        start_seat = (datetime.strptime(time, time_pattern) - timedelta(minutes=45)).strftime(time_pattern)
+        places = sample(range(1, 8), int(context['sits_count']))
+        for place in places:
+            params = {
+                'user_id': state.user_id,
+                'departure': context['from_city'],
+                'destination': context['to_city'],
+                'plane_id': state.context['plane'],
+                'row': row,
+                'place': place,
+                'date': date,
+                'time_seat': start_seat,
+                'time_departure': time
+            }
+            images.append(tg.make_ticket(**params))
+    else:
+        row_to = randint(1, 20)
+        date_time_to = context['flight_to_date'].split(' ')
+        date_to = date_time_to[0]
+        time_to = date_time_to[1]
+        start_seat_to = (datetime.strptime(time_to, time_pattern) - timedelta(minutes=45)).strftime(time_pattern)
+        date_time_from = context['flight_from_date'].split(' ')
+        date_from = date_time_from[0]
+        time_from = date_time_from[1]
+        start_seat_from = (datetime.strptime(time_from, time_pattern) - timedelta(minutes=45)).strftime(
+            time_pattern)
+        places = sample(range(1, 8), int(context['sits_count']))
+        for place in places:
+            params_to = {
+                'user_id': state.user_id,
+                'departure': context['transfer_city'],
+                'destination': context['to_city'],
+                'plane_id': state.context['plane_to'],
+                'row': row_to,
+                'place': place,
+                'date': date_to,
+                'time_seat': start_seat_to,
+                'time_departure': time_to
+            }
+            params_from = {
+                'user_id': state.user_id,
+                'departure': context['from_city'],
+                'destination': context['transfer_city'],
+                'plane_id': state.context['plane_from'],
+                'row': row,
+                'place': place,
+                'date': date_from,
+                'time_seat': start_seat_from,
+                'time_departure': time_from
+            }
+            images.append(tg.make_ticket(**params_from))
+            images.append(tg.make_ticket(**params_to))
+    return images
+
+
 class Bot:
     """
     Bot for flight ticket registration
@@ -97,6 +166,7 @@ class Bot:
             'No straight flight yes/no state': 2,
             'Change Data': 3,
             'Change Data yes/no state': 30,
+            'Send Ticket': 4
         }
 
     def run(self):
@@ -133,6 +203,24 @@ class Bot:
             text_to_send = sc.DEFAULT_WRONG_INPUT
         return text_to_send
 
+    def switch_send_ticket(self, text, state):
+        for intent in sc.PRINT_TICKET:
+            if any(_token in text for _token in intent['tokens']):
+                if intent['name'] == 'yes':
+                    state.step_name = intent['next_step']
+                    images = get_images(state)
+                    self.send_image(images, state.user_id)
+                    state.sub_scenario_id = self.sub_states['Registration']
+                    text_to_send = self.continue_scenario(text, state)
+                else:
+                    state.step_name = intent['next_step']
+                    state.sub_scenario_id = self.sub_states['Registration']
+                    text_to_send = self.continue_scenario(text, state)
+                break
+        else:
+            text_to_send = f"{sc.DEFAULT_WRONG_INPUT}\n Ведите \"да\" или \"нет\""
+        return text_to_send
+
     def switch_no_straight_flight(self, text, state):
         for intent in sc.NO_STRAIGHT_FLIGHT_SWITCHER:
             if any(_token in text for _token in intent['tokens']):
@@ -149,16 +237,32 @@ class Bot:
             text_to_send = f"Неопознаный ввод.\n{sc.DEFAULT_NO_STRAIGHT_FLIGHT_SWITCHER_ANSWER}"
         return text_to_send
 
-    def send_image(self, image, user_id):
-        upload_url = self.api.photos.getMessagesUploadServer()['upload_url']
-        upload_data = requests.post(url=upload_url, files={'photo': ('image.png', image, 'image/png')}).json()
-        image_data = self.api.photos.saveMessagesPhoto(**upload_data)
-        owner_id = image_data['owner_id']
-        media_id = image_data['id']
-        attachment_id = f"photo{owner_id}_{media_id}"
-        self.api.messages.send(attachment=attachment_id,
-                               random_id=randint(0, 2 ** 24),
-                               peer_id=user_id)
+    def send_image(self, images, user_id):
+        if len(images) == 1:
+            upload_url = self.api.photos.getMessagesUploadServer()['upload_url']
+            upload_data = requests.post(url=upload_url, files={'photo': ('image.png', images[0], 'image/png')}).json()
+            image_data = self.api.photos.saveMessagesPhoto(**upload_data)[0]
+            owner_id = image_data['owner_id']
+            media_id = image_data['id']
+            attachment_id = f"photo{owner_id}_{media_id}"
+            self.api.messages.send(attachment=attachment_id,
+                                   random_id=randint(0, 2 ** 24),
+                                   peer_id=user_id)
+        elif len(images) > 1:
+            attachments_id = []
+            for image in images:
+                upload_url = self.api.photos.getMessagesUploadServer()['upload_url']
+                upload_data = requests.post(url=upload_url,
+                                            files={'photo': ('image.png', image, 'image/png')}).json()
+                image_data = self.api.photos.saveMessagesPhoto(**upload_data)[0]
+                owner_id = image_data['owner_id']
+                media_id = image_data['id']
+                attachments_id.append(f"photo{owner_id}_{media_id}")
+            self.api.messages.send(attachment=','.join(attachments_id),
+                                   random_id=randint(0, 2 ** 24),
+                                   peer_id=user_id)
+        else:
+            raise Exception("empty image list")
 
     @db_session
     def on_event(self, event):
@@ -182,6 +286,8 @@ class Bot:
                 text_to_send = self.change_data_switcher(text, state)
             elif state.sub_scenario_id is self.sub_states['No straight flight yes/no state']:
                 text_to_send = self.switch_no_straight_flight(text, state)
+            elif state.sub_scenario_id is self.sub_states['Send Ticket']:
+                text_to_send = self.switch_send_ticket(text, state)
             else:
                 text_to_send = self.continue_scenario(text, state)
         else:
@@ -212,8 +318,15 @@ class Bot:
                     state.delete()
                     text_to_send = f'{sc.DEFAULT_EXIT[1]}\n{text_to_send}'
             else:
-                text_to_send = ''
+                text_to_send = step['text'].format(**state.context)
+                context = dict(state.context)
+                if context['straight_flight']:
+                    register_straight(state, context)
+                else:
+                    register_no_straight(state, context)
                 state.delete()
+                text_to_send = f'{sc.DEFAULT_EXIT[1]}\n{text_to_send}'
+
         else:
             if step['switcher'] == 'no_straight_chooser' and handler_result[2]:
                 state.sub_scenario_id = self.sub_states['No straight flight yes/no state']
@@ -222,6 +335,10 @@ class Bot:
             elif step['switcher'] == "switcher_check":
                 next_step = steps[step['next_step']]
                 state.sub_scenario_id = self.sub_states['Change Data yes/no state']
+                text_to_send = next_step['text'].format(**state.context) + handler_result[1]
+            elif step['switcher'] == "switcher_ticket_copy" and handler_result[2]:
+                next_step = steps[step['next_step']]
+                state.sub_scenario_id = self.sub_states['Send Ticket']
                 text_to_send = next_step['text'].format(**state.context) + handler_result[1]
             else:
                 text_to_send = step['failure_text'].format(**state.context) + handler_result[1]

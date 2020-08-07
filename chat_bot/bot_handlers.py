@@ -2,6 +2,8 @@ import itertools
 import re
 from datetime import datetime, timedelta
 
+import rstr
+
 import fly_dispatcher as fd
 from fly_dispatcher import Dispatcher as dp
 
@@ -161,6 +163,8 @@ def handler_flight_chooser(text, context):
             text = int(text) - 1
             if len(flight_dates) > text:
                 flight_date = flight_dates[text]
+                plane = rstr.xeger("[A-Z] \d\d\d")
+                context['plane'] = plane
                 context['flight_date'] = flight_date
                 return [True, f" {context['from_city'].capitalize()} > {context['to_city'].capitalize()}"]
             else:
@@ -186,6 +190,10 @@ def handler_flight_chooser(text, context):
                     len(flight_from_dates) > from_transfer and len(flight_to_dates) > transfer_to:
                 flight_from_date = flight_from_dates[from_transfer]
                 flight_to_date = flight_to_dates[transfer_to]
+                plane_to = rstr.xeger(r"[A-Z] \d\d\d")
+                context['plane_to'] = plane_to
+                plane_from = rstr.xeger(r"[A-Z] \d\d\d")
+                context['plane_from'] = plane_from
                 context['flight_from_date'] = flight_from_date
                 context['flight_to_date'] = flight_to_date
             else:
@@ -217,9 +225,13 @@ def handler_phone_number(text, context):
     text = re.sub(r'\s', "", text)
     if re.match(r'^(\+7|8)\d{10}$', text):
         context['phone'] = text
-        return [True, ""]
+        return [False, "", True]
     else:
-        return [False, ""]
+        return [False, "", False]
+
+
+def handler_ticket_copy(text, context):
+    return [True, ""]
 
 
 def handler_end(text, context):
