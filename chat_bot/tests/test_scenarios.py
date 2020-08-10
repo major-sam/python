@@ -1,5 +1,8 @@
+from datetime import datetime
 import scenarios as sc
-
+date = datetime.now()
+date_pattern = '%d-%m-%Y'
+today = date.strftime(date_pattern)
 INPUTS = [
     [
         'Регистрация',
@@ -8,7 +11,7 @@ INPUTS = [
         'Москва',
         'Нарния',
         '44-13-3131',
-        '07-08-2020',
+        today,
         '1',
         '1',
         'Comment',
@@ -24,7 +27,7 @@ INPUTS = [
         'Онтарио',
         "да",
         '44-13-3131',
-        '07-08-2020',
+        today,
         'Нарния,1,1',
         '1',
         'Comment',
@@ -39,7 +42,7 @@ INPUTS = [
         'Москва',
         'Нарния',
         '44-13-3131',
-        '07-08-2020',
+        today,
         '1',
         '1',
         'Comment',
@@ -52,7 +55,7 @@ INPUTS = [
         'Онтарио',
         "да",
         '44-13-3131',
-        '07-08-2020',
+        today,
         'Нарния,1,1',
         '1',
         'Comment',

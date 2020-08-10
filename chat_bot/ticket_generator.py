@@ -13,10 +13,13 @@ FONT_COLOR = 'black'
 
 
 def get_name_by_id(user_id):
-    vk_session = vk_api.VkApi(token=token)
-    api = vk_session.get_api()
-    name = api.users.get(user_ids=user_id)[0]
-    return f"{name['first_name']} {name['last_name']}"
+    # vk_session = vk_api.VkApi(token=token)
+    # api = vk_session.get_api()
+    # name = api.users.get(user_ids=user_id)[0]
+    return 'Тест Тестов'
+
+
+# return f"{name['first_name']} {name['last_name']}"
 
 
 def make_ticket(user_id, departure, destination, plane_id, row, place, date, time_seat, time_departure):
@@ -42,11 +45,13 @@ def make_ticket(user_id, departure, destination, plane_id, row, place, date, tim
         pos_x, pos_y = position['position']
         pos = pos_x, pos_y - position['font_size']
         draw.text(pos, str(position['name']), font=position['font'], fill=fill)
-    # image_template.show()
     image_byte_arr = io.BytesIO()
     image_template.save(image_byte_arr, format='PNG')
+    # image_template.save('tests/test_ticket.png')
 
     return image_byte_arr.getvalue()
 
 
-# make_ticket('12464270', 'test', 'test', '10-08-2020', 'test', 'test', 'test', 'test', 'test')
+# make_ticket(user_id='0000000', departure='test_dep', destination='test_dest',
+#             plane_id='Plane_id', row='test_row', place='test_place', date='test_date',
+#             time_seat='test_seat_time', time_departure='test_dep_time')

@@ -1,6 +1,6 @@
 import unittest
 from copy import deepcopy
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock, patch
 import requests
 from pony.orm import db_session, rollback
 from vk_api.bot_longpoll import VkBotMessageEvent

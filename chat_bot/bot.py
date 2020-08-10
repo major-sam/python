@@ -238,17 +238,7 @@ class Bot:
         return text_to_send
 
     def send_image(self, images, user_id):
-        if len(images) == 1:
-            upload_url = self.api.photos.getMessagesUploadServer()['upload_url']
-            upload_data = requests.post(url=upload_url, files={'photo': ('image.png', images[0], 'image/png')}).json()
-            image_data = self.api.photos.saveMessagesPhoto(**upload_data)[0]
-            owner_id = image_data['owner_id']
-            media_id = image_data['id']
-            attachment_id = f"photo{owner_id}_{media_id}"
-            self.api.messages.send(attachment=attachment_id,
-                                   random_id=randint(0, 2 ** 24),
-                                   peer_id=user_id)
-        elif len(images) > 1:
+        if len(images) > 0:
             attachments_id = []
             for image in images:
                 upload_url = self.api.photos.getMessagesUploadServer()['upload_url']

@@ -2,9 +2,9 @@ import unittest
 from copy import deepcopy
 from datetime import datetime, timedelta
 from unittest.mock import Mock, MagicMock, patch
-from chat_bot.tests.test_context import CONTEXT_STRAIGHT, CONTEXT_NO_STRAIGHT
-import chat_bot.fly_dispatcher as dp
-import chat_bot.bot_handlers as handlers
+from tests.test_context import CONTEXT_STRAIGHT, CONTEXT_NO_STRAIGHT
+import fly_dispatcher as dp
+import bot_handlers as handlers
 
 tests_cities = 'tests/test_cities.json'
 test_flights = 'tests/test_flights.json'
@@ -33,7 +33,7 @@ class MyTestCase(unittest.TestCase):
         wrong_input = ['1111', 'онтарио']
         right_input = 'нарн'
         mock = Mock(context=deepcopy(CONTEXT_STRAIGHT))
-        with patch('chat_bot.fly_dispatcher.load_source', side_effect=patcher):
+        with patch('fly_dispatcher.load_source', side_effect=patcher):
             self.assertTrue(handlers.handler_to_city(right_input, mock.context)[0])
             self.assertFalse(handlers.handler_to_city(wrong_input[0], mock.context)[0])
             self.assertFalse(handlers.handler_to_city(wrong_input[1], mock.context)[0])
@@ -46,8 +46,8 @@ class MyTestCase(unittest.TestCase):
         no_straight = deepcopy(CONTEXT_NO_STRAIGHT)
         mock_straight = Mock(context=straight)
         mock_no_straight = Mock(context=no_straight)
-        with patch('chat_bot.fly_dispatcher.load_source', side_effect=patcher), \
-             patch('chat_bot.bot_handlers.format_flights', return_value=""):
+        with patch('fly_dispatcher.load_source', side_effect=patcher), \
+             patch('bot_handlers.format_flights', return_value=""):
             self.assertTrue(handlers.handler_return_flight_list(right_input_date, mock_straight.context)[0])
             self.assertFalse(handlers.handler_return_flight_list(wrong_input[0], mock_straight.context)[0])
             self.assertFalse(handlers.handler_return_flight_list(wrong_input[1], mock_straight.context)[0])
@@ -63,7 +63,7 @@ class MyTestCase(unittest.TestCase):
         wrong_input = ['12eqweqweqweqwe', '7', 'Нарния,9,2', '12e1weqwe,1,2']
         right_input_straight = '1'
         right_input_no_straight = 'Нарния,2,2'
-        with patch('chat_bot.fly_dispatcher.load_source', side_effect=patcher):
+        with patch('fly_dispatcher.load_source', side_effect=patcher):
             self.assertTrue(handlers.handler_flight_chooser(right_input_straight, mock_straight.context)[0])
             self.assertTrue(handlers.handler_flight_chooser(right_input_no_straight, mock_no_straight.context)[0])
             for wrong_i in wrong_input:
@@ -75,7 +75,7 @@ class MyTestCase(unittest.TestCase):
         right_input = ['+71112223344', '82223334455']
         mock = Mock(context=deepcopy(CONTEXT_STRAIGHT))
         for right_i in right_input:
-            self.assertTrue(handlers.handler_phone_number(right_i, mock.context)[0])
+            self.assertTrue(handlers.handler_phone_number(right_i, mock.context)[2])
             self.assertEqual(right_i, mock.context['phone'])
         self.assertFalse(handlers.handler_phone_number(wrong_input, mock.context)[0])
 
